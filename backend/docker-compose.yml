@@ -1,0 +1,74 @@
+version: '3.9'
+
+services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq-wellcomehub
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+
+  postgres-reserva:
+    image: postgres:15.2
+    container_name: reserva-db
+    environment:
+      POSTGRES_DB: companydb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  mongo-auth:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+    volumes:
+      - mongodb_data:/data/db
+    restart: unless-stopped
+
+  reserva-ms:
+    container_name: company-ms
+    build:
+      context: ./companyms
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-reserva:5432/companydb
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_RABBITMQ_HOST: rabbitmq
+    ports:
+      - "8081:8080"
+    depends_on:
+      postgres-reserva:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_started
+
+  auth-ms:
+    container_name: identity-ms
+    build:
+      context: ./identityms
+    environment:
+      SPRING_DATA_MONGODB_URI: mongodb://admin:admin@mongo-auth:27017/
+      SPRING_RABBITMQ_HOST: rabbitmq
+    ports:
+      - "8082:8080"
+    depends_on:
+      mongo-auth:
+        condition: service_started
+      rabbitmq:
+        condition: service_started
+
+volumes:
+  mongodb_data:
