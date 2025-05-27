@@ -1,60 +1,65 @@
 package com.example.wsauth.wsauth.model;
 
+import java.time.LocalDateTime;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection = "users")
 public class User {
-    private int id;
-    private String name;
-    private String login;
-    private String password;
-    private String profile;
+    @Id
+    private String id;
+    private String cpf;
+    private String nome;
+    private String email;
+    private String senha; // hash
+    private LocalDateTime criadoEm = LocalDateTime.now();
 
-    public User(int id, String name, String login, String password, String profile) {
-        this.id = id;
-        this.name = name;
-        this.login = login;
-        this.password = password;
-        this.profile = profile;
-    }
-
-    public User() {
-    }
-
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getCpf() {
+        return cpf;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
     }
 
-    public String getLogin() {
-        return login;
+    public String getNome() {
+        return nome;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
-    public String getPassword() {
-        return password;
+    public String getEmail() {
+        return email;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public String getProfile() {
-        return profile;
+    public String getSenha() {
+        return senha;
     }
 
-    public void setProfile(String profile) {
-        this.profile = profile;
+    public void setSenha(String senha) {
+        this.senha = senha;
+    }
+
+    public LocalDateTime getCriadoEm() {
+        return criadoEm;
+    }
+
+    public void setCriadoEm(LocalDateTime criadoEm) {
+        this.criadoEm = criadoEm;
     }
 }
