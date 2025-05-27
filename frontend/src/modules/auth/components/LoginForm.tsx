@@ -11,7 +11,7 @@ interface LoginFormProps {
 export function LoginForm({ onSubmit, error, loading }: LoginFormProps) {
   const [formData, setFormData] = useState<LoginFormData>({
     email: '',
-    password: ''
+    senha: ''
   });
   const [, setOpenSnackbar] = useState<boolean>(!!error);
 
@@ -38,8 +38,8 @@ export function LoginForm({ onSubmit, error, loading }: LoginFormProps) {
         label="Senha"
         variant="outlined"
         type="password"
-        value={formData.password}
-        onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+        value={formData.senha}
+        onChange={(e) => setFormData({ ...formData, senha: e.target.value })}
       />
 
       <Button

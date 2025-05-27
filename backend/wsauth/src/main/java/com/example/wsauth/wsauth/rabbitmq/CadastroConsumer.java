@@ -28,15 +28,15 @@ public class CadastroConsumer {
             ObjectMapper mapper = new ObjectMapper();
             JsonNode node = mapper.readTree(mensagemJson);
 
-            String cpf = node.get("cpf").asText();
             String nome = node.get("nome").asText();
             String email = node.get("email").asText();
+            String perfil= node.get("perfil").asText();
 
             String senha = String.valueOf(new Random().nextInt(9000) + 1000);
             String senhaHash = new BCryptPasswordEncoder().encode(senha);
 
             User user = new User();
-            user.setCpf(cpf);
+            user.setPerfil(perfil);
             user.setNome(nome);
             user.setEmail(email);
             user.setSenha(senhaHash);

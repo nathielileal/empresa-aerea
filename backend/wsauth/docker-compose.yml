@@ -6,21 +6,26 @@ services:
       - "8080:8080"
     depends_on:
       - mongo
-      - rabbitmq
     environment:
       - rabbitmq.queue.cadastro-iniciado=cliente.cadastro.iniciado
+    networks:
+      - ms-network
 
   mongo:
     image: mongo
     container_name: auth-mongo
     ports:
       - "27017:27017"
-
-  rabbitmq:
-    image: rabbitmq:3-management
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    environment:
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - ms-network
+networks:
+  ms-network:
+    external: true
+  # rabbitmq:
+  #   image: rabbitmq:3-management
+  #   ports:
+  #     - "5672:5672"
+  #     - "15672:15672"
+  #   environment:
+  #     RABBITMQ_DEFAULT_USER: guest
+  #     RABBITMQ_DEFAULT_PASS: guest

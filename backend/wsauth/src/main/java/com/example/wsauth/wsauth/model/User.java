@@ -9,10 +9,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public class User {
     @Id
     private String id;
-    private String cpf;
     private String nome;
     private String email;
     private String senha; // hash
+    private String perfil;
     private LocalDateTime criadoEm = LocalDateTime.now();
 
     public String getId() {
@@ -23,12 +23,13 @@ public class User {
         this.id = id;
     }
 
-    public String getCpf() {
-        return cpf;
+
+    public String getPerfil() {
+        return perfil;
     }
 
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
+    public void setPerfil(String perfil) {
+        this.perfil = perfil;
     }
 
     public String getNome() {

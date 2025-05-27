@@ -51,6 +51,9 @@ public class AuthController {
                 .signWith(key)
                 .compact();
 
-        return ResponseEntity.ok(Map.of("token", token));
+        return ResponseEntity.ok(Map.of(
+                "token", token,
+                "perfil", user.getPerfil()
+        ));
     }
 }
