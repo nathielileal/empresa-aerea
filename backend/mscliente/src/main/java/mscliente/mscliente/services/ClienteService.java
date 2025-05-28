@@ -20,16 +20,9 @@ public class ClienteService {
 
     public ClienteDTO saveCliente(ClienteDTO clienteDTO) {
         try {
-            Cliente cliente = mapper.map(clienteDTO, Cliente.class);
-
-            // Associa o cliente no endereço para manter relação bidirecional
-            if (cliente.getEndereco() != null) {
-                cliente.getEndereco().setCliente(cliente);
-            }
-
-            Cliente saved = repository.save(cliente);
-            return mapper.map(saved, ClienteDTO.class);
+            return mapper.map(repository.save(mapper.map(clienteDTO, Cliente.class)), ClienteDTO.class);
         } catch (Exception e) {
+            // Log e rethrow — melhor para debug
             throw new RuntimeException("Erro ao salvar cliente: " + e.getMessage(), e);
         }
     }

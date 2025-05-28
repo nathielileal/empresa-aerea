@@ -38,9 +38,6 @@ public class Endereco {
     @Column(name = "complemento_endereco")
     private String complemento;
 
-    @OneToOne(mappedBy = "endereco")
-    private Cliente cliente;
-
     // Getters e Setters
     public Long getId() {
         return id;
@@ -104,13 +101,5 @@ public class Endereco {
 
     public void setComplemento(String complemento) {
         this.complemento = complemento;
-    }
-
-    public Cliente getCliente() {
-        return cliente;
-    }
-
-    public void setCliente(Cliente cliente) {
-        this.cliente = cliente;
     }
 }
