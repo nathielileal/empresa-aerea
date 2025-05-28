@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://${SPRING_DATASOURCE_HOST:mscliente-db}:${SPRING_DATASOURCE_PORT:5432}/${SPRING_DATASOURCE_DATABASE:cliente_db}
+    username: ${SPRING_DATASOURCE_USERNAME:cliente_user}
+    password: ${SPRING_DATASOURCE_PASSWORD:cliente_pass}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  application:
+    name: mscliente
+
+server:
+  port: 8081
