@@ -12,6 +12,11 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   application:
     name: mscliente
+  rabbitmq:
+    host: rabbitmq
+    port: 5672
+    username: guest
+    password: guest
 
 server:
   port: 8081

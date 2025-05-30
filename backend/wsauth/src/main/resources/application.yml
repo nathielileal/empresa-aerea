@@ -12,8 +12,8 @@ spring:
   mail:
     host: smtp.gmail.com
     port: 587
-    username: 
-    password: 
+    username: guilherme.viol1914@gmail.com
+    password: exxp djka zhab szxt
     properties:
       mail:
         smtp:
@@ -22,10 +22,5 @@ spring:
             enable: true
 jwt:
     secret: segredo123
-# app:
-#   rabbitmq:
-#     queue:
-#       cadastro-iniciado: cliente.cadastro.iniciado
-#       cadastro-sucesso: cliente.cadastro.sucesso
-#     exchange: cliente.exchange
-#     routingkey: cliente.routingkey
+server:
+  port: 8083
