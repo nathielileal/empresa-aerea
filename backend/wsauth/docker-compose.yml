@@ -3,11 +3,14 @@ services:
   auth-service:
     build: .
     ports:
-      - "8080:8080"
+      - "8083:8083"
     depends_on:
       - mongo
     environment:
-      - rabbitmq.queue.cadastro-iniciado=cliente.cadastro.iniciado
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
     networks:
       - ms-network
 
@@ -21,11 +24,3 @@ services:
 networks:
   ms-network:
     external: true
-  # rabbitmq:
-  #   image: rabbitmq:3-management
-  #   ports:
-  #     - "5672:5672"
-  #     - "15672:15672"
-  #   environment:
-  #     RABBITMQ_DEFAULT_USER: guest
-  #     RABBITMQ_DEFAULT_PASS: guest
