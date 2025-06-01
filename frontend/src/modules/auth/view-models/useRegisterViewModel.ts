@@ -1,4 +1,4 @@
-import { RegisterFormData } from '../models/AuthTypes';
+import { RegisterFormData, UserProfile } from '../models/AuthTypes';
 import { clienteService } from '../../cliente/services/clienteService';
 import { viacepService } from '../services/viacepService';
 import { useNavigate } from 'react-router-dom';
@@ -18,34 +18,30 @@ export function useRegisterViewModel() {
     setError('');
 
     try {
-      const endereco = await viacepService.buscarEndereco(formData.cep);
-      console.log(endereco)
-
-      const senha = await authService.generatePassword();
-
-      authService.sendEmailPassword(senha)
-
-      console.log(`Senha enviada para ${formData.email}: ${senha}`);
-      const cliente: Cliente & { password: string } = {
-        id: '',
-        role: 'client',
-        password: senha,
-        cpf: formData.cpf,
-        cep: formData.cep,
-        endereco: endereco.logradouro,
-        cidade: endereco.localidade,
-        estado: endereco.uf,
+      console.log("iniciando autocadastro")
+      const enderecoData = await viacepService.buscarEndereco(formData.cep);
+      console.log(enderecoData)
+      const cliente = {
         nome: formData.nome,
+        cpf: formData.cpf,
         email: formData.email,
-        saldoMilhas: 0
+        saldoMilhas: 0.0,
+        // perfil: UserProfile.CLIENTE,
+        ativo: true,
+        endereco: {
+          cep: formData.cep,
+          uf: enderecoData.uf,
+          cidade: enderecoData.cidade,
+          bairro: enderecoData.bairro,
+          rua: enderecoData.logradouro,
+          numero: enderecoData.numero,
+          complemento: enderecoData.complemento || '',
+        },
       };
-
       await clienteService.cadastrar(cliente);
-      //COLOCAR VERIFICAÇÃO DE SUCESSO DEPOIS DA VALIDAÇÃO DO BACKEND
       setSuccess(true);
-      setSuccessMessage(`Cadastro realizado com sucesso! Sua senha é: ${senha} (também foi enviada para seu email). Redirecionando para login...`);
+      setSuccessMessage(`Cadastro realizado com sucesso! Redirecionando para login...`);
 
-      //COLOCAR IF DEPOIS DO SUCESSO PARA NAVEGAÇÃO CORRETA
       setTimeout(() => {
         navigate('/login');
       }, 3000);

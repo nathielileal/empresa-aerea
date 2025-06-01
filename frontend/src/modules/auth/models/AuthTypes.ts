@@ -7,16 +7,21 @@ export interface LoginFormData {
 }
 
 export interface User {
-  id: string;
+  id?: string;
   nome: string;
   email: string;
-  role: "client" | "employee";
+  perfil?: UserProfile;
 }
-
+export enum UserProfile {
+  CLIENTE = "CLIENTE",
+  FUNCIONARIO = "FUNCIONARIO"
+}
 export type AuthUser = User | Cliente | Funcionario;
 
 export interface AuthResponse {
-  token: string;
+  accessToken: string;
+  tokenType: string;
+  tipo: string;
   user: AuthUser;
 }
 
@@ -25,6 +30,7 @@ export interface RegisterFormData {
   nome: string;
   email: string;
   cep: string;
+  saldoMilhas: number
 }
 
 export interface RegisterResponse {
