@@ -5,6 +5,7 @@ const sagaServiceProxy = require('../services/sagaServiceProxy');
 const clienteServiceProxy = require('../services/clienteServiceProxy');
 
 router.get('/clientes', clienteServiceProxy);
+router.put('/clientes/:id/milhas', clienteServiceProxy);
 router.post('/clientes', sagaServiceProxy);
 
 

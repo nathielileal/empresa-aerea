@@ -13,7 +13,7 @@ export function usePerfilViewModel() {
   const [error, setError] = useState('');
   const [saldoMilhas, setSaldoMilhas] = useState(Number)
 
-  const cliente = user?.role === 'client' ? user as Cliente : null;
+  const cliente = user?.tipo === 'CLIENTE' ? user as Cliente : null;
 
   const { transactions, getSaldoMilhas } = useMilhas(); 
 

@@ -55,7 +55,7 @@ export default function Layout({ tipo }: LayoutProps) {
     { text: "Voos", icon: <FlightIcon />, path: "/funcionario/voos" },
   ];
 
-  const menuItens = tipo === "client" ? menuClientItens : menuFuncionarios;
+  const menuItens = tipo === "CLIENTE" ? menuClientItens : menuFuncionarios;
 
   const drawer = (
     <Box display="flex" flexDirection="column" height="100%">
