@@ -16,14 +16,14 @@ export function ClienteRoutes() {
   const { isAuthenticated, user } = useAuth();
 
   // Redireciona imediatamente se não estiver autenticado ou não for cliente
-  if (!isAuthenticated || user?.role !== 'client') {
-    console.log(isAuthenticated, user?.role)
+  if (!isAuthenticated || user?.tipo !== 'CLIENTE') {
+    console.log(isAuthenticated, user?.tipo)
     return <Navigate to="/login" replace />;
   }
 
   return (
     <Routes>
-      <Route path="/" element={<ClienteLayout role={user.role} />}>
+      <Route path="/" element={<ClienteLayout tipo={user.tipo} />}>
         <Route index element={<Navigate to="initial-page" replace />} />
         <Route path="initial-page" element={<InitialPageView />} />
         <Route path="reservas/:reservaId" element={<ReservaDetalheView />} />

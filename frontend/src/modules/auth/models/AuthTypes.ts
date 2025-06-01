@@ -3,14 +3,14 @@ import { Funcionario } from "../../funcionario/models/FuncionarioTypes";
 
 export interface LoginFormData {
   email: string;
-  password: string;
+  senha: string;
 }
 
 export interface User {
   id?: string;
   nome: string;
   email: string;
-  perfil?: UserProfile;
+  tipo?: UserProfile;
 }
 export enum UserProfile {
   CLIENTE = "CLIENTE",
@@ -19,10 +19,10 @@ export enum UserProfile {
 export type AuthUser = User | Cliente | Funcionario;
 
 export interface AuthResponse {
-  accessToken: string;
+  access_token: string;
   tokenType: string;
   tipo: string;
-  user: AuthUser;
+  usuario: AuthUser;
 }
 
 export interface RegisterFormData {

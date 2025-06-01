@@ -26,7 +26,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/cliente',
-    element: <PrivateRoute allowedRoles={['client']} />, // Sem children
+    element: <PrivateRoute allowedRoles={['CLIENTE']} />, // Sem children
     children: [
       {
         path: '*', // Captura todas as sub-rotas
@@ -36,7 +36,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/funcionario',
-    element: <PrivateRoute allowedRoles={['employee']} />,
+    element: <PrivateRoute allowedRoles={['FUNCIONARIO']} />,
     children: [
       {
         path: '*', // Captura todas as sub-rotas

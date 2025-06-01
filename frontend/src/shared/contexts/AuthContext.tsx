@@ -8,7 +8,7 @@ interface AuthContextType {
   user: AuthUser | null;
   isAuthenticated: boolean;
   isLoading: boolean; // Adicione isso;
-  login: (user: AuthUser, token: string) => void;
+  login: (user: AuthUser, access_token: string) => void;
   logout: () => void;
   updateUser: (updatedUser: Partial<AuthUser>) => void;
 }
@@ -26,7 +26,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         const userData = await authService.getCurrentUser();
         setUser(userData);
       } catch {
-        localStorage.removeItem('token');
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('user');
       } finally {
         setIsLoading(false); // Sempre define como false quando termina
       }
@@ -35,14 +36,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     initializeAuth();
   }, []);
 
-  const login = (userData: AuthUser, token: string) => {
+  const login = (userData: AuthUser, access_token: string) => {
     setUser(userData);
-    localStorage.setItem('token', token);
+    localStorage.setItem('access_token', access_token);
+    localStorage.setItem('user', JSON.stringify(userData));  // salva usuário
   };
+  
 
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('token');
+    localStorage.removeItem('access_token');
   };
 
   const updateUser = (updatedFields: Partial<AuthUser>) => {

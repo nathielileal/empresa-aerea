@@ -3,7 +3,7 @@ import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 
 interface PrivateRouteProps {
-  allowedRoles: ('client' | 'employee')[];
+  allowedRoles: ('CLIENTE' | 'FUNCIONARIO')[];
 }
 
 export const PrivateRoute = ({ allowedRoles }: PrivateRouteProps) => {
@@ -15,7 +15,8 @@ export const PrivateRoute = ({ allowedRoles }: PrivateRouteProps) => {
 
   if (!isAuthenticated) return <Navigate to="/login" replace />;
   console.log(isAuthenticated)
-  if (user && !allowedRoles.includes(user.role)) return <Navigate to="/" replace />;
+  if (user?.tipo && !allowedRoles.includes(user.tipo)) return <Navigate to="/" replace />;
+
 
   return <Outlet />; // Alterado de children para Outlet
 };

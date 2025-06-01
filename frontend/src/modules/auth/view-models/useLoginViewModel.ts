@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { authService } from '../services/authService';
 import { useAuth } from '../../../shared/contexts/AuthContext';
-import { LoginFormData } from '../models/AuthTypes';
+import { AuthUser, LoginFormData, UserProfile } from '../models/AuthTypes';
 
 // modules/auth/view-models/useLoginViewModel.ts
 export function useLoginViewModel() {
@@ -16,9 +16,15 @@ export function useLoginViewModel() {
     setError('');
 
     try {
-      const { token, user } = await authService.login(formData);
-      await authLogin(user, token); // Espera a atualização do contexto
-      navigate(user.role === 'client' ? '/cliente/initial-page' : '/funcionario/initial-page');
+      console.log("Iniciando o login")
+      const { access_token, usuario, tipo } = await authService.login(formData);
+      console.log("login realizado", access_token, usuario, tipo)
+      const usuarioComTipo: AuthUser = {
+        ...usuario,
+        tipo: tipo as UserProfile
+      };
+      await authLogin(usuarioComTipo, access_token); // Espera a atualização do contexto
+      navigate(tipo === 'CLIENTE' ? '/cliente/initial-page' : '/funcionario/initial-page');
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro no login');
     } finally {

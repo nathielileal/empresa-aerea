@@ -27,10 +27,10 @@ import { useAuth } from "../contexts/AuthContext";
 const drawerWidth = 240;
 
 interface LayoutProps {
-  role: string;
+  tipo: string;
 }
 
-export default function Layout({ role }: LayoutProps) {
+export default function Layout({ tipo }: LayoutProps) {
   
   const [mobileOpen, setMobileOpen] = React.useState(false);
   const navigate = useNavigate();
@@ -55,7 +55,7 @@ export default function Layout({ role }: LayoutProps) {
     { text: "Voos", icon: <FlightIcon />, path: "/funcionario/voos" },
   ];
 
-  const menuItens = role === "client" ? menuClientItens : menuFuncionarios;
+  const menuItens = tipo === "client" ? menuClientItens : menuFuncionarios;
 
   const drawer = (
     <Box display="flex" flexDirection="column" height="100%">
@@ -112,7 +112,7 @@ export default function Layout({ role }: LayoutProps) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Área do {role == 'client' ? 'cliente' : 'funcionário'}
+            Área do {tipo == 'client' ? 'cliente' : 'funcionário'}
           </Typography>
         </Toolbar>
       </AppBar>
