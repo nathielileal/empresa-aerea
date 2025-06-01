@@ -7,31 +7,33 @@ export const clienteService = {
     return 3000;
   },
 
-  async restituirMilhas() {},
+  async restituirMilhas() { },
 
-  async debitarMilhas() {},
+  async debitarMilhas() { },
 
-  async cadastrar(cliente: Cliente & { password: string }) {
-    const novoCliente: MockUser = {
-      id: `user-${Date.now()}`,
-      nome: cliente.nome,
-      email: cliente.email,
-      role: "client",
-      password: cliente.password,
-      cpf: cliente.cpf,
-      cep: cliente.cep,
-      endereco: cliente.endereco,
-      cidade: cliente.cidade,
-      estado: cliente.estado,
-      saldoMilhas: cliente.saldoMilhas || 0
-    };
+  async cadastrar(cliente: Cliente) {
+    console.log("enviando os dados para cadastro do cliente:", cliente)
+    try {
+      const response = await fetch('http://localhost:3000/clientes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(cliente),
+      });
 
-    mockDatabase[cliente.email] = novoCliente;
-    
-    console.log('Cliente cadastrado:', novoCliente);
-    console.log('Database atual:', mockDatabase);
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Erro ao cadastrar cliente: ${errorText}`);
+      }
 
-    return novoCliente;
-  },
+      return await response.json();
+
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
+
 };
 ;

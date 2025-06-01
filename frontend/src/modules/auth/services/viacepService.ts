@@ -7,9 +7,10 @@ export const viacepService = {
   
       return {
         logradouro: data.logradouro,
-        numero: '', 
+        numero: '100', 
         complemento: data.complemento,
-        localidade: data.localidade,
+        cidade: data.localidade,
+        bairro: data.bairro,
         uf: data.uf,
       };
     },
