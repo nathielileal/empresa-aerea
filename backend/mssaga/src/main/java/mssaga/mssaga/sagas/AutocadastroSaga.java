@@ -24,11 +24,10 @@ public class AutocadastroSaga {
         try {
             String clienteJson = objectMapper.writeValueAsString(clienteDTO);
 
-            // Envia a mensagem e espera a resposta
             String respostaJson = (String) rabbitTemplate.convertSendAndReceive(
-                    "autocadastro", // exchange
-                    "cliente", // routing key (ajuste conforme necessário)
-                    clienteJson // mensagem
+                    "autocadastro", 
+                    "cliente", 
+                    clienteJson 
             );
 
             if (respostaJson != null) {
