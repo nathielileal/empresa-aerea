@@ -35,6 +35,11 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao realizar login");
         }
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout() {
+        return ResponseEntity.ok("Logout realizado com sucesso.");
+    }
     // public ResponseEntity<?> login(@RequestBody LoginDTO req) {
     // Optional<User> opt = userRepository.findByEmail(req.getEmail());
     // if (opt.isEmpty())

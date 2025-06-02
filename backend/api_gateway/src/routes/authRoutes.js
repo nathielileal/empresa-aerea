@@ -5,7 +5,7 @@ const authServiceProxy = require('../services/authServiceProxy');
 
 router.get('/usuarios', authServiceProxy);
 router.post('/login', authServiceProxy);
-
+router.post('/logout', authServiceProxy);
 
 
 module.exports = router;

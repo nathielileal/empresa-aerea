@@ -6,7 +6,7 @@ const clienteServiceProxy = require('../services/clienteServiceProxy');
 
 router.get('/clientes', verifyJWT, clienteServiceProxy);
 router.get('/clientes/:id', verifyJWT, clienteServiceProxy);
-router.get('/clientes/:id/transacoes', verifyJWT, clienteServiceProxy);
+router.get('/clientes/:id/milhas', verifyJWT, clienteServiceProxy);
 router.put('/clientes/:id/milhas', verifyJWT, clienteServiceProxy);
 router.post('/clientes', sagaServiceProxy); //autocadastro
 
