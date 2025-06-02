@@ -1,19 +1,19 @@
 package mssaga.mssaga.DTO;
 
 public class ClienteDTO {
-    private Long id;
+    private Long codigo;
     private String nome;
     private String cpf;
     private String email;
     private float saldoMilhas;
     private EnderecoDTO endereco;
 
-    public Long getId() {
-        return id;
+    public Long getCodigo() {
+        return codigo;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setCodigo(Long codigo) {
+        this.codigo = codigo;
     }
 
     public String getNome() {

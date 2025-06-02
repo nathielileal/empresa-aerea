@@ -13,7 +13,8 @@ public class EmailService {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
         message.setSubject("Sua senha de acesso");
-        message.setText("Sua senha é: " + senha);
+        message.setText(senha);
+        System.out.println(senha);
         mailSender.send(message);
     }
 }

@@ -10,4 +10,6 @@ import mscliente.mscliente.model.Cliente;
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
     Optional<Cliente> findByEmail(String email);
+    Optional<Cliente> findByCpf(String cpf);
+    Optional<Cliente> findByCodigo(Long codigo);
 }

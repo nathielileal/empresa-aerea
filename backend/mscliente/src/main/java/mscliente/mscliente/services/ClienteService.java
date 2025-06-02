@@ -21,13 +21,27 @@ public class ClienteService {
     private ModelMapper mapper;
 
     public ClienteDTO saveCliente(ClienteDTO clienteDTO) {
+        boolean cpfExistente = repository.findByCpf(clienteDTO.getCpf()).isPresent();
+        boolean emailExistente = repository.findByEmail(clienteDTO.getEmail()).isPresent();
+    
+        if (cpfExistente || emailExistente) {
+            throw new IllegalArgumentException("CPF ou e-mail já cadastrados.");
+        }
+    
         try {
-            return mapper.map(repository.save(mapper.map(clienteDTO, Cliente.class)), ClienteDTO.class);
+            Cliente cliente = mapper.map(clienteDTO, Cliente.class);
+            return mapper.map(repository.save(cliente), ClienteDTO.class);
         } catch (Exception e) {
-            // Log e rethrow — melhor para debug
             throw new RuntimeException("Erro ao salvar cliente: " + e.getMessage(), e);
         }
     }
+    
+    public ClienteDTO findById(Long id) {
+        Cliente cliente = repository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Cliente não encontrado com o ID: " + id));
+        return mapper.map(cliente, ClienteDTO.class);
+    }
+    
 
     public List<Cliente> listarClientes() {
         return repository.findAll();

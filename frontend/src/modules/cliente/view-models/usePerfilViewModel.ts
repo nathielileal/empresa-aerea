@@ -33,9 +33,10 @@ export function usePerfilViewModel() {
   };
 
   useEffect(() => {
-    const milhasCompradas = getSaldoMilhas();
-    const milhasOriginais = cliente?.saldoMilhas ?? 0;
-    setSaldoMilhas(milhasOriginais + milhasCompradas);
+    // const milhasCompradas = getSaldoMilhas();
+    if(cliente?.saldoMilhas)
+    // const milhasOriginais = cliente?.saldoMilhas ?? 0;
+    setSaldoMilhas(cliente?.saldoMilhas);
   }, [cliente?.saldoMilhas, transactions]);
 
   const cancelarReserva = async (reservaId: string) => {

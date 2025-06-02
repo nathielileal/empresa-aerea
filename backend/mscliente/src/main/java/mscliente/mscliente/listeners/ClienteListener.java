@@ -24,13 +24,15 @@ public class ClienteListener {
         try {
             ClienteDTO clienteDTO = objectMapper.readValue(clienteJson, ClienteDTO.class);
             ClienteDTO createdClient = clienteService.saveCliente(clienteDTO);
-            System.out.println("Cliente salvo: " + createdClient.getNome());
             return objectMapper.writeValueAsString(createdClient);
+        } catch (IllegalArgumentException e) {
+            return "{\"erro\":\"CPF ou e-mail já cadastrados.\"}";
         } catch (Exception e) {
             System.err.println("Erro ao salvar cliente: " + e.getMessage());
             throw new AmqpRejectAndDontRequeueException("Erro no autocadastro", e);
         }
     }
+    
 
     @RabbitListener(queues = "login.cliente")
     public String dadosLoginCliente(String email) {

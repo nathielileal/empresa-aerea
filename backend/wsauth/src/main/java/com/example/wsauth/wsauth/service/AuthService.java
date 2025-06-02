@@ -81,7 +81,7 @@ public class AuthService {
     }
 
     public LoginResponseDTO login(LoginDTO req) {
-        User user = userRepository.findByEmail(req.getEmail())
+        User user = userRepository.findByEmail(req.getLogin())
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
         if (!passwordEncoder.matches(req.getSenha(), user.getSenha())) {

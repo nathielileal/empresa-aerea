@@ -20,8 +20,8 @@ public class Cliente implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_cliente")
-    private Long id;
+    @Column(name = "codigo_cliente")
+    private Long codigo;
 
     @Column(name = "nome_cliente")
     private String nome;
@@ -42,12 +42,12 @@ public class Cliente implements Serializable {
     private boolean ativo;
 
     // Getters e Setters
-    public Long getId() {
-        return id;
+    public Long getCodigo() {
+        return codigo;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setCodigo(Long codigo) {
+        this.codigo = codigo;
     }
 
     public String getNome() {

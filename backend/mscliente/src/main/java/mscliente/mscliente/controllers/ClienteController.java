@@ -19,11 +19,20 @@ public class ClienteController {
     @Autowired
     private ClienteService service;
 
-
     @PostMapping
-    public ResponseEntity <ClienteDTO> createCliente(@RequestBody ClienteDTO cliente) {
+    public ResponseEntity<ClienteDTO> createCliente(@RequestBody ClienteDTO cliente) {
         ClienteDTO saved = service.saveCliente(cliente);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ClienteDTO> getById(@PathVariable Long id) {
+        try {
+            ClienteDTO clienteDTO = service.findById(id);
+            return ResponseEntity.ok(clienteDTO);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
     }
 
     @GetMapping

@@ -19,7 +19,7 @@ import com.example.wsauth.wsauth.model.User;
 import com.example.wsauth.wsauth.service.AuthService;
 
 @RestController
-@RequestMapping("/auth")
+// @RequestMapping("/login")
 public class AuthController {
     @Autowired
     private AuthService authService;

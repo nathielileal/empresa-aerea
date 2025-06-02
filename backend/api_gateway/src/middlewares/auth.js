@@ -5,7 +5,7 @@ function verifyJWT(req, res, next) {
     if (!token) return res.status(401).json({ auth: false, message: 'Token não fornecido.' });
 
     jwt.verify(token, process.env.SECRET, (err, decoded) => {
-        if (err) return res.status(500).json({ auth: false, message: 'Falha ao autenticar o token.' });
+        if (err) return res.status(401).json({ auth: false, message: 'Token Incorreto' });
 
         req.userId = decoded.id;
         next();

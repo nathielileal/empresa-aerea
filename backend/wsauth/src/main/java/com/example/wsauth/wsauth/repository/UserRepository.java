@@ -10,5 +10,5 @@ import com.example.wsauth.wsauth.model.User;
 
 @Repository
 public interface UserRepository extends MongoRepository<User, String> {
-    Optional<User> findByEmail(String email);
+    Optional<User> findByEmail(String login);
 }

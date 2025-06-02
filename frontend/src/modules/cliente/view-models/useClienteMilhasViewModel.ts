@@ -40,7 +40,7 @@ export const useMilhas = () => {
 
     try {
       await MilhasService.buyMiles(clienteId, milhas);
-      // await fetchTransactions();
+      await fetchTransactions();
     } catch (err) {
       console.error("Erro ao comprar milhas:", err);
       throw err;

@@ -19,36 +19,36 @@ public class AutocadastroSaga {
     @Autowired
     private ObjectMapper objectMapper;
 
-
-    public void autoCadastro(ClienteDTO clienteDTO) {
+    public ClienteDTO autoCadastro(ClienteDTO clienteDTO) {
         try {
             String clienteJson = objectMapper.writeValueAsString(clienteDTO);
 
             String respostaJson = (String) rabbitTemplate.convertSendAndReceive(
-                    "autocadastro", 
-                    "cliente", 
-                    clienteJson 
-            );
+                    "autocadastro",
+                    "cliente",
+                    clienteJson);
+            System.out.println(respostaJson);
 
-            if (respostaJson != null) {
-                ClienteDTO clienteCriado = objectMapper.readValue(respostaJson, ClienteDTO.class);
-
-                // Cria DTO para autenticação
-                CadastroDTO cadastroDTO = new CadastroDTO();
-                cadastroDTO.setNome(clienteCriado.getNome());
-                cadastroDTO.setEmail(clienteCriado.getEmail());
-                cadastroDTO.setPerfil("CLIENTE");
-
-                String cadastroJson = objectMapper.writeValueAsString(cadastroDTO);
-
-                // Envia para auth
-                rabbitTemplate.convertAndSend("autocadastro", "auth", cadastroJson);
-                System.out.println("Usuário criado com sucesso.");
-            } else {
-                System.err.println("Erro: não houve resposta do mscliente");
+            if (respostaJson != null && respostaJson.contains("\"erro\"")) {
+                String mensagemErro = objectMapper.readTree(respostaJson).get("erro").asText();
+                throw new IllegalArgumentException(mensagemErro);
             }
+
+            ClienteDTO clienteCriado = objectMapper.readValue(respostaJson, ClienteDTO.class);
+
+            CadastroDTO cadastroDTO = new CadastroDTO();
+            cadastroDTO.setNome(clienteCriado.getNome());
+            cadastroDTO.setEmail(clienteCriado.getEmail());
+            cadastroDTO.setPerfil("CLIENTE");
+
+            String cadastroJson = objectMapper.writeValueAsString(cadastroDTO);
+            rabbitTemplate.convertAndSend("autocadastro", "auth", cadastroJson);
+            return clienteCriado;
+        } catch (IllegalArgumentException e) {
+            throw e;
         } catch (Exception e) {
-            System.err.println("Erro ao realizar autocadastro: " + e.getMessage());
+            throw new RuntimeException("Erro ao realizar autocadastro: " + e.getMessage(), e);
         }
     }
+
 }
