@@ -1,22 +1,24 @@
 import { useState, useEffect } from "react";
-import { Transaction } from "../models/TransactionTypes";
 import axios from "axios";
 import { useAuth } from "../../../shared/contexts/AuthContext";
 import { MilhasService } from "../services/milhasService";
+import { Extrato } from "../models/ExtratoTypes";
+import { Cliente } from "../models/ClienteTypes";
 
 
 
 export const useMilhas = () => {
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [extrato, setExtrato] = useState<Extrato>();
   const [loading, setLoading] = useState<boolean>(false);
   const { user } = useAuth();
-  const clienteId = Number(user?.id)
+  const cliente = user?.tipo === 'CLIENTE' ? user as Cliente : null;
+  const clienteId = cliente?.codigo
   const fetchTransactions = async () => {
     if (!clienteId) return;
     try {
       setLoading(true);
-      const data = await MilhasService.getTransactions(clienteId);
-      setTransactions(data);
+      const data = await MilhasService.getExtrato(clienteId);
+      setExtrato(data);
     } catch (err) {
       console.error("Erro ao buscar transações:", err);
     } finally {
@@ -25,17 +27,20 @@ export const useMilhas = () => {
   };
 
   useEffect(() => {
+    console.log("Buscando extrato para o cliente", clienteId)
+    console.log("Usuario", user)
+    console.log("Cliente", cliente)
     fetchTransactions();
   }, [clienteId]);
 
-  const getSaldoMilhas = () => {
-    return transactions.reduce((total, t) => {
-      return t.tipo === "ENTRADA" ? total + t.milhas : total - t.milhas;
-    }, 0);
+  const getSaldo_milhas = () => {
+    return extrato?.saldo_milhas;
   };
 
   const buyMiles = async (valor: number) => {
+    console.log("comprando", valor / 5)
     const milhas = valor / 5;
+    console.log("ID do cliente", clienteId)
     if (!clienteId) return;
 
     try {
@@ -47,5 +52,5 @@ export const useMilhas = () => {
     }
   };
 
-  return { transactions, buyMiles, getSaldoMilhas, loading };
+  return { extrato, buyMiles, getSaldo_milhas, loading, fetchTransactions };
 };

@@ -19,7 +19,7 @@ import {
 import { useMilhas } from "../view-models/useClienteMilhasViewModel";
 
 const MilhasView: React.FC = () => {
-  const { transactions, buyMiles, loading } = useMilhas();
+  const { extrato, buyMiles, loading } = useMilhas();
 
   const [valor, setValor] = useState<string>("");
   const [purchaseMessage, setPurchaseMessage] = useState<string>("");
@@ -98,12 +98,12 @@ const MilhasView: React.FC = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {transactions.map((trans, idx) => (
+              {extrato?.transacoes?.map((trans, idx) => (
                 <TableRow key={idx}>
-                  <TableCell>{trans.data.toLocaleString()}</TableCell>
-                  <TableCell>{trans.codigoReserva}</TableCell>
+                  <TableCell>{new Date(trans.data).toLocaleString()}</TableCell>
+                  <TableCell>{trans.codigo}</TableCell>
                   <TableCell>{trans.valor.toFixed(2)}</TableCell>
-                  <TableCell>{trans.milhas.toFixed(2)}</TableCell>
+                  <TableCell>{trans.quantidade_milhas.toFixed(2)}</TableCell>
                   <TableCell>{trans.descricao}</TableCell>
                   <TableCell>
                     <Chip

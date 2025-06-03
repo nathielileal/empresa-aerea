@@ -6,7 +6,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 
 function PerfilView() {
   const navigate = useNavigate();
-  const { user, reservas, loading, error, saldoMilhas, cancelarReserva, recarregar } = usePerfilViewModel();
+  const { user, reservas, loading, error, saldo_milhas, cancelarReserva, recarregar } = usePerfilViewModel();
   const handleServiceClick = (serviceTitle: string) => {
     if (serviceTitle === "Reservar voos") {
       navigate("/cliente/reservar"); // BuscaVoosView
@@ -63,7 +63,7 @@ function PerfilView() {
             Saldo em milhas
           </Typography>
           <Typography variant="h3" sx={{ color: "#374151", fontWeight: "bold" }}>
-            {saldoMilhas.toLocaleString()}
+            {saldo_milhas.toLocaleString()}
           </Typography>
         </Box>
 

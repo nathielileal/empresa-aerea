@@ -2,7 +2,7 @@
 import { AuthResponse, AuthUser, LoginFormData } from '../models/AuthTypes';
 import { mockDatabase } from '../mocks/mockDatabase';
 
-const API_URL = 'http://localhost:3000/auth';
+const API_URL = 'http://localhost:3000';
 
 export const authService = {
   async login(formData: LoginFormData): Promise<AuthResponse> {

@@ -1,18 +1,30 @@
 import axios from "axios";
-import { Transaction } from "../models/TransactionTypes";
+import { Extrato } from "../models/ExtratoTypes";
 
 const API_URL = "http://localhost:3000/clientes";
 
-export const MilhasService = {
-    async getTransactions(clienteId: number): Promise<Transaction[]> {
-        const res = await axios.get(`${API_URL}/${clienteId}/transacoes`);
-        return res.data.map((t: any) => ({
-            ...t,
-            data: new Date(t.data),
-        }));
+const getAuthHeader = () => {
+  const token = localStorage.getItem("access_token");
+  return {
+    headers: {
+      Authorization: `Bearer ${token}`,
     },
+  };
+};
 
-    async buyMiles(clienteId: number, milhas: number): Promise<void> {
-        await axios.put(`${API_URL}/${clienteId}/milhas`, { milhas });
-    },
+export const MilhasService = {
+  async getExtrato(clienteId: string): Promise<Extrato> {
+    const res = await axios.get(`${API_URL}/${clienteId}/milhas`, getAuthHeader());
+    return {
+      ...res.data,
+      transacoes: res.data.transacoes.map((t: any) => ({
+        ...t,
+        data: new Date(t.data),
+      })),
+    };
+  },
+
+  async buyMiles(clienteId: string, quantidade: number): Promise<void> {
+    await axios.put(`${API_URL}/${clienteId}/milhas`, { quantidade }, getAuthHeader());
+  },
 };

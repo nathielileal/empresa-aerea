@@ -11,18 +11,18 @@ export function usePerfilViewModel() {
   const [reservas, setReservas] = useState<Reserva[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
-  const [saldoMilhas, setSaldoMilhas] = useState(Number)
+  const [saldo_milhas, setSaldo_milhas] = useState(Number)
 
   const cliente = user?.tipo === 'CLIENTE' ? user as Cliente : null;
 
-  const { transactions, getSaldoMilhas } = useMilhas(); 
+  const { fetchTransactions } = useMilhas();
 
   const carregarDadosReservas = async () => {
-    if (!user?.id) return;
+    if (!user?.codigo) return;
 
     setLoading(true);
     try {
-      const reservasData = await reservaService.getReservas(user.id, {
+      const reservasData = await reservaService.getReservas(user.codigo, {
       });
       setReservas(reservasData);
     } catch (err) {
@@ -33,15 +33,15 @@ export function usePerfilViewModel() {
   };
 
   useEffect(() => {
-    // const milhasCompradas = getSaldoMilhas();
-    if(cliente?.saldoMilhas)
-    // const milhasOriginais = cliente?.saldoMilhas ?? 0;
-    setSaldoMilhas(cliente?.saldoMilhas);
-  }, [cliente?.saldoMilhas, transactions]);
+    // const milhasCompradas = getsaldo_milhas();
+    if (cliente?.saldo_milhas)
+      // const milhasOriginais = cliente?.saldo_milhas ?? 0;
+      setSaldo_milhas(cliente?.saldo_milhas);
+  }, [cliente?.saldo_milhas]);
 
   const cancelarReserva = async (reservaId: string) => {
     try {
-      const reserva = reservas.find(r => r.id === reservaId);
+      const reserva = reservas.find(r => r.codigo === reservaId);
 
       if (!reserva || !['CRIADA', 'CHECK-IN'].includes(reserva.estado)) {
         setError('Reserva não pode ser cancelada');
@@ -50,13 +50,14 @@ export function usePerfilViewModel() {
 
       await reservaService.cancelarReserva(reservaId);
 
+      //buscar o extrato e atualiza
       const milhasRestituir = reserva.milhasGastas ?? 0;
-      if (milhasRestituir > 0 && user?.id) {
+      if (milhasRestituir > 0 && user?.codigo) {
         // await clienteService.restituirMilhas(...)
       }
 
       // Atualiza saldo no frontend
-      setSaldoMilhas(prev => prev + milhasRestituir);
+      setSaldo_milhas(prev => prev + milhasRestituir);
     } catch (err) {
       setError('Erro ao cancelar reserva');
     }
@@ -68,14 +69,14 @@ export function usePerfilViewModel() {
 
   useEffect(() => {
     carregarDados();
-  }, [user?.id]);
+  }, [user?.codigo]);
 
   return {
     user,
     reservas,
     loading,
     error,
-    saldoMilhas,
+    saldo_milhas,
     cancelarReserva,
     recarregar: carregarDados
   };

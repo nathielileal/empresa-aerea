@@ -6,7 +6,7 @@ import RefreshIcon from '@mui/icons-material/Refresh';
 
 function InitialPageView() {
   const navigate = useNavigate();
-  const { user, reservas, loading, error, saldoMilhas, cancelarReserva, recarregar } = usePerfilViewModel();
+  const { user, reservas, loading, error, saldo_milhas, cancelarReserva, recarregar } = usePerfilViewModel();
 
   const handleVerDetalhes = (reservaId: string) => {
     navigate(`/cliente/reservas/${reservaId}`);
@@ -23,7 +23,7 @@ function InitialPageView() {
           Saldo em milhas
         </Typography>
         <Typography variant="h3" sx={{ color: "#374151", fontWeight: "bold" }}>
-          {saldoMilhas.toLocaleString()}
+          {saldo_milhas.toLocaleString()}
         </Typography>
       </Box>
 

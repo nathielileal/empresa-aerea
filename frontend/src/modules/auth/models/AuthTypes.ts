@@ -2,12 +2,12 @@ import { Cliente } from "../../cliente/models/ClienteTypes";
 import { Funcionario } from "../../funcionario/models/FuncionarioTypes";
 
 export interface LoginFormData {
-  email: string;
+  login: string;
   senha: string;
 }
 
 export interface User {
-  id?: string;
+  codigo?: string;
   nome: string;
   email: string;
   tipo?: UserProfile;
@@ -30,7 +30,7 @@ export interface RegisterFormData {
   nome: string;
   email: string;
   cep: string;
-  saldoMilhas: number
+  saldo_milhas: number
 }
 
 export interface RegisterResponse {

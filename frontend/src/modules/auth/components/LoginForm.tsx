@@ -10,7 +10,7 @@ interface LoginFormProps {
 
 export function LoginForm({ onSubmit, error, loading }: LoginFormProps) {
   const [formData, setFormData] = useState<LoginFormData>({
-    email: '',
+    login: '',
     senha: ''
   });
   const [, setOpenSnackbar] = useState<boolean>(!!error);
@@ -27,9 +27,9 @@ export function LoginForm({ onSubmit, error, loading }: LoginFormProps) {
         fullWidth
         label="E-mail"
         variant="outlined"
-        type="email"
-        value={formData.email}
-        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+        type="login"
+        value={formData.login}
+        onChange={(e) => setFormData({ ...formData, login: e.target.value })}
       />
 
       <TextField

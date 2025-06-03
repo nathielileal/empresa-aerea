@@ -3,7 +3,7 @@ import { User } from "../../auth/models/AuthTypes";
 export interface Cliente extends User {
   cpf: string;
   endereco: Endereco;
-  saldoMilhas: number;
+  saldo_milhas: number;
 }
 
 export interface Endereco{
