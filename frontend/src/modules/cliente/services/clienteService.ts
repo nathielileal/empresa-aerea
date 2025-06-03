@@ -2,7 +2,7 @@ import { mockDatabase, MockUser } from "../../auth/mocks/mockDatabase";
 import { Cliente } from "../models/ClienteTypes";
 
 export const clienteService = {
-  async getSaldoMilhas(clienteId: string): Promise<number> {
+  async getSaldo_milhas(clienteId: string): Promise<number> {
     console.log(clienteId)
     return 3000;
   },

@@ -5,6 +5,7 @@ import { vooService } from '../services/vooService';
 import { Voo } from '../../funcionario/models/VooTypes';
 import { Reserva } from '../models/ReservaTypes';
 import { Cliente } from '../models/ClienteTypes';
+import { UserProfile } from '../../auth/models/AuthTypes';
 
 export function useReservaViewModel() {
     const navigate = useNavigate();
@@ -22,8 +23,8 @@ export function useReservaViewModel() {
     const [error, setError] = useState('');
 
     // Calculados
-    const cliente = user?.role === 'client' ? user as Cliente : null;
-    const saldoMilhas = cliente?.saldoMilhas || 0;
+    const cliente = user?.tipo === UserProfile.CLIENTE ? user as Cliente : null;
+    const saldo_milhas = cliente?.saldo_milhas || 0;
     const valorTotal = vooSelecionado ? vooSelecionado.preco * quantidade : 0;
     const milhasTotais = vooSelecionado ? vooSelecionado.milhasNecessarias * quantidade : 0;
     const valorComMilhas = vooSelecionado ?
@@ -74,7 +75,7 @@ export function useReservaViewModel() {
 
     const atualizarMilhasUsadas = (value: number) => {
         if (!vooSelecionado) return;
-        const maxMilhas = Math.min(saldoMilhas, milhasTotais);
+        const maxMilhas = Math.min(saldo_milhas, milhasTotais);
         setMilhasUsadas(Math.min(value, maxMilhas));
     };
 
@@ -115,7 +116,7 @@ export function useReservaViewModel() {
             // Atualiza o estado local
             updateUser({
                 ...user,
-                saldoMilhas: cliente?.saldoMilhas ?? - milhasUsadas
+                saldo_milhas: cliente?.saldo_milhas ?? - milhasUsadas
             });
             // Navega para a página de confirmação
             // navigate(`/cliente/reservas/${reserva.codigo}`);
@@ -143,7 +144,7 @@ export function useReservaViewModel() {
         error,
 
         // Calculados
-        saldoMilhas,
+        saldo_milhas,
         valorTotal,
         milhasTotais,
         valorComMilhas,

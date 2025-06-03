@@ -14,7 +14,7 @@ export function usePerfilViewModel() {
   const [saldo_milhas, setSaldo_milhas] = useState(Number)
 
   const cliente = user?.tipo === 'CLIENTE' ? user as Cliente : null;
-
+  console.log("Cliente na tela inicial", cliente)
   const { fetchTransactions } = useMilhas();
 
   const carregarDadosReservas = async () => {

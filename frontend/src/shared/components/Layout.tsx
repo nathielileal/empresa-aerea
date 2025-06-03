@@ -23,6 +23,7 @@ import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 import LogoutIcon from "@mui/icons-material/Logout";
 import FlightTakeoffIcon from '@mui/icons-material/FlightTakeoff';
 import { useAuth } from "../contexts/AuthContext";
+import { UserProfile } from "../../modules/auth/models/AuthTypes";
 
 const drawerWidth = 240;
 
@@ -112,7 +113,7 @@ export default function Layout({ tipo }: LayoutProps) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div">
-            Área do {tipo == 'client' ? 'cliente' : 'funcionário'}
+            Área do {tipo == UserProfile.CLIENTE ? 'cliente' : 'funcionário'}
           </Typography>
         </Toolbar>
       </AppBar>

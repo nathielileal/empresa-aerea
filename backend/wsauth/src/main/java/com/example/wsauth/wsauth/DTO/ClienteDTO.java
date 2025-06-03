@@ -5,7 +5,7 @@ public class ClienteDTO {
     private String nome;
     private String cpf;
     private String email;
-    private float saldoMilhas;
+    private float saldo_milhas;
     private EnderecoDTO endereco;
 
     public Long getCodigo() {
@@ -40,20 +40,20 @@ public class ClienteDTO {
         this.email = email;
     }
 
-    public float getSaldoMilhas() {
-        return saldoMilhas;
-    }
-
-    public void setSaldoMilhas(float saldoMilhas) {
-        this.saldoMilhas = saldoMilhas;
-    }
-
     public EnderecoDTO getEndereco() {
         return endereco;
     }
 
     public void setEndereco(EnderecoDTO endereco) {
         this.endereco = endereco;
+    }
+
+    public float getSaldo_milhas() {
+        return saldo_milhas;
+    }
+
+    public void setSaldo_milhas(float saldo_milhas) {
+        this.saldo_milhas = saldo_milhas;
     }
 
 }
