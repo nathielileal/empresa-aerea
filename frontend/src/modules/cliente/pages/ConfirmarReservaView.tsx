@@ -13,7 +13,7 @@ export function ConfirmarReservaView() {
         setQuantidade,
         milhasUsadas,
         setMilhasUsadas,
-        saldoMilhas,
+        saldo_milhas,
         valorTotal,
         milhasTotais,
         valorComMilhas,
@@ -89,7 +89,7 @@ export function ConfirmarReservaView() {
                 <Box sx={{ m: 3 }}>
                     <Typography variant="h6">Pagamento com Milhas</Typography>
 
-                    <Typography><strong>Saldo disponível:</strong> {saldoMilhas.toLocaleString()} milhas</Typography>
+                    <Typography><strong>Saldo disponível:</strong> {saldo_milhas.toLocaleString()} milhas</Typography>
 
                     <TextField
                         label="Milhas a usar"
@@ -98,12 +98,12 @@ export function ConfirmarReservaView() {
                         onChange={(e) => setMilhasUsadas(parseInt(e.target.value) || 0)}
                         inputProps={{
                             min: 0,
-                            max: Math.min(saldoMilhas, milhasTotais),
+                            max: Math.min(saldo_milhas, milhasTotais),
                             step: 100
                         }}
                         sx={{ my: 2 }}
                         fullWidth
-                        helperText={`Máximo: ${Math.min(saldoMilhas, milhasTotais).toLocaleString()} milhas`}
+                        helperText={`Máximo: ${Math.min(saldo_milhas, milhasTotais).toLocaleString()} milhas`}
                     />
 
                     <Box display="grid" gridTemplateColumns="repeat(2, 1fr)" gap={2}>
@@ -116,7 +116,7 @@ export function ConfirmarReservaView() {
                         <Box>
                             <Typography><strong>Milhas restantes:</strong></Typography>
                             <Typography variant="h6">
-                                {(saldoMilhas - milhasUsadas).toLocaleString()}
+                                {(saldo_milhas - milhasUsadas).toLocaleString()}
                             </Typography>
                         </Box>
                     </Box>
