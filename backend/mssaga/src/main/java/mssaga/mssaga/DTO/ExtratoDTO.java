@@ -1,4 +1,4 @@
-package mscliente.mscliente.DTO;
+package mssaga.mssaga.DTO;
 
 import java.util.List;
 

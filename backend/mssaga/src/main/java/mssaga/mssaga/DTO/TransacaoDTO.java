@@ -1,8 +1,6 @@
-package mscliente.mscliente.DTO;
+package mssaga.mssaga.DTO;
 
 import java.time.ZonedDateTime;
-
-import mscliente.mscliente.model.TipoTransacao;
 
 public class TransacaoDTO {
     private Long codigo;

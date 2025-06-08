@@ -1,4 +1,4 @@
-package mscliente.mscliente.model;
+package mssaga.mssaga.DTO;
 
 public enum TipoTransacao {
     ENTRADA("ENTRADA"),

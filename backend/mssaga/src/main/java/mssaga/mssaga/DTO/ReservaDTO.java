@@ -1,4 +1,4 @@
-package com.dac.msreserva.DTO;
+package mssaga.mssaga.DTO;
 
 import java.time.ZonedDateTime;
 import java.util.List;

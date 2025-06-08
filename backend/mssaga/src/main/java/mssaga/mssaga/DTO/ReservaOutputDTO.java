@@ -1,38 +1,38 @@
-package com.dac.msreserva.DTO;
+package mssaga.mssaga.DTO;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.time.ZonedDateTime;
-import java.util.List;
 
-public class ReservaDTO {
-
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class ReservaOutputDTO {
     private String codigo;
     private ZonedDateTime data;
     private String estado;
-    private Float quantidade_milhas;
-    private Long codigo_cliente;
+    private float quantidade_milhas;
+    private long codigo_cliente;
     private Float saldo_cliente;
-    private List<Integer> poltronas_reservadas;
+    // private List<Integer> poltronasReservadas;
     private VooDTO voo;
     private String voo_codigo;
 
-    public String getCodigo() {
-        return codigo;
+    public ReservaOutputDTO() {
     }
 
-    public ReservaDTO(String codigo, ZonedDateTime data, String estado, Float quantidade_milhas, Long codigo_cliente,
-            Float saldo_cliente, List<Integer> poltronas_reservadas, VooDTO voo, String voo_codigo) {
+    public ReservaOutputDTO(String codigo, ZonedDateTime data, String estado, float quantidade_milhas,
+            long codigo_cliente, Float saldo_cliente, VooDTO voo, String voo_codigo) {
         this.codigo = codigo;
         this.data = data;
         this.estado = estado;
         this.quantidade_milhas = quantidade_milhas;
         this.codigo_cliente = codigo_cliente;
         this.saldo_cliente = saldo_cliente;
-        this.poltronas_reservadas = poltronas_reservadas;
         this.voo = voo;
         this.voo_codigo = voo_codigo;
     }
 
-    public ReservaDTO() {
+    public String getCodigo() {
+        return codigo;
     }
 
     public void setCodigo(String codigo) {
@@ -55,19 +55,19 @@ public class ReservaDTO {
         this.estado = estado;
     }
 
-    public Float getQuantidade_milhas() {
+    public float getQuantidade_milhas() {
         return quantidade_milhas;
     }
 
-    public void setQuantidade_milhas(Float quantidade_milhas) {
+    public void setQuantidade_milhas(float quantidade_milhas) {
         this.quantidade_milhas = quantidade_milhas;
     }
 
-    public Long getCodigo_cliente() {
+    public long getCodigo_cliente() {
         return codigo_cliente;
     }
 
-    public void setCodigo_cliente(Long codigo_cliente) {
+    public void setCodigo_cliente(long codigo_cliente) {
         this.codigo_cliente = codigo_cliente;
     }
 
@@ -77,14 +77,6 @@ public class ReservaDTO {
 
     public void setSaldo_cliente(Float saldo_cliente) {
         this.saldo_cliente = saldo_cliente;
-    }
-
-    public List<Integer> getPoltronas_reservadas() {
-        return poltronas_reservadas;
-    }
-
-    public void setPoltronas_reservadas(List<Integer> poltronas_reservadas) {
-        this.poltronas_reservadas = poltronas_reservadas;
     }
 
     public VooDTO getVoo() {
@@ -102,6 +94,4 @@ public class ReservaDTO {
     public void setVoo_codigo(String voo_codigo) {
         this.voo_codigo = voo_codigo;
     }
-
-    // Getters e Setters
 }
