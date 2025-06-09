@@ -2,7 +2,7 @@ FROM maven:3.9.6-eclipse-temurin-21 AS builder
 WORKDIR /app
 COPY . .
 RUN mvn clean package -DskipTests
-EXPOSE 8081
+EXPOSE 9091
 FROM openjdk:21-slim
 
 RUN apt-get update && \

@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
+    url: jdbc:postgresql://${SPRING_DATASOURCE_HOST:msvoo-db}:${SPRING_DATASOURCE_PORT:5432}/${SPRING_DATASOURCE_DATABASE:voo_db}
+    username: ${SPRING_DATASOURCE_USERNAME:voo_user}
+    password: ${SPRING_DATASOURCE_PASSWORD:voo_pass}
   jpa:
     hibernate:
       ddl-auto: update
@@ -10,9 +10,8 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: true
   application:
-    name: voo
+    name: msvoo
   rabbitmq:
     host: rabbitmq
     port: 5672
@@ -21,13 +20,3 @@ spring:
 
 server:
   port: 9091
-
-logging:
-  level:
-    org:
-      hibernate:
-        SQL: DEBUG
-        type:
-          descriptor:
-            sql:
-              BasicBinder: TRACE

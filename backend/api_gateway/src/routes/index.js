@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const clienteRoutes = require('./clienteRoutes');
+const funcionarioRoutes = require('./funcionarioRoutes');
 const reservaRoutes = require('./reservaRoutes');
 const authRoutes = require('./authRoutes');
 // const userRoutes = require('./userRoutes');
@@ -12,6 +13,7 @@ const authRoutes = require('./authRoutes');
 // router.use('/', userRoutes);
 router.use('/', authRoutes);
 router.use('/', clienteRoutes);
+router.use('/', funcionarioRoutes);
 router.use('/', reservaRoutes);
 
 // aqui vai outras rotas

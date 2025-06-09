@@ -3,6 +3,7 @@ package com.ms.voo.model;
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Random;
 
 @Entity
 @Table(name = "voo")
@@ -35,6 +36,7 @@ public class Voo {
     }
 
     public Voo(LocalDateTime dataHora, Aeroporto origem, Aeroporto destino) {
+this.codigo = "TADS" + String.format("%04d", new Random().nextInt(10000));
         this.dataHora = dataHora;
         this.aeroportoOrigem = origem;
         this.aeroportoDestino = destino;

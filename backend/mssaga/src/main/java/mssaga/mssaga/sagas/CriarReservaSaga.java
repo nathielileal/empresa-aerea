@@ -34,7 +34,6 @@ public class CriarReservaSaga {
     private ObjectMapper objectMapper;
 
     public CriarReservaSaga(
-            RabbitUtils rabbit,
             @Qualifier("sagaCriarReserva") DirectExchange exchangeCriar,
             @Qualifier("sagaCancelarReserva") DirectExchange exchangeCancelar) {
         this.exchangeCriar = exchangeCriar;
