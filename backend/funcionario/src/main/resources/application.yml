@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
+    url: jdbc:postgresql://${SPRING_DATASOURCE_HOST:msfuncionario-db}:${SPRING_DATASOURCE_PORT:5432}/${SPRING_DATASOURCE_DATABASE:funcionario_db}
+    username: ${SPRING_DATASOURCE_USERNAME:funcionario_user}
+    password: ${SPRING_DATASOURCE_PASSWORD:funcionario_pass}
   jpa:
     hibernate:
       ddl-auto: update
@@ -11,7 +11,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
   application:
-    name: funcionario
+    name: msfuncionario
   rabbitmq:
     host: rabbitmq
     port: 5672
@@ -20,10 +20,3 @@ spring:
 
 server:
   port: 9090
-  
-logging: # <-- Esta seção deve estar no mesmo nível de 'spring' e 'server'
-  level:
-    org.springframework.orm.jpa.JpaTransactionManager: DEBUG
-    org.springframework.transaction: DEBUG
-    org.hibernate.engine.transaction.internal.TransactionImpl: DEBUG
-    org.springframework.amqp.rabbit: DEBUG

@@ -1,29 +1,17 @@
-version: '3.8'
+version: "3.8"
 
 services:
   msfuncionario-db:
     image: postgres:15
     container_name: msfuncionario-db
     environment:
-      POSTGRES_DB: msfuncionario
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: '@123Mudar'
+      POSTGRES_DB: funcionario_db
+      POSTGRES_USER: funcionario_user
+      POSTGRES_PASSWORD: funcionario_pass
     ports:
-      - "5432:5432"
-    networks:
-      - ms-network
+      - "5435:5432"
     volumes:
-      - msfuncionario-db-data:/var/lib/postgresql/data
-      
-  rabbitmq:
-    image: rabbitmq:3-management
-    container_name: rabbitmq
-    ports:
-      - "5672:5672"      
-      - "15672:15672"   
-    environment:
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_PASS: guest
+      - funcionario-db-data:/var/lib/postgresql/data
     networks:
       - ms-network
 
@@ -33,9 +21,9 @@ services:
     ports:
       - "9090:9090"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://msfuncionario-db:5432/msfuncionario
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: '@123Mudar'
+      SPRING_DATASOURCE_URL: jdbc:postgresql://msfuncionario-db:5432/funcionario_db
+      SPRING_DATASOURCE_USERNAME: funcionario_user
+      SPRING_DATASOURCE_PASSWORD: funcionario_pass
       SPRING_RABBITMQ_HOST: rabbitmq
       SPRING_RABBITMQ_PORT: 5672
       SPRING_RABBITMQ_USERNAME: guest
@@ -46,7 +34,8 @@ services:
       - ms-network
 
 volumes:
-  msfuncionario-db-data:
+  funcionario-db-data:
 
 networks:
   ms-network:
+    external: true
