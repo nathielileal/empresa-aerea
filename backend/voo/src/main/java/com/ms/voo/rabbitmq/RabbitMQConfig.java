@@ -17,6 +17,16 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Queue novasReservas() {
+        return new Queue("criareserva.voo");
+    }
+
+    @Bean
+    public DirectExchange sagaCriarReserva() {
+        return new DirectExchange("criareserva");
+    }
+
+    @Bean
     public Queue vooRealizeQueue() {
         return new Queue("voo.realize");
     }
@@ -38,6 +48,13 @@ public class RabbitMQConfig {
         return BindingBuilder.bind(vooRealizeQueue)
                 .to(vooExchange)
                 .with(DEFAULT_ROUTING_KEY + ".realize");
+    }
+
+    @Bean
+    public Binding bindingCriarReserva(DirectExchange sagaCriarReserva, Queue novasReservas) {
+        return BindingBuilder.bind(novasReservas)
+                .to(sagaCriarReserva)
+                .with(DEFAULT_ROUTING_KEY);
     }
 
     @Bean

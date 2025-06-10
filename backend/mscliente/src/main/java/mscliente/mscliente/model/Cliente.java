@@ -33,7 +33,7 @@ public class Cliente implements Serializable {
     private String email;
 
     @Column(name = "saldo_milhas_cliente")
-    private float saldo_milhas;
+    private double saldo_milhas;
 
     @OneToOne(cascade = { CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE })
     @JoinColumn(name = "endereco_id")
@@ -54,11 +54,11 @@ public class Cliente implements Serializable {
         return nome;
     }
 
-    public float getSaldo_milhas() {
+    public double getSaldo_milhas() {
         return saldo_milhas;
     }
 
-    public void setSaldo_milhas(float saldo_milhas) {
+    public void setSaldo_milhas(double saldo_milhas) {
         this.saldo_milhas = saldo_milhas;
     }
 

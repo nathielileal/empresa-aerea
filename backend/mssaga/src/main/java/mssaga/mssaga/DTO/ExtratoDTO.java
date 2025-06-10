@@ -4,7 +4,7 @@ import java.util.List;
 
 public class ExtratoDTO {
     private Long codigo;
-    private float saldo_milhas;
+    private Double saldo_milhas;
     private List<TransacaoDTO> transacoes;
 
     public Long getCodigo() {
@@ -15,11 +15,11 @@ public class ExtratoDTO {
         this.codigo = codigo;
     }
 
-    public float getSaldo_milhas() {
+    public Double getSaldo_milhas() {
         return saldo_milhas;
     }
 
-    public void setSaldo_milhas(float saldo_milhas) {
+    public void setSaldo_milhas(Double saldo_milhas) {
         this.saldo_milhas = saldo_milhas;
     }
 

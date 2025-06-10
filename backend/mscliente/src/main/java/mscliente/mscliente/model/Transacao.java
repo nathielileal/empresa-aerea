@@ -26,7 +26,7 @@ public class Transacao {
 
     private ZonedDateTime data;
 
-    private Float quantidade_milhas;
+    private double quantidade_milhas;
 
     private Double valor;
 
@@ -39,7 +39,7 @@ public class Transacao {
     }
 
     public Transacao(Cliente cliente, String codigo_reserva, ZonedDateTime data,
-            Float milhas, Double valor, String descricao, TipoTransacao tipo) {
+            double milhas, Double valor, String descricao, TipoTransacao tipo) {
         this.cliente = cliente;
         this.codigo_reserva = codigo_reserva;
         this.data = data;
@@ -87,11 +87,11 @@ public class Transacao {
         return descricao;
     }
 
-    public Float getQuantidade_milhas() {
+    public double getQuantidade_milhas() {
         return quantidade_milhas;
     }
 
-    public void setQuantidade_milhas(Float quantidade_milhas) {
+    public void setQuantidade_milhas(double quantidade_milhas) {
         this.quantidade_milhas = quantidade_milhas;
     }
 

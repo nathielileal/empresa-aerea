@@ -6,7 +6,7 @@ public class TransacaoDTO {
     private Long codigo;
     private String codigo_reserva;
     private ZonedDateTime data;
-    private Float quantidade_milhas;
+    private Double quantidade_milhas;
     private Double valor;
     private String descricao;
     private TipoTransacao tipo;
@@ -61,11 +61,11 @@ public class TransacaoDTO {
         this.tipo = tipo;
     }
 
-    public Float getQuantidade_milhas() {
+    public Double getQuantidade_milhas() {
         return quantidade_milhas;
     }
 
-    public void setQuantidade_milhas(Float quantidade_milhas) {
+    public void setQuantidade_milhas(Double quantidade_milhas) {
         this.quantidade_milhas = quantidade_milhas;
     }
 }

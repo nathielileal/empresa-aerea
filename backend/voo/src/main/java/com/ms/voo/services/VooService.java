@@ -37,8 +37,10 @@ public class VooService {
 
     @Transactional(readOnly = true)
     public VooDTO buscarPorCodigo(String codigo) {
-        Voo voo = repository.findById(codigo).orElseThrow(() -> new RuntimeException("Voo não encontrado com código: " + codigo));
-
+        Voo voo = repository.findById(codigo)
+                .orElseThrow(() -> new RuntimeException("Voo não encontrado com código: " + codigo));
+        System.out.println("Voo encontrado");
+        System.out.println(voo);
         return mapper.map(voo, VooDTO.class);
     }
 
@@ -57,12 +59,15 @@ public class VooService {
 
         voo.setCodigo(codigo);
         voo.setDataHora(dto.getDataHora());
-        voo.setAeroportoOrigem(aeroportoRepository.findById(dto.getAeroportoOrigem()).orElseThrow(() -> new RuntimeException("Aeroporto origem não encontrado")));
-        voo.setAeroportoDestino(aeroportoRepository.findById(dto.getAeroportoDestino()).orElseThrow(() -> new RuntimeException("Aeroporto destino não encontrado")));
+        voo.setAeroportoOrigem(aeroportoRepository.findById(dto.getAeroportoOrigem())
+                .orElseThrow(() -> new RuntimeException("Aeroporto origem não encontrado")));
+        voo.setAeroportoDestino(aeroportoRepository.findById(dto.getAeroportoDestino())
+                .orElseThrow(() -> new RuntimeException("Aeroporto destino não encontrado")));
         voo.setValorPassagem(dto.getValorPassagem());
         voo.setQuantidadeOcupadas(0);
 
-        VooEstado estadoConfirmado = vooEstadoRepository.findBySigla("CONFIRMADO").orElseThrow(() -> new RuntimeException("Estado CONFIRMADO não encontrado"));
+        VooEstado estadoConfirmado = vooEstadoRepository.findBySigla("CONFIRMADO")
+                .orElseThrow(() -> new RuntimeException("Estado CONFIRMADO não encontrado"));
 
         voo.setEstado(estadoConfirmado);
 
@@ -79,7 +84,8 @@ public class VooService {
             throw new IllegalStateException("Só é possível cancelar voo no estado CONFIRMADO");
         }
 
-        VooEstado estadoCancelado = vooEstadoRepository.findBySigla("CANCELADO").orElseThrow(() -> new RuntimeException("Estado CANCELADO não encontrado"));
+        VooEstado estadoCancelado = vooEstadoRepository.findBySigla("CANCELADO")
+                .orElseThrow(() -> new RuntimeException("Estado CANCELADO não encontrado"));
 
         voo.setEstado(estadoCancelado);
 
@@ -102,7 +108,8 @@ public class VooService {
             throw new IllegalStateException("Só é possível realizar voo no estado CONFIRMADO");
         }
 
-        VooEstado estadoRealizado = vooEstadoRepository.findBySigla("REALIZADO").orElseThrow(() -> new RuntimeException("Estado REALIZADO não encontrado"));
+        VooEstado estadoRealizado = vooEstadoRepository.findBySigla("REALIZADO")
+                .orElseThrow(() -> new RuntimeException("Estado REALIZADO não encontrado"));
 
         voo.setEstado(estadoRealizado);
 

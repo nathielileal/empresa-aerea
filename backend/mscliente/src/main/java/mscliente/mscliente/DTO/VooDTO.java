@@ -1,4 +1,4 @@
-package mssaga.mssaga.DTO;
+package mscliente.mscliente.DTO;
 
 import java.time.ZonedDateTime;
 

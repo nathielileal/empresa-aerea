@@ -1,4 +1,4 @@
-package mssaga.mssaga.DTO;
+package mscliente.mscliente.DTO;
 
 import java.time.ZonedDateTime;
 
@@ -8,16 +8,16 @@ public class ReservaCreationResponseDTO {
     private String codigo_reserva;
     private String estado_reserva;
     private Long codigo_cliente;
-    private Double quantidade_milhas;
+    private double quantidade_milhas;
     private String descricao;
-    private Double valor;
+    private double valor;
 
     public ZonedDateTime getData() {
         return data;
     }
 
     public ReservaCreationResponseDTO(ZonedDateTime data, String codigo_reserva, String estado_reserva,
-            Long codigo_cliente, Double quantidade_milhas, String descricao, Double valor) {
+            Long codigo_cliente, double quantidade_milhas, String descricao, double valor) {
         this.data = data;
         this.codigo_reserva = codigo_reserva;
         this.estado_reserva = estado_reserva;
@@ -55,11 +55,11 @@ public class ReservaCreationResponseDTO {
         this.codigo_cliente = codigo_cliente;
     }
 
-    public Double getQuantidade_milhas() {
+    public double getQuantidade_milhas() {
         return quantidade_milhas;
     }
 
-    public void setQuantidade_milhas(Double quantidade_milhas) {
+    public void setQuantidade_milhas(double quantidade_milhas) {
         this.quantidade_milhas = quantidade_milhas;
     }
 
@@ -71,11 +71,11 @@ public class ReservaCreationResponseDTO {
         this.descricao = descricao;
     }
 
-    public Double getValor() {
+    public double getValor() {
         return valor;
     }
 
-    public void setValor(Double valor) {
+    public void setValor(double valor) {
         this.valor = valor;
     }
 

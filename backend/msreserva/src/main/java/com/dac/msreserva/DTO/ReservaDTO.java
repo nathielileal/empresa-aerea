@@ -8,9 +8,9 @@ public class ReservaDTO {
     private String codigo;
     private ZonedDateTime data;
     private String estado;
-    private Float quantidade_milhas;
+    private Double quantidade_milhas;
     private Long codigo_cliente;
-    private Float saldo_cliente;
+    private Double saldo_cliente;
     private List<Integer> poltronas_reservadas;
     private VooDTO voo;
     private String voo_codigo;
@@ -19,8 +19,8 @@ public class ReservaDTO {
         return codigo;
     }
 
-    public ReservaDTO(String codigo, ZonedDateTime data, String estado, Float quantidade_milhas, Long codigo_cliente,
-            Float saldo_cliente, List<Integer> poltronas_reservadas, VooDTO voo, String voo_codigo) {
+    public ReservaDTO(String codigo, ZonedDateTime data, String estado, Double quantidade_milhas, Long codigo_cliente,
+            Double saldo_cliente, List<Integer> poltronas_reservadas, VooDTO voo, String voo_codigo) {
         this.codigo = codigo;
         this.data = data;
         this.estado = estado;
@@ -55,11 +55,11 @@ public class ReservaDTO {
         this.estado = estado;
     }
 
-    public Float getQuantidade_milhas() {
+    public Double getQuantidade_milhas() {
         return quantidade_milhas;
     }
 
-    public void setQuantidade_milhas(Float quantidade_milhas) {
+    public void setQuantidade_milhas(Double quantidade_milhas) {
         this.quantidade_milhas = quantidade_milhas;
     }
 
@@ -71,11 +71,11 @@ public class ReservaDTO {
         this.codigo_cliente = codigo_cliente;
     }
 
-    public Float getSaldo_cliente() {
+    public Double getSaldo_cliente() {
         return saldo_cliente;
     }
 
-    public void setSaldo_cliente(Float saldo_cliente) {
+    public void setSaldo_cliente(Double saldo_cliente) {
         this.saldo_cliente = saldo_cliente;
     }
 

@@ -1,4 +1,4 @@
-package mssaga.mssaga.DTO;
+package com.dac.msreserva.DTO;
 
 import java.time.ZonedDateTime;
 
@@ -62,4 +62,3 @@ public class VooDTO {
     }
 
 }
-
