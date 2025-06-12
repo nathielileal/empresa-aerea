@@ -42,6 +42,13 @@ public class CriarReservaSaga {
 
         public ReservaOutputDTO executeSaga(ReservaInputDTO payload) {
                 try {
+                        System.out.println("payload");
+                        System.out.println(
+                                        "Cliente: " + payload.getCodigo_cliente() +
+                                                        ", Voo: " + payload.getCodigo_voo() +
+                                                        ", Milhas Utilizadas: " + payload.getMilhas_utilizadas() +
+                                                        ", Valor: " + payload.getValor());
+                        System.out.println();
                         // Verificar saldo do cliente
                         String responseConsultaSaldo = (String) rabbitTemplate.convertSendAndReceive(
                                         exchangeCriar.getName(), "saldo", objectMapper.writeValueAsString(payload));
@@ -52,9 +59,30 @@ public class CriarReservaSaga {
                         // Buscar dados do voo
 
                         System.out.println(("Buscando dados do voo"));
-                        String vooPayload = (String) rabbitTemplate.convertSendAndReceive(
-                                        exchangeCriar.getName(), "voo",
-                                        objectMapper.writeValueAsString(payload.getCodigo_voo()));
+                        String vooPayload = """
+                                        {
+                                            "codigo": "TADS1078",
+                                            "data": "2025-07-01T15:00:00-03:00",
+                                            "valor_passagem": 500.0,
+                                            "quantidade_poltronas_total": 180,
+                                            "estado": "DISPONIVEL",
+                                            "aeroporto_origem": {
+                                                "codigo": "GRU",
+                                                "nome": "Aeroporto Internacional de Guarulhos",
+                                                "cidade": "Guarulhos",
+                                                "uf": "SP"
+                                            },
+                                            "aeroporto_destino": {
+                                                "codigo": "SDU",
+                                                "nome": "Aeroporto Santos Dumont",
+                                                "cidade": "Rio de Janeiro",
+                                                "uf": "RJ"
+                                            }
+                                        }
+                                        """;
+                        // String vooPayload = (String) rabbitTemplate.convertSendAndReceive(
+                        // exchangeCriar.getName(), "voo",
+                        // objectMapper.writeValueAsString(payload.getCodigo_voo()));
 
                         VooDTO dadosVoo = objectMapper.readValue(vooPayload, VooDTO.class);
                         System.out.println("Dados do voo retornados");
@@ -67,7 +95,11 @@ public class CriarReservaSaga {
                                         payload.getQuantidade_poltronas(),
                                         payload.getCodigo_cliente(),
                                         dadosVoo);
-
+                        System.out.println(("dados da reserva a ser enviado"));
+                        String json = objectMapper.writeValueAsString(reservaTransaction);
+                        System.out.println("JSON enviado para fila 'reserva':");
+                        System.out.println(json);
+                        System.out.println(reservaTransaction);
                         String reservaResponse = (String) rabbitTemplate.convertSendAndReceive(
                                         exchangeCriar.getName(), "reserva",
                                         objectMapper.writeValueAsString(reservaTransaction));

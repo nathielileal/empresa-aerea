@@ -74,134 +74,148 @@ public class ReservaService {
         return mapper.map(reserva, ReservaDTO.class);
     }
 
-    // public ReservaCreationResponseDTO efetuarReserva(ReservaTransactionDTO reserva) {
-    //     // Geração de código aleatório no formato ABC123
-    //     String codigo = gerarCodigoReservaUnico();
+    public ReservaCreationResponseDTO efetuarReserva(ReservaTransactionDTO reserva) {
+        // Geração de código aleatório no formato ABC123
+        long proximoNumero = repository.count() + 1;
+        String codigo = "RES" + String.format("%04d", proximoNumero);
 
-    //     Double valorTotal = reserva.getValor();
-    //     Double milhasGanhas = (valorTotal / 5);
-    //     Double milhasUtilizadas = reserva.getMilhas_utilizadas();
-    //     Double valorFinalEmDinheiro = valorTotal - milhasUtilizadas * 0.05f;
+        Double milhas_utilizadas = (reserva.getMilhas_utilizadas() != null ? reserva.getMilhas_utilizadas() : 0.0)
+                + reserva.getValor();
+        // EstadoReserva estadoReserva =
+        // estadoReservaRepository.findById(EstadoReservaEnum.CRIADA.getCodigo()).get();
+        EstadoReserva estadoReserva = estadoReservaRepository.findById(EstadoReservaEnum.CRIADA.getCodigo()).get();
+        ZonedDateTime data = ZonedDateTime.now(ZoneOffset.of("-03:00"));
 
-    //     EstadoReserva estadoReserva = estadoReservaRepository.findById(EstadoReservaEnum.CRIADA.getCodigo()).get();
-    //     ZonedDateTime data = ZonedDateTime.now(ZoneOffset.of("-03:00"));
+        Reserva input = new Reserva(codigo, reserva.getCodigo_cliente(), reserva.getVoo().getCodigo(), estadoReserva,
+                milhas_utilizadas);
 
-    //     Reserva input = new Reserva(codigo, reserva.getCodigo_cliente(), reserva.getVoo().getCodigo(), estadoReserva,
-    //             milhasGanhas);
+        repository.save(input);
+        historicoRepository.save(new HistoricoReserva(0L, data, input, null, estadoReserva));
 
-    //     repository.save(input);
-    //     historicoRepository.save(new HistoricoReserva(0L, data, input, null, estadoReserva));
+        // Envia para sistema de consulta (CQRS)
+        template.convertAndSend(exchange.getName(), "gravacao", mapper.map(reserva, ReservaDTO.class));
 
-    //     // Envia para sistema de consulta (CQRS)
-    //     template.convertAndSend(exchange.getName(), "gravacao", gson.toJson(reserva));
+        return new ReservaCreationResponseDTO(
+                data,
+                codigo,
+                estadoReserva.getDescricao(),
+                reserva.getCodigo_cliente(),
+                milhas_utilizadas,
+                reserva.getVoo().getCodigo(),
+                milhas_utilizadas);
+    }
 
-    //     return new ReservaCreationResponseDTO(
-    //             data,
-    //             codigo,
-    //             estadoReserva.getDescricao(),
-    //             reserva.getCodigo_cliente(),
-    //             milhasGanhas,
-    //             reserva.getVoo().getAeroporto_origem().getCodigo() + "->"
-    //                     + reserva.getVoo().getAeroporto_destino().getCodigo(),
-    //             valorFinalEmDinheiro);
-    // }
-
-    // private String gerarCodigoReservaUnico() {
-    //     String letras = UUID.randomUUID().toString().replaceAll("[^A-Z]", "").substring(0, 3).toUpperCase();
-    //     int numeros = new Random().nextInt(900) + 100;
-    //     return letras + numeros;
-    // }
+    private String gerarCodigoReservaUnico() {
+        String letras = UUID.randomUUID().toString().replaceAll("[^A-Z]", "").substring(0, 3).toUpperCase();
+        int numeros = new Random().nextInt(900) + 100;
+        return letras + numeros;
+    }
 
     // public ReservaDTO cancelarReserva(String codigo) {
-    //     Reserva reserva = repository.findById(codigo)
-    //             .orElseThrow(() -> new ("Reserva não encontrada com o código fornecido."));
-        
-    //     if (!Arrays.asList(EstadoReservaEnum.CRIADA.getCodigo(), EstadoReservaEnum.CHECK_IN.getCodigo()).contains(reserva.getEstado().getCodigo())) {
-    //         throw new IllegalArgumentException("Uma reserva só pode ser cancelada nos estados CRIADA ou CHECK-IN");
-    //     }
+    // Reserva reserva = repository.findById(codigo)
+    // .orElseThrow(() -> new ("Reserva não encontrada com o código fornecido."));
 
-    //     return atualizarEstadoReserva(reserva, EstadoReservaEnum.CANCELADA.getCodigo());
+    // if (!Arrays.asList(EstadoReservaEnum.CRIADA.getCodigo(),
+    // EstadoReservaEnum.CHECK_IN.getCodigo()).contains(reserva.getEstado().getCodigo()))
+    // {
+    // throw new IllegalArgumentException("Uma reserva só pode ser cancelada nos
+    // estados CRIADA ou CHECK-IN");
+    // }
+
+    // return atualizarEstadoReserva(reserva,
+    // EstadoReservaEnum.CANCELADA.getCodigo());
     // }
 
     // public ReservaDTO alterarEstado(String codigo, AlternaEstadoDTO payload) {
-    //     Reserva reserva = repository.findById(codigo)
-    //             .orElseThrow(() -> new ("Reserva não encontrada com o código fornecido."));
-        
-    //     long novoEstado = validaAlteracaoEstado(payload.getEstado(), reserva.getEstado()).getCodigo();
+    // Reserva reserva = repository.findById(codigo)
+    // .orElseThrow(() -> new ("Reserva não encontrada com o código fornecido."));
 
-    //     return atualizarEstadoReserva(reserva, novoEstado);
+    // long novoEstado = validaAlteracaoEstado(payload.getEstado(),
+    // reserva.getEstado()).getCodigo();
+
+    // return atualizarEstadoReserva(reserva, novoEstado);
     // }
 
     // public List<ReservaDTO> canceladoVoo(VooDTO voo) {
-    //     List<Reserva> reservas = repository.findByCodigoVoo(voo.getCodigo());
-    //     return reservas.stream()
-    //             .map(r -> atualizarEstadoReserva(r, EstadoReservaEnum.CANCELADA_VOO.getCodigo()))
-    //             .collect(Collectors.toList());
+    // List<Reserva> reservas = repository.findByCodigoVoo(voo.getCodigo());
+    // return reservas.stream()
+    // .map(r -> atualizarEstadoReserva(r,
+    // EstadoReservaEnum.CANCELADA_VOO.getCodigo()))
+    // .collect(Collectors.toList());
     // }
 
     // public void realizaVoo(VooDTO voo) {
-    //     List<Reserva> reservas = repository.findByCodigoVoo(voo.getCodigo());
-    //     reservas.forEach(res -> {
-    //         EstadoReservaEnum estado;
-    //         if (res.getEstado().getCodigo() == EstadoReservaEnum.EMBARCADA.getCodigo()) {
-    //             estado = EstadoReservaEnum.REALIZADA;
-    //         } else if (res.getEstado().getCodigo() == EstadoReservaEnum.CANCELADA.getCodigo()) {
-    //             estado = EstadoReservaEnum.CANCELADA;
-    //         } else {
-    //             estado = EstadoReservaEnum.NAO_REALIZADA;
-    //         }
-    //         atualizarEstadoReserva(res, estado.getCodigo());
-    //     });
+    // List<Reserva> reservas = repository.findByCodigoVoo(voo.getCodigo());
+    // reservas.forEach(res -> {
+    // EstadoReservaEnum estado;
+    // if (res.getEstado().getCodigo() == EstadoReservaEnum.EMBARCADA.getCodigo()) {
+    // estado = EstadoReservaEnum.REALIZADA;
+    // } else if (res.getEstado().getCodigo() ==
+    // EstadoReservaEnum.CANCELADA.getCodigo()) {
+    // estado = EstadoReservaEnum.CANCELADA;
+    // } else {
+    // estado = EstadoReservaEnum.NAO_REALIZADA;
+    // }
+    // atualizarEstadoReserva(res, estado.getCodigo());
+    // });
     // }
 
-    // private ReservaDTO atualizarEstadoReserva(Reserva reserva, long codigo_estado) {
-    //     ZonedDateTime data = ZonedDateTime.now(ZoneOffset.of("-03:00"));
-    //     EstadoReservaDTO estadoAntigo = reserva.getEstado();
-    //     EstadoReservaDTO estadoNovo = estadoReservaRepository.findById(codigo_estado).get();
-    //     reserva.setEstado(estadoNovo);
-    //     Reserva reservaAtualizada = repository.save(reserva);
+    // private ReservaDTO atualizarEstadoReserva(Reserva reserva, long
+    // codigo_estado) {
+    // ZonedDateTime data = ZonedDateTime.now(ZoneOffset.of("-03:00"));
+    // EstadoReservaDTO estadoAntigo = reserva.getEstado();
+    // EstadoReservaDTO estadoNovo =
+    // estadoReservaRepository.findById(codigo_estado).get();
+    // reserva.setEstado(estadoNovo);
+    // Reserva reservaAtualizada = repository.save(reserva);
 
-    //     historicoRepository.save(new HistoricoReserva(0L, data, reservaAtualizada, estadoAntigo, estadoNovo));
+    // historicoRepository.save(new HistoricoReserva(0L, data, reservaAtualizada,
+    // estadoAntigo, estadoNovo));
 
-    //     template.convertAndSend(
-    //             exchange.getName(),
-    //             "edicao",
-    //             gson.toJson(new ReservaUpdateEstadoDTO(reservaAtualizada.getCodigo(),
-    //                     reservaAtualizada.getEstado().getDescricao(), data)));
+    // template.convertAndSend(
+    // exchange.getName(),
+    // "edicao",
+    // gson.toJson(new ReservaUpdateEstadoDTO(reservaAtualizada.getCodigo(),
+    // reservaAtualizada.getEstado().getDescricao(), data)));
 
-    //     return new ReservaDTO(
-    //             reservaAtualizada.getCodigo(),
-    //             data,
-    //             reservaAtualizada.getEstado().getDescricao(),
-    //             (Double) reservaAtualizada.getQuantidade_milhas(),
-    //             reservaAtualizada.getCodigo_cliente(),
-    //             null,
-    //             null,
-    //             reservaAtualizada.getCodigo_voo());
+    // return new ReservaDTO(
+    // reservaAtualizada.getCodigo(),
+    // data,
+    // reservaAtualizada.getEstado().getDescricao(),
+    // (Double) reservaAtualizada.getQuantidade_milhas(),
+    // reservaAtualizada.getCodigo_cliente(),
+    // null,
+    // null,
+    // reservaAtualizada.getCodigo_voo());
     // }
 
-    // private EstadoReservaEnum validaAlteracaoEstado(String estadoDesejado, EstadoReservaDTO estadoAtual) {
-    //     Map<String, EstadoReservaEnum> transicoesValidas = new HashMap<>();
-    //     transicoesValidas.put("CHECK-IN", EstadoReservaEnum.CRIADA);
-    //     transicoesValidas.put("EMBARCADA", EstadoReservaEnum.CHECK_IN);
+    // private EstadoReservaEnum validaAlteracaoEstado(String estadoDesejado,
+    // EstadoReservaDTO estadoAtual) {
+    // Map<String, EstadoReservaEnum> transicoesValidas = new HashMap<>();
+    // transicoesValidas.put("CHECK-IN", EstadoReservaEnum.CRIADA);
+    // transicoesValidas.put("EMBARCADA", EstadoReservaEnum.CHECK_IN);
 
-    //     String estadoNormalizado = estadoDesejado.toUpperCase().replace("-", "_");
-    //     EstadoReservaEnum estadoDesejadoEnum;
-    //     try {
-    //         estadoDesejadoEnum = EstadoReservaEnum.valueOf(estadoNormalizado);
-    //     } catch (IllegalArgumentException e) {
-    //         throw new IllegalArgumentException("Estado desejado inválido: " + estadoDesejado);
-    //     }
+    // String estadoNormalizado = estadoDesejado.toUpperCase().replace("-", "_");
+    // EstadoReservaEnum estadoDesejadoEnum;
+    // try {
+    // estadoDesejadoEnum = EstadoReservaEnum.valueOf(estadoNormalizado);
+    // } catch (IllegalArgumentException e) {
+    // throw new IllegalArgumentException("Estado desejado inválido: " +
+    // estadoDesejado);
+    // }
 
-    //     EstadoReservaEnum estadoAtualEsperado = transicoesValidas.get(estadoDesejado.toUpperCase());
-    //     if (estadoAtualEsperado == null) {
-    //         throw new IllegalArgumentException("Estado desejado inválido: " + estadoDesejado);
-    //     }
+    // EstadoReservaEnum estadoAtualEsperado =
+    // transicoesValidas.get(estadoDesejado.toUpperCase());
+    // if (estadoAtualEsperado == null) {
+    // throw new IllegalArgumentException("Estado desejado inválido: " +
+    // estadoDesejado);
+    // }
 
-    //     if (estadoAtual.getCodigo() != estadoAtualEsperado.getCodigo()) {
-    //         throw new IllegalArgumentException("Condições para troca de estado não atendidas");
-    //     }
+    // if (estadoAtual.getCodigo() != estadoAtualEsperado.getCodigo()) {
+    // throw new IllegalArgumentException("Condições para troca de estado não
+    // atendidas");
+    // }
 
-    //     return estadoDesejadoEnum;
+    // return estadoDesejadoEnum;
     // }
 }

@@ -5,7 +5,7 @@ import com.dac.msreserva.DTO.EstadoReservaDTO;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "reserva", schema = "reserva_transaction")
+@Table(name = "reserva")
 public class Reserva {
 
     @Id

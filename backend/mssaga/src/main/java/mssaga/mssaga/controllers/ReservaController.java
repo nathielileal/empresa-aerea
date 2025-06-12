@@ -19,9 +19,10 @@ public class ReservaController {
     private final CriarReservaSaga sagaCriar;
     // private final CancelarReservaSaga sagaCancelar;
 
-    // public ReservaController(CriarReservaSaga sagaCriar, CancelarReservaSaga sagaCancelar) {
-    //     this.sagaCriar = sagaCriar;
-    //     this.sagaCancelar = sagaCancelar;
+    // public ReservaController(CriarReservaSaga sagaCriar, CancelarReservaSaga
+    // sagaCancelar) {
+    // this.sagaCriar = sagaCriar;
+    // this.sagaCancelar = sagaCancelar;
     // }
 
     public ReservaController(CriarReservaSaga sagaCriar) {
@@ -32,7 +33,11 @@ public class ReservaController {
     @PostMapping
     public ResponseEntity<ReservaOutputDTO> efetuarReserva(@RequestBody ReservaInputDTO payload) {
         System.out.println("Saga da reserva iniciando");
-        System.out.println(payload);
+        System.out.println(
+                "Cliente: " + payload.getCodigo_cliente() +
+                        ", Voo: " + payload.getCodigo_voo() +
+                        ", Milhas Utilizadas: " + payload.getMilhas_utilizadas() +
+                        ", Valor: " + payload.getValor());
         ReservaOutputDTO reserva = sagaCriar.executeSaga(payload);
         return ResponseEntity.created(URI.create("/reserva/" + reserva.getCodigo())).body(reserva);
     }

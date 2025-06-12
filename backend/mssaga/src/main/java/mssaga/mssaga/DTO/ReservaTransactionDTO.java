@@ -9,6 +9,8 @@ public class ReservaTransactionDTO {
     private Long codigo_cliente;
     private VooDTO voo;
 
+
+
     public Double getValor() {
         return valor;
     }
@@ -58,10 +60,7 @@ public class ReservaTransactionDTO {
         this.voo = voo;
     }
 
-    public ReservaTransactionDTO(double valor2, double milhas_utilizadas2, int quantidade_poltronas2,
-            long codigo_cliente2, VooDTO dadosVoo) {
-        //TODO Auto-generated constructor stub
-    }
+
 
 
 }

@@ -1,58 +1,70 @@
-// package com.dac.msreserva.listeners;
+package com.dac.msreserva.listeners;
 
-// import java.time.ZonedDateTime;
+import java.time.ZonedDateTime;
 
-// import org.springframework.amqp.rabbit.annotation.RabbitListener;
-// import org.springframework.stereotype.Service;
+import org.modelmapper.ModelMapper;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-// import com.dac.msreserva.DTO.VooDTO;
-// import com.dac.msreserva.services.ReservaService;
+import com.dac.msreserva.DTO.ReservaTransactionDTO;
+import com.dac.msreserva.DTO.VooDTO;
+import com.dac.msreserva.services.ReservaService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-// @Service
-// public class TransactionListener {
+@Service
+public class TransactionListener {
 
-//     private final ReservaService service;
-//     private final Gson gson;
+    private final ReservaService service;
+    @Autowired
+    private ObjectMapper objectMapper;
 
-//     public TransactionListener(ReservaService service) {
-//         this.service = service;
-//         this.gson = new GsonBuilder()
-//                 .registerTypeAdapter(ZonedDateTime.class, new ZonedDateTimeAdapter())
-//                 .create();
-//     }
+    public TransactionListener(ReservaService service) {
+        this.service = service;
+    }
 
-//     @RabbitListener(queues = "criareserva.reserva", errorHandler = "customErrorHandler")
-//     public String efetuarReserva(String payload) {
-//         ReservaTransactionDTO reservaTransaction = gson.fromJson(payload, ReservaTransactionDTO.class);
-        
-//         Object milhasTransaction = service.efetuarReserva(reservaTransaction);
-//          response = new (true, milhasTransaction);
-//         return gson.toJson(response);
-//     }
+    @RabbitListener(queues = "criareserva.reserva")
+    public String efetuarReserva(String payload) {
+        try {
+            System.out.println("Criar reservada escutado");
+            System.out.println(payload);
+            ReservaTransactionDTO reservaTransaction = objectMapper.readValue(payload, ReservaTransactionDTO.class);
 
-//     @RabbitListener(queues = "cancelareserva.reserva", errorHandler = "customErrorHandler")
-//     public String cancelarReserva(String codigo) {
-//         Object reserva = service.cancelarReserva(codigo);
-//          response = new (true, reserva);
-        
-//         return gson.toJson(response);
-//     }
+            Object resultado = service.efetuarReserva(reservaTransaction);
 
-//     @RabbitListener(queues = "cancelavoo.reserva", errorHandler = "customErrorHandler")
-//     public String canceladoVoo(String payload) {
-//         VooDTO voo = gson.fromJson(payload, VooDTO.class);
-//         Object reserva = service.canceladoVoo(voo);
-//          response = new (true, reserva);
-        
-//         return gson.toJson(response);
-//     }
+            return objectMapper.writeValueAsString(resultado);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao processar reserva", e);
+        }
+    }
+}
 
-//     @RabbitListener(queues = "realizavoo.reserva", errorHandler = "customErrorHandler")
-//     public String realizaVoo(String payload) {
-//         VooDTO voo = gson.fromJson(payload, VooDTO.class);
-//         Object reserva = service.realizaVoo(voo);
-//          response = new (true, reserva);
-        
-//         return gson.toJson(response);
-//     }
+    // @RabbitListener(queues = "cancelareserva.reserva", errorHandler =
+    // "customErrorHandler")
+    // public String cancelarReserva(String codigo) {
+    // Object reserva = service.cancelarReserva(codigo);
+    // response = new (true, reserva);
+
+    // return gson.toJson(response);
+    // }
+
+    // @RabbitListener(queues = "cancelavoo.reserva", errorHandler =
+    // "customErrorHandler")
+    // public String canceladoVoo(String payload) {
+    // VooDTO voo = gson.fromJson(payload, VooDTO.class);
+    // Object reserva = service.canceladoVoo(voo);
+    // response = new (true, reserva);
+
+    // return gson.toJson(response);
+    // }
+
+    // @RabbitListener(queues = "realizavoo.reserva", errorHandler =
+    // "customErrorHandler")
+    // public String realizaVoo(String payload) {
+    // VooDTO voo = gson.fromJson(payload, VooDTO.class);
+    // Object reserva = service.realizaVoo(voo);
+    // response = new (true, reserva);
+
+    // return gson.toJson(response);
+    // }
 // }
