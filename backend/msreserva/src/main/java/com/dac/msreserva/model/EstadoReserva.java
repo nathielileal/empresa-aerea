@@ -5,7 +5,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "estado_reserva", schema = "reserva_transaction")
+@Table(name = "estado_reserva")
 public class EstadoReserva {
     @Id
     private Long codigo;

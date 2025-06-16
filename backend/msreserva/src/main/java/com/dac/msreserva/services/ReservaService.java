@@ -81,19 +81,22 @@ public class ReservaService {
 
         Double milhas_utilizadas = (reserva.getMilhas_utilizadas() != null ? reserva.getMilhas_utilizadas() : 0.0)
                 + reserva.getValor();
-        // EstadoReserva estadoReserva =
-        // estadoReservaRepository.findById(EstadoReservaEnum.CRIADA.getCodigo()).get();
+
         EstadoReserva estadoReserva = estadoReservaRepository.findById(EstadoReservaEnum.CRIADA.getCodigo()).get();
+
+        System.out.println("Estado Reserva");
+        System.out.println(estadoReserva);
         ZonedDateTime data = ZonedDateTime.now(ZoneOffset.of("-03:00"));
 
         Reserva input = new Reserva(codigo, reserva.getCodigo_cliente(), reserva.getVoo().getCodigo(), estadoReserva,
                 milhas_utilizadas);
-
+        System.out.println("Input");
+        System.out.println(input);
         repository.save(input);
         historicoRepository.save(new HistoricoReserva(0L, data, input, null, estadoReserva));
 
         // Envia para sistema de consulta (CQRS)
-        template.convertAndSend(exchange.getName(), "gravacao", mapper.map(reserva, ReservaDTO.class));
+        // template.convertAndSend(exchange.getName(), "gravacao", mapper.map(reserva, ReservaDTO.class));
 
         return new ReservaCreationResponseDTO(
                 data,

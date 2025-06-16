@@ -6,7 +6,7 @@ import java.time.ZonedDateTime;
 import com.dac.msreserva.DTO.EstadoReservaDTO;
 
 @Entity
-@Table(name = "historico_reserva", schema = "reserva_transaction")
+@Table(name = "historico_reserva")
 public class HistoricoReserva {
 
     @Id
@@ -29,6 +29,9 @@ public class HistoricoReserva {
 
     public Long getCodigo() {
         return codigo;
+    }
+
+    public HistoricoReserva() {
     }
 
     public HistoricoReserva(Long codigo, ZonedDateTime data, Reserva reserva, EstadoReserva estadoAntigo,

@@ -12,6 +12,7 @@ services:
       - "5434:5432"  # Mapeia 5434 no host para 5432 no container
     volumes:
       - reserva-db-data:/var/lib/postgresql/data
+      # - ./db:/docker-entrypoint-initdb.d
     networks:
       - ms-network
 

@@ -15,8 +15,11 @@ public class Reserva {
     @OneToOne
     @JoinColumn(name = "estado_codigo")
     private EstadoReserva estado;
+
+    public Reserva() {
+    }
+
     private Double quantidade_milhas;
-    
 
     public Reserva(String codigo, Long codigo_cliente, String codigo_voo, EstadoReserva estado,
             Double quantidade_milhas) {
