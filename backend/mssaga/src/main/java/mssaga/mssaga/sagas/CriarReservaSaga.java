@@ -59,30 +59,30 @@ public class CriarReservaSaga {
                         // Buscar dados do voo
 
                         System.out.println(("Buscando dados do voo"));
-                        String vooPayload = """
-                                        {
-                                            "codigo": "TADS1078",
-                                            "data": "2025-07-01T15:00:00-03:00",
-                                            "valor_passagem": 500.0,
-                                            "quantidade_poltronas_total": 180,
-                                            "estado": "DISPONIVEL",
-                                            "aeroporto_origem": {
-                                                "codigo": "GRU",
-                                                "nome": "Aeroporto Internacional de Guarulhos",
-                                                "cidade": "Guarulhos",
-                                                "uf": "SP"
-                                            },
-                                            "aeroporto_destino": {
-                                                "codigo": "SDU",
-                                                "nome": "Aeroporto Santos Dumont",
-                                                "cidade": "Rio de Janeiro",
-                                                "uf": "RJ"
-                                            }
-                                        }
-                                        """;
-                        // String vooPayload = (String) rabbitTemplate.convertSendAndReceive(
-                        // exchangeCriar.getName(), "voo",
-                        // objectMapper.writeValueAsString(payload.getCodigo_voo()));
+                        // String vooPayload = """
+                        //                 {
+                        //                     "codigo": "TADS5492",
+                        //                     "data": "2025-07-01T15:00:00-03:00",
+                        //                     "valor_passagem": 500.0,
+                        //                     "quantidade_poltronas_total": 180,
+                        //                     "estado": "DISPONIVEL",
+                        //                     "aeroporto_origem": {
+                        //                         "codigo": "GRU",
+                        //                         "nome": "Aeroporto Internacional de Guarulhos",
+                        //                         "cidade": "Guarulhos",
+                        //                         "uf": "SP"
+                        //                     },
+                        //                     "aeroporto_destino": {
+                        //                         "codigo": "SDU",
+                        //                         "nome": "Aeroporto Santos Dumont",
+                        //                         "cidade": "Rio de Janeiro",
+                        //                         "uf": "RJ"
+                        //                     }
+                        //                 }
+                        //                 """;
+                        String vooPayload = (String) rabbitTemplate.convertSendAndReceive(
+                        exchangeCriar.getName(), "voo",
+                        objectMapper.writeValueAsString(payload.getCodigo_voo()));
 
                         VooDTO dadosVoo = objectMapper.readValue(vooPayload, VooDTO.class);
                         System.out.println("Dados do voo retornados");
