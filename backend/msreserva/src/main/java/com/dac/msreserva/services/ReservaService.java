@@ -108,12 +108,6 @@ public class ReservaService {
                 milhas_utilizadas);
     }
 
-    private String gerarCodigoReservaUnico() {
-        String letras = UUID.randomUUID().toString().replaceAll("[^A-Z]", "").substring(0, 3).toUpperCase();
-        int numeros = new Random().nextInt(900) + 100;
-        return letras + numeros;
-    }
-
     // public ReservaDTO cancelarReserva(String codigo) {
     // Reserva reserva = repository.findById(codigo)
     // .orElseThrow(() -> new ("Reserva não encontrada com o código fornecido."));

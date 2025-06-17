@@ -1,28 +1,34 @@
-// package br.ufpr.dac.reserva_service.resource.cqrs
+// package com.dac.msreserva.cqrs;
 
-// import br.ufpr.dac.reserva_service.repository.IConsultaRepository
-// import br.ufpr.dac.reserva_service.resource.dto.ReservaConsultaInputDTO
-// import org.springframework.stereotype.Service
-// import utils.dto.ReservaUpdateEstadoDTO
+// import java.util.List;
+
+// import org.springframework.stereotype.Service;
+
+// import com.dac.msreserva.DTO.ReservaConsultaDTO;
+// import com.dac.msreserva.repository.ConsultaRepository;
 
 // @Service
-// class AsyncReservaService(private val repository: IConsultaRepository) {
+// public class AsyncReservaService {
 
-//     fun gravarReserva(reserva: List<ReservaConsultaInputDTO>){
-//         reserva.forEach {
+//     private final ConsultaRepository repository;
+
+//     public AsyncReservaService(ConsultaRepository repository) {
+//         this.repository = repository;
+//     }
+
+//     public void gravarReserva(List<ReservaConsultaDTO> reserva) {
+//         for (ReservaConsultaDTO it : reserva) {
 //             repository.save(
-//                 it.codigo,
-//                 it.codigo_cliente,
-//                 it.codigo_voo,
-//                 it.estado,
-//                 it.data,
-//                 it.poltrona,
-//                 it.quantidade_milhas
-//             )
+//                     it.getCodigo(),
+//                     it.getCodigo_cliente(),
+//                     it.getCodigo_voo(),
+//                     it.getEstado(),
+//                     it.getData(),
+//                     it.getQuantidade_milhas());
 //         }
 //     }
 
-//     fun editarReserva(reserva: ReservaUpdateEstadoDTO){
-//         repository.update(reserva.estado, reserva.data, reserva.codigo)
+//     public void editarReserva(ReservaUpdateEstadoDTO reserva) {
+//         repository.update(reserva.getEstado(), reserva.getData(), reserva.getCodigo());
 //     }
 // }
