@@ -59,12 +59,12 @@ public class VooService {
 
         voo.setCodigo(codigo);
         voo.setData(dto.getData());
-        voo.setAeroportoOrigem(aeroportoRepository.findById(dto.getAeroportoOrigem())
+        voo.setAeroportoOrigem(aeroportoRepository.findById(dto.getAeroportoOrigem().getCodigo())
                 .orElseThrow(() -> new RuntimeException("Aeroporto origem não encontrado")));
-        voo.setAeroportoDestino(aeroportoRepository.findById(dto.getAeroportoDestino())
+        voo.setAeroportoDestino(aeroportoRepository.findById(dto.getAeroportoDestino().getCodigo())
                 .orElseThrow(() -> new RuntimeException("Aeroporto destino não encontrado")));
         voo.setValorPassagem(dto.getValorPassagem());
-        voo.setQuantidadeOcupadas(0);
+        voo.setQuantidadeOcupadas(dto.getQuantidadeOcupadas());
 
         VooEstado estadoConfirmado = vooEstadoRepository.findBySigla("CONFIRMADO")
                 .orElseThrow(() -> new RuntimeException("Estado CONFIRMADO não encontrado"));

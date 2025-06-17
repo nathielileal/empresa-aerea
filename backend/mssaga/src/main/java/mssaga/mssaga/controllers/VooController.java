@@ -5,7 +5,6 @@ import mssaga.mssaga.DTO.VooDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.Map;
 import mssaga.mssaga.sagas.CadastroVooSaga;
 import mssaga.mssaga.sagas.CancelarVooSaga;
@@ -40,7 +39,7 @@ public class VooController {
             return ResponseEntity.status(500).body(Map.of("erro", "Erro ao processar cadastro de voo"));
         }
     }
-   
+
     @PostMapping("/{codigo}/cancelar")
     public ResponseEntity<Map<String, String>> cancelarVoo(@PathVariable String codigo) {
         try {

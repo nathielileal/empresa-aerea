@@ -20,7 +20,7 @@ public class CadastroVooSaga {
             String vooJson = objectMapper.writeValueAsString(vooDTO);
 
             String respostaJson = (String) rabbitTemplate.convertSendAndReceive(
-                    "criareserva",
+                    "cadastravoo",
                     "voo",
                     vooJson);
 
