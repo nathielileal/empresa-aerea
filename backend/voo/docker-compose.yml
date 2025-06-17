@@ -9,36 +9,26 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: '@123Mudar'
     ports:
-      - "5432:5432"
+      - "5436:5432"
     networks:
       - ms-network
     volumes:
       - msvoo-db-data:/var/lib/postgresql/data
 
-  rabbitmq:
-    image: rabbitmq:3-management
-    container_name: rabbitmq
-    ports:
-      - "5672:5672"
-      - "15672:15672"  
-    environment:
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_PASS: guest
-    networks:
-      - ms-network
-
   voo:
     build:
       context: .
-    container_name: voo
+    container_name: msvoo
     depends_on:
       - msvoo-db
-      - rabbitmq
     environment:
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
       SPRING_DATASOURCE_URL: jdbc:postgresql://msvoo-db:5432/msvoo
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: '@123Mudar'
-      SPRING_RABBITMQ_HOST: rabbitmq
     ports:
       - "9091:9091"
     networks:
@@ -46,7 +36,7 @@ services:
 
 networks:
   ms-network:
-    driver: bridge
+    external: true
 
 volumes:
   msvoo-db-data:
