@@ -19,7 +19,7 @@ public class RabbitMQConfig {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setReplyTimeout(60000);
         rabbitTemplate.setMessageConverter(
-            new RemoteInvocationAwareMessageConverterAdapter(new SimpleMessageConverter())
+                new RemoteInvocationAwareMessageConverterAdapter(new SimpleMessageConverter())
         );
         return rabbitTemplate;
     }
@@ -47,5 +47,10 @@ public class RabbitMQConfig {
     @Bean
     public DirectExchange sagaRealizarVoo() {
         return new DirectExchange("realizavoo");
+    }
+
+    @Bean
+    public DirectExchange sagaCadastroVoo() {
+        return new DirectExchange("cadastravoo");
     }
 }
