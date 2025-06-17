@@ -1,8 +1,7 @@
 package com.ms.voo.model;
 
 import jakarta.persistence.*;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Random;
 
 @Entity
@@ -12,21 +11,21 @@ public class Voo {
     @Id
     private String codigo;
 
-    private LocalDateTime dataHora;
+    private ZonedDateTime data;
 
     @ManyToOne
     @JoinColumn(name = "aeroporto_origem")
-    private Aeroporto aeroportoOrigem;
+    private Aeroporto aeroporto_origem;
 
     @ManyToOne
     @JoinColumn(name = "aeroporto_destino")
-    private Aeroporto aeroportoDestino;
+    private Aeroporto aeroporto_destino;
 
-    private BigDecimal valorPassagem;
+    private double valor_passagem;
 
-    private Integer quantidadePoltronas;
+    private int quantidade_poltronas;
 
-    private Integer quantidadeOcupadas;
+    private int quantidade_ocupadas;
 
     @ManyToOne
     @JoinColumn(name = "estado_id")
@@ -35,14 +34,14 @@ public class Voo {
     public Voo() {
     }
 
-    public Voo(LocalDateTime dataHora, Aeroporto origem, Aeroporto destino) {
-this.codigo = "TADS" + String.format("%04d", new Random().nextInt(10000));
-        this.dataHora = dataHora;
-        this.aeroportoOrigem = origem;
-        this.aeroportoDestino = destino;
-        this.quantidadePoltronas = 100;
-        this.quantidadeOcupadas = 0;
-        this.valorPassagem = new BigDecimal("0.00"); 
+    public Voo(ZonedDateTime data, Aeroporto origem, Aeroporto destino) {
+        this.codigo = "TADS" + String.format("%04d", new Random().nextInt(10000));
+        this.data = data;
+        this.aeroporto_origem = origem;
+        this.aeroporto_destino = destino;
+        this.quantidade_poltronas = 100;
+        this.quantidade_ocupadas = 0;
+        this.valor_passagem = 0.0;
     }
 
     public String getCodigo() {
@@ -53,52 +52,52 @@ this.codigo = "TADS" + String.format("%04d", new Random().nextInt(10000));
         this.codigo = codigo;
     }
 
-    public LocalDateTime getDataHora() {
-        return dataHora;
+    public ZonedDateTime getData() {
+        return data;
     }
 
-    public void setDataHora(LocalDateTime dataHora) {
-        this.dataHora = dataHora;
+    public void setData(ZonedDateTime data) {
+        this.data = data;
     }
 
     public Aeroporto getAeroportoOrigem() {
-        return aeroportoOrigem;
+        return aeroporto_origem;
     }
 
-    public void setAeroportoOrigem(Aeroporto aeroportoOrigem) {
-        this.aeroportoOrigem = aeroportoOrigem;
+    public void setAeroportoOrigem(Aeroporto aeroporto_origem) {
+        this.aeroporto_origem = aeroporto_origem;
     }
 
     public Aeroporto getAeroportoDestino() {
-        return aeroportoDestino;
+        return aeroporto_destino;
     }
 
-    public void setAeroportoDestino(Aeroporto aeroportoDestino) {
-        this.aeroportoDestino = aeroportoDestino;
+    public void setAeroportoDestino(Aeroporto aeroporto_destino) {
+        this.aeroporto_destino = aeroporto_destino;
     }
 
-    public BigDecimal getValorPassagem() {
-        return valorPassagem;
+    public double getValorPassagem() {
+        return valor_passagem;
     }
 
-    public void setValorPassagem(BigDecimal valorPassagem) {
-        this.valorPassagem = valorPassagem;
+    public void setValorPassagem(double valor_passagem) {
+        this.valor_passagem = valor_passagem;
     }
 
-    public Integer getQuantidadePoltronas() {
-        return quantidadePoltronas;
+    public int getQuantidadePoltronas() {
+        return quantidade_poltronas;
     }
 
-    public void setQuantidadePoltronas(Integer quantidadePoltronas) {
-        this.quantidadePoltronas = quantidadePoltronas;
+    public void setQuantidadePoltronas(int quantidade_poltronas) {
+        this.quantidade_poltronas = quantidade_poltronas;
     }
 
-    public Integer getQuantidadeOcupadas() {
-        return quantidadeOcupadas;
+    public int getQuantidadeOcupadas() {
+        return quantidade_ocupadas;
     }
 
-    public void setQuantidadeOcupadas(Integer quantidadeOcupadas) {
-        this.quantidadeOcupadas = quantidadeOcupadas;
+    public void setQuantidadeOcupadas(int quantidade_ocupadas) {
+        this.quantidade_ocupadas = quantidade_ocupadas;
     }
 
     public VooEstado getEstado() {

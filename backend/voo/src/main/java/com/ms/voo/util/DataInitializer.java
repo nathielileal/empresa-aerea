@@ -32,9 +32,9 @@ public class DataInitializer {
                 Optional<Aeroporto> gig = aeroportoRepository.findById("GIG");
 
                 if (poa.isPresent() && cwb.isPresent() && gig.isPresent()) {
-                    vooRepository.save(new Voo(OffsetDateTime.parse("2025-08-10T10:30:00-03:00").toLocalDateTime(), poa.get(), cwb.get()));
-                    vooRepository.save(new Voo(OffsetDateTime.parse("2025-09-11T09:30:00-03:00").toLocalDateTime(), cwb.get(), gig.get()));
-                    vooRepository.save(new Voo(OffsetDateTime.parse("2025-10-12T08:30:00-03:00").toLocalDateTime(), cwb.get(), poa.get()));
+                    vooRepository.save(new Voo(OffsetDateTime.parse("2025-08-10T10:30:00-03:00").toZonedDateTime(), poa.get(), cwb.get()));
+                    vooRepository.save(new Voo(OffsetDateTime.parse("2025-09-11T09:30:00-03:00").toZonedDateTime(), cwb.get(), gig.get()));
+                    vooRepository.save(new Voo(OffsetDateTime.parse("2025-10-12T08:30:00-03:00").toZonedDateTime(), cwb.get(), poa.get()));
 
                     System.out.println(">>> Voos cadastrados.");
                 } else {

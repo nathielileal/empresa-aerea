@@ -58,7 +58,7 @@ public class VooService {
         Voo voo = new Voo();
 
         voo.setCodigo(codigo);
-        voo.setDataHora(dto.getDataHora());
+        voo.setData(dto.getData());
         voo.setAeroportoOrigem(aeroportoRepository.findById(dto.getAeroportoOrigem())
                 .orElseThrow(() -> new RuntimeException("Aeroporto origem não encontrado")));
         voo.setAeroportoDestino(aeroportoRepository.findById(dto.getAeroportoDestino())
