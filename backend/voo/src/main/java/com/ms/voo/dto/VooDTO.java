@@ -11,7 +11,7 @@ public class VooDTO {
     private double valor_passagem;
     private int quantidade_poltronas;
     private int quantidade_ocupadas;
-    private String estado;
+    private VooEstadoDTO estado;
 
     public String getCodigo() {
         return codigo;
@@ -69,11 +69,11 @@ public class VooDTO {
         this.quantidade_ocupadas = quantidade_ocupadas;
     }
 
-    public String getEstado() {
+    public VooEstadoDTO getEstado() {
         return estado;
     }
 
-    public void setEstado(String estado) {
+    public void setEstado(VooEstadoDTO estado) {
         this.estado = estado;
     }
 }
