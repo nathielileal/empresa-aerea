@@ -1,5 +1,6 @@
 package mssaga.mssaga.controllers;
 
+import java.util.HashMap;
 import mssaga.mssaga.DTO.VooDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,19 +25,24 @@ public class VooController {
     private RealizarVooSaga realizarVooSaga;
 
     @PostMapping
-    public ResponseEntity<?> cadastrarVoo(@RequestBody VooDTO vooDTO) {
+    public ResponseEntity<Map<String, Object>> cadastrarVoo(@RequestBody VooDTO vooDTO) {
         try {
-            VooDTO criado = cadastroVooSaga.iniciarCadastroVoo(vooDTO);
-            return ResponseEntity.status(201).body(criado);
+            VooDTO vooCriado = cadastroVooSaga.iniciarCadastroVoo(vooDTO);
+            Map<String, Object> response = new HashMap<>();
+            response.put("codigo", vooCriado.getCodigo());
+            response.put("origem", vooCriado.getAeroporto_origem());
+            response.put("destino", vooCriado.getAeroporto_origem());
+            response.put("data", vooCriado.getData());
+            return ResponseEntity.status(201).body(response);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(409).body(Map.of("erro", e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(Map.of("erro", "Erro ao cadastrar voo via saga"));
+            return ResponseEntity.status(500).body(Map.of("erro", "Erro ao processar cadastro de voo"));
         }
     }
-
+   
     @PostMapping("/{codigo}/cancelar")
-    public ResponseEntity<?> cancelarVoo(@PathVariable String codigo) {
+    public ResponseEntity<Map<String, String>> cancelarVoo(@PathVariable String codigo) {
         try {
             cancelarVooSaga.cancelarVoo(codigo);
             return ResponseEntity.ok(Map.of("mensagem", "Solicitação de cancelamento enviada"));
@@ -46,7 +52,7 @@ public class VooController {
     }
 
     @PostMapping("/{codigo}/realizar")
-    public ResponseEntity<?> realizarVoo(@PathVariable String codigo) {
+    public ResponseEntity<Map<String, String>> realizarVoo(@PathVariable String codigo) {
         try {
             realizarVooSaga.realizarVoo(codigo);
             return ResponseEntity.ok(Map.of("mensagem", "Solicitação de realização enviada"));
