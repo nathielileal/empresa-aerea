@@ -56,6 +56,7 @@ public class ClienteListener {
     @RabbitListener(queues = "criareserva.saldo")
     public String consultaSaldo(String payload) {
         try {
+            System.out.println("Validação de saldo escutada");
             ReservaInputDTO dadosReserva = objectMapper.readValue(payload, ReservaInputDTO.class);
             ClienteDTO dadosCliente = clienteService.findById(dadosReserva.getCodigo_cliente());
 

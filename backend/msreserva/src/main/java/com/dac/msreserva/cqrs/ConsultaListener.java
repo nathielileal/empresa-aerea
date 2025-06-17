@@ -25,15 +25,23 @@ public class ConsultaListener {
 
     @RabbitListener(queues = "cqrs.gravacao")
     public void gravarReserva(String payload) {
-        Type listType = new TypeToken<List<ReservaConsultaDTO>>() {
-        }.getType();
-        List<ReservaConsultaDTO> reservas = mapper.map(payload, listType);
-        service.gravarReserva(reservas);
+        try {
+            System.out.println("CQRS escutado");
+            Type listType = new TypeToken<List<ReservaConsultaDTO>>() {
+            }.getType();
+            List<ReservaConsultaDTO> reservas = mapper.map(payload, listType);
+            service.gravarReserva(reservas);
+
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+
     }
 
     // @RabbitListener(queues = "cqrs.edicao")
     // public void editaReserva(String payload) {
-    //     ReservaUpdateEstadoDTO reservas = gson.fromJson(payload, ReservaUpdateEstadoDTO.class);
-    //     service.editarReserva(reservas);
+    // ReservaUpdateEstadoDTO reservas = gson.fromJson(payload,
+    // ReservaUpdateEstadoDTO.class);
+    // service.editarReserva(reservas);
     // }
 }

@@ -6,6 +6,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.amqp.AmqpException;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,11 +14,9 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 // import com.dac.msreserva.DTO.AlternaEstadoDTO;
-import com.dac.msreserva.DTO.EstadoReservaDTO;
 import com.dac.msreserva.DTO.ReservaCreationResponseDTO;
 import com.dac.msreserva.DTO.ReservaDTO;
 import com.dac.msreserva.DTO.ReservaTransactionDTO;
-import com.dac.msreserva.DTO.VooDTO;
 import com.dac.msreserva.model.EstadoReserva;
 import com.dac.msreserva.model.EstadoReservaEnum;
 import com.dac.msreserva.model.HistoricoReserva;
@@ -27,6 +26,8 @@ import com.dac.msreserva.repository.ConsultaRepository;
 import com.dac.msreserva.repository.EstadoReservaRepository;
 import com.dac.msreserva.repository.HistoricoRepository;
 import com.dac.msreserva.repository.TransactionRepository;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class ReservaService {
@@ -40,6 +41,8 @@ public class ReservaService {
 
     @Autowired
     private ModelMapper mapper;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     public ReservaService(
             RabbitTemplate template,
@@ -74,7 +77,7 @@ public class ReservaService {
         return mapper.map(reserva, ReservaDTO.class);
     }
 
-    public ReservaCreationResponseDTO efetuarReserva(ReservaTransactionDTO reserva) {
+    public ReservaCreationResponseDTO efetuarReserva(ReservaTransactionDTO reserva) throws JsonProcessingException, AmqpException {
         // Geração de código aleatório no formato ABC123
         long proximoNumero = repository.count() + 1;
         String codigo = "RES" + String.format("%04d", proximoNumero);
@@ -96,7 +99,7 @@ public class ReservaService {
         historicoRepository.save(new HistoricoReserva(0L, data, input, null, estadoReserva));
 
         // Envia para sistema de consulta (CQRS)
-        template.convertAndSend(exchange.getName(), "gravacao", mapper.map(reserva, ReservaDTO.class));
+        template.convertAndSend(exchange.getName(), "gravacao", objectMapper.writeValueAsString(reserva));
 
         return new ReservaCreationResponseDTO(
                 data,

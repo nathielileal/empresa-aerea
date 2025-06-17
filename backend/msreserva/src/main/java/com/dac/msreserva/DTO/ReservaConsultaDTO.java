@@ -22,6 +22,19 @@ public class ReservaConsultaDTO {
         return codigo_voo;
     }
 
+    public ReservaConsultaDTO(String codigo, Long codigo_cliente, Long codigo_voo, String estado, ZonedDateTime data,
+            Double quantidade_milhas) {
+        this.codigo = codigo;
+        this.codigo_cliente = codigo_cliente;
+        this.codigo_voo = codigo_voo;
+        this.estado = estado;
+        this.data = data;
+        this.quantidade_milhas = quantidade_milhas;
+    }
+
+    public ReservaConsultaDTO() {
+    }
+
     public void setCodigo_voo(Long codigo_voo) {
         this.codigo_voo = codigo_voo;
     }
