@@ -96,7 +96,7 @@ public class ReservaService {
         historicoRepository.save(new HistoricoReserva(0L, data, input, null, estadoReserva));
 
         // Envia para sistema de consulta (CQRS)
-        // template.convertAndSend(exchange.getName(), "gravacao", mapper.map(reserva, ReservaDTO.class));
+        template.convertAndSend(exchange.getName(), "gravacao", mapper.map(reserva, ReservaDTO.class));
 
         return new ReservaCreationResponseDTO(
                 data,

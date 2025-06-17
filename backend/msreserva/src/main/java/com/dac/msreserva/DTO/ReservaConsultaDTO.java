@@ -4,11 +4,10 @@ import jakarta.persistence.*;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import com.dac.msreserva.model.ReservaConsulta;
 
 public class ReservaConsultaDTO {
 
-    private ReservaConsulta codigo;
+    private String codigo;
     private Long codigo_cliente;
     private Long codigo_voo;
     private String estado;
@@ -18,14 +17,6 @@ public class ReservaConsultaDTO {
     private Double quantidade_milhas;
 
 
-
-    public ReservaConsulta getCodigo() {
-        return codigo;
-    }
-
-    public void setCodigo(ReservaConsulta codigo) {
-        this.codigo = codigo;
-    }
 
     public Long getCodigo_voo() {
         return codigo_voo;
@@ -66,6 +57,16 @@ public class ReservaConsultaDTO {
     public void setQuantidade_milhas(Double quantidade_milhas) {
         this.quantidade_milhas = quantidade_milhas;
     }
+
+    public String getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(String codigo) {
+        this.codigo = codigo;
+    }
+
+
 
     // Getters and Setters
 }

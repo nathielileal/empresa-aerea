@@ -59,7 +59,6 @@ public interface ConsultaRepository extends JpaRepository<ReservaConsulta, Reser
                 r.codigo_cliente,
                 r.estado,
                 r.data,
-                ARRAY_AGG(r.poltrona) AS poltronas,
                 r.quantidade_milhas
             FROM reserva_access.reserva r
             WHERE r.codigo = :codigo
@@ -84,10 +83,9 @@ public interface ConsultaRepository extends JpaRepository<ReservaConsulta, Reser
     void save(
         @Param("codigo") String codigo,
         @Param("codigo_cliente") Long codigo_cliente,
-        @Param("codigo_voo") String codigo_voo,
+        @Param("codigo_voo") Long codigo_voo,
         @Param("estado") String estado,
         @Param("data") ZonedDateTime data,
-        @Param("poltrona") Integer poltrona,
         @Param("quantidade_milhas") Double quantidade_milhas
     );
 

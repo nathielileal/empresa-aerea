@@ -1,33 +1,39 @@
-// package br.ufpr.dac.reserva_service.resource.cqrs
+package com.dac.msreserva.cqrs;
 
-// import br.ufpr.dac.reserva_service.resource.dto.ReservaConsultaInputDTO
-// import com.google.gson.Gson
-// import com.google.gson.GsonBuilder
-// import com.google.gson.reflect.TypeToken
-// import org.springframework.amqp.rabbit.annotation.RabbitListener
-// import org.springframework.stereotype.Service
-// import utils.dto.ReservaUpdateEstadoDTO
-// import utils.gson.ZonedDateTimeAdapter
-// import java.time.ZonedDateTime
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeToken;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-// @Service
-// class ConsultaListener(private val service: AsyncReservaService) {
-//     private final val gson: Gson = GsonBuilder()
-//         .registerTypeAdapter(ZonedDateTime::class.java, ZonedDateTimeAdapter())
-//         .create()
+import com.dac.msreserva.DTO.ReservaConsultaDTO;
 
-//     @RabbitListener(queues = ["emiratads.cqrs.gravacao"])
-//     fun gravarReserva(payload: String) {
-//         val reservas: List<ReservaConsultaInputDTO> = gson.fromJson(
-//             payload,
-//             object : TypeToken<List<ReservaConsultaInputDTO>>() {}.type
-//         )
-//         service.gravarReserva(reservas)
-//     }
+import java.lang.reflect.Type;
+import java.util.List;
 
-//     @RabbitListener(queues = ["emiratads.cqrs.edicao"])
-//     fun editaReserva(payload: String) {
-//         val reservas = gson.fromJson(payload, ReservaUpdateEstadoDTO::class.java)
-//         service.editarReserva(reservas)
-//     }
-// }
+@Service
+public class ConsultaListener {
+
+    private final AsyncReservaService service;
+    @Autowired
+    private ModelMapper mapper;
+
+    public ConsultaListener(AsyncReservaService service) {
+        this.service = service;
+
+    }
+
+    @RabbitListener(queues = "cqrs.gravacao")
+    public void gravarReserva(String payload) {
+        Type listType = new TypeToken<List<ReservaConsultaDTO>>() {
+        }.getType();
+        List<ReservaConsultaDTO> reservas = mapper.map(payload, listType);
+        service.gravarReserva(reservas);
+    }
+
+    // @RabbitListener(queues = "cqrs.edicao")
+    // public void editaReserva(String payload) {
+    //     ReservaUpdateEstadoDTO reservas = gson.fromJson(payload, ReservaUpdateEstadoDTO.class);
+    //     service.editarReserva(reservas);
+    // }
+}
