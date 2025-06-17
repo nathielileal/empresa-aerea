@@ -64,7 +64,7 @@ public class VooService {
         voo.setAeroportoDestino(aeroportoRepository.findById(dto.getAeroportoDestino())
                 .orElseThrow(() -> new RuntimeException("Aeroporto destino não encontrado")));
         voo.setValorPassagem(dto.getValorPassagem());
-        voo.setQuantidadeOcupadas(0);
+        voo.setQuantidadeOcupadas(dto.getQuantidadeOcupadas());
 
         VooEstado estadoConfirmado = vooEstadoRepository.findBySigla("CONFIRMADO")
                 .orElseThrow(() -> new RuntimeException("Estado CONFIRMADO não encontrado"));

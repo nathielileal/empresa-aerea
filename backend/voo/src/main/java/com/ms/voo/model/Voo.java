@@ -14,11 +14,11 @@ public class Voo {
     private ZonedDateTime data;
 
     @ManyToOne
-    @JoinColumn(name = "aeroporto_origem")
+    @JoinColumn(name = "aeroporto_origem", referencedColumnName = "codigo")
     private Aeroporto aeroporto_origem;
 
     @ManyToOne
-    @JoinColumn(name = "aeroporto_destino")
+    @JoinColumn(name = "aeroporto_destino", referencedColumnName = "codigo")
     private Aeroporto aeroporto_destino;
 
     private double valor_passagem;
@@ -28,7 +28,7 @@ public class Voo {
     private int quantidade_ocupadas;
 
     @ManyToOne
-    @JoinColumn(name = "estado_id")
+    @JoinColumn(name = "estado_codigo", referencedColumnName = "codigo")
     private VooEstado estado;
 
     public Voo() {
