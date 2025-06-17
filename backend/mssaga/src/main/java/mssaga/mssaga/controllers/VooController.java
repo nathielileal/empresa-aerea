@@ -27,11 +27,15 @@ public class VooController {
     public ResponseEntity<Map<String, Object>> cadastrarVoo(@RequestBody VooDTO vooDTO) {
         try {
             VooDTO vooCriado = cadastroVooSaga.iniciarCadastroVoo(vooDTO);
+
             Map<String, Object> response = new HashMap<>();
+
             response.put("codigo", vooCriado.getCodigo());
-            response.put("origem", vooCriado.getAeroporto_origem());
-            response.put("destino", vooCriado.getAeroporto_origem());
+            response.put("aeroporto_origem", vooCriado.getAeroportoOrigem());
+            response.put("aeroporto_destino", vooCriado.getAeroportoDestino());
             response.put("data", vooCriado.getData());
+            response.put("estado", vooCriado.getEstado());
+
             return ResponseEntity.status(201).body(response);
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(409).body(Map.of("erro", e.getMessage()));
@@ -44,6 +48,7 @@ public class VooController {
     public ResponseEntity<Map<String, String>> cancelarVoo(@PathVariable String codigo) {
         try {
             cancelarVooSaga.cancelarVoo(codigo);
+
             return ResponseEntity.ok(Map.of("mensagem", "Solicitação de cancelamento enviada"));
         } catch (Exception e) {
             return ResponseEntity.status(500).body(Map.of("erro", "Erro ao cancelar voo via saga"));
@@ -54,6 +59,7 @@ public class VooController {
     public ResponseEntity<Map<String, String>> realizarVoo(@PathVariable String codigo) {
         try {
             realizarVooSaga.realizarVoo(codigo);
+
             return ResponseEntity.ok(Map.of("mensagem", "Solicitação de realização enviada"));
         } catch (Exception e) {
             return ResponseEntity.status(500).body(Map.of("erro", "Erro ao realizar voo via saga"));

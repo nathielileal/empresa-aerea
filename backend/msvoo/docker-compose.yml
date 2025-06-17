@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  msvoo-db:
+    image: postgres:15
+    container_name: msvoo-db
+    environment:
+      POSTGRES_DB: voo-db
+      POSTGRES_USER: voo_user
+      POSTGRES_PASSWORD: voo_pass
+    ports:
+      - "5436:5432"
+    volumes:
+      - voo-db-data:/var/lib/postgresql/data
+    networks:
+      - ms-network
+
+  voo:
+    build:
+      context: .
+    container_name: msvoo
+    ports:
+      - "9091:9091"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://msvoo-db:5432/voo-db
+      SPRING_DATASOURCE_USERNAME: voo_user
+      SPRING_DATASOURCE_PASSWORD: voo_pass
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
+    depends_on:
+      - msvoo-db
+    networks:
+      - ms-network
+
+volumes:
+  voo-db-data:
+
+networks:
+  ms-network:
+    external: true
