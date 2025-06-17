@@ -32,7 +32,6 @@ public class ReservaOutputDTO {
     }
 
 
-
     public ReservaOutputDTO(String codigo, ZonedDateTime data, String estado, Double quantidade_milhas,
             long codigo_cliente, Double saldo_cliente) {
         this.codigo = codigo;
