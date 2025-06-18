@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dac.msreserva.DTO.ReservaConsultaDTO;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.lang.reflect.Type;
 import java.util.List;
@@ -27,15 +29,18 @@ public class ConsultaListener {
     public void gravarReserva(String payload) {
         try {
             System.out.println("CQRS escutado");
-            Type listType = new TypeToken<List<ReservaConsultaDTO>>() {
-            }.getType();
-            List<ReservaConsultaDTO> reservas = mapper.map(payload, listType);
+
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<ReservaConsultaDTO> reservas = objectMapper.readValue(payload,
+                    new TypeReference<List<ReservaConsultaDTO>>() {
+                    });
+
             service.gravarReserva(reservas);
 
         } catch (Exception e) {
-            System.out.println(e);
+            System.out.println("Erro ao processar mensagem CQRS: " + e.getMessage());
+            e.printStackTrace();
         }
-
     }
 
     // @RabbitListener(queues = "cqrs.edicao")

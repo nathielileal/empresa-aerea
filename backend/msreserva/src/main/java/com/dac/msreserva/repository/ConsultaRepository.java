@@ -26,7 +26,7 @@ public interface ConsultaRepository extends JpaRepository<ReservaConsulta, Reser
                 r.data,
                 ARRAY_AGG(r.poltrona) AS poltronas,
                 r.quantidade_milhas
-            FROM reserva_access.reserva r
+            FROM reserva r
             GROUP BY r.codigo, r.codigo_voo, r.codigo_cliente, r.estado, r.data, r.quantidade_milhas
         """,
         nativeQuery = true
@@ -43,7 +43,7 @@ public interface ConsultaRepository extends JpaRepository<ReservaConsulta, Reser
                 r.data,
                 ARRAY_AGG(r.poltrona) AS poltronas,
                 r.quantidade_milhas
-            FROM reserva_access.reserva r
+            FROM reserva r
             WHERE r.codigo_cliente = :codigo_cliente
             GROUP BY r.codigo, r.codigo_voo, r.codigo_cliente, r.estado, r.data, r.quantidade_milhas
         """,
@@ -60,7 +60,7 @@ public interface ConsultaRepository extends JpaRepository<ReservaConsulta, Reser
                 r.estado,
                 r.data,
                 r.quantidade_milhas
-            FROM reserva_access.reserva r
+            FROM reserva r
             WHERE r.codigo = :codigo
             GROUP BY r.codigo, r.codigo_cliente, r.codigo_voo, r.estado, r.data, r.quantidade_milhas
         """,
@@ -73,7 +73,7 @@ public interface ConsultaRepository extends JpaRepository<ReservaConsulta, Reser
     @Query(
         value = """
             INSERT INTO 
-                reserva_access.reserva 
+                reserva 
                 (codigo, codigo_cliente, codigo_voo, estado, data, poltrona, quantidade_milhas) 
             VALUES
                 (:codigo, :codigo_cliente, :codigo_voo, :estado, :data, :poltrona, :quantidade_milhas);
@@ -93,7 +93,7 @@ public interface ConsultaRepository extends JpaRepository<ReservaConsulta, Reser
     @Modifying
     @Query(
         value = """
-            UPDATE reserva_access.reserva
+            UPDATE reserva
             SET estado = :estado, data = :data
             WHERE codigo = :codigo
         """,
