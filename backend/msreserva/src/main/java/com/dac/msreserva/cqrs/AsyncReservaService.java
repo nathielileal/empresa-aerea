@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.dac.msreserva.DTO.ReservaConsultaDTO;
+import com.dac.msreserva.model.ReservaConsulta;
 import com.dac.msreserva.repository.ConsultaRepository;
 
 @Service
@@ -16,16 +17,8 @@ public class AsyncReservaService {
         this.repository = repository;
     }
 
-    public void gravarReserva(List<ReservaConsultaDTO> reserva) {
-        for (ReservaConsultaDTO it : reserva) {
-            repository.save(
-                    it.getCodigo(),
-                    it.getCodigo_cliente(),
-                    it.getCodigo_voo(),
-                    it.getEstado(),
-                    it.getData(),
-                    it.getQuantidade_milhas());
-        }
+    public void gravarReserva(ReservaConsulta reserva) {
+            repository.save(reserva);
     }
 
     // public void editarReserva(ReservaUpdateEstadoDTO reserva) {

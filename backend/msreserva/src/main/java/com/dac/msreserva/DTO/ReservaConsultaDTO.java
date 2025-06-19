@@ -1,42 +1,41 @@
 package com.dac.msreserva.DTO;
 
-import jakarta.persistence.*;
 import java.time.ZonedDateTime;
-import java.util.List;
 
+import com.dac.msreserva.model.ReservaConsulta;
 
 public class ReservaConsultaDTO {
 
     private String codigo;
     private Long codigo_cliente;
-    private Long codigo_voo;
+    private VooDTO voo;
     private String estado;
-
+    private Double quantidade_milhas;
     private ZonedDateTime data;
 
-    private Double quantidade_milhas;
+    public ReservaConsultaDTO(ReservaConsulta reserva) {
+        this.codigo = reserva.getCodigo();
+        this.codigo_cliente = reserva.getCodigo_cliente();
+        this.estado = reserva.getEstado();
+        this.data = reserva.getData();
+        this.quantidade_milhas = reserva.getQuantidade_milhas();
 
-
-
-    public Long getCodigo_voo() {
-        return codigo_voo;
+        this.voo = new VooDTO(
+                reserva.getCodigo_voo(),
+                new AeroportoDTO(reserva.getAeroporto_origem()),
+                new AeroportoDTO(reserva.getAeroporto_destino()));
     }
 
-    public ReservaConsultaDTO(String codigo, Long codigo_cliente, Long codigo_voo, String estado, ZonedDateTime data,
+    public ReservaConsultaDTO(String codigo, Long codigo_cliente, VooDTO voo, String estado, ZonedDateTime data,
             Double quantidade_milhas) {
         this.codigo = codigo;
         this.codigo_cliente = codigo_cliente;
-        this.codigo_voo = codigo_voo;
+        this.voo = voo;
         this.estado = estado;
         this.data = data;
-        this.quantidade_milhas = quantidade_milhas;
     }
 
     public ReservaConsultaDTO() {
-    }
-
-    public void setCodigo_voo(Long codigo_voo) {
-        this.codigo_voo = codigo_voo;
     }
 
     public Long getCodigo_cliente() {
@@ -63,14 +62,6 @@ public class ReservaConsultaDTO {
         this.data = data;
     }
 
-    public Double getQuantidade_milhas() {
-        return quantidade_milhas;
-    }
-
-    public void setQuantidade_milhas(Double quantidade_milhas) {
-        this.quantidade_milhas = quantidade_milhas;
-    }
-
     public String getCodigo() {
         return codigo;
     }
@@ -79,7 +70,13 @@ public class ReservaConsultaDTO {
         this.codigo = codigo;
     }
 
+    public VooDTO getVoo() {
+        return voo;
+    }
 
+    public void setVoo(VooDTO voo) {
+        this.voo = voo;
+    }
 
     // Getters and Setters
 }

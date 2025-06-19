@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.dac.msreserva.DTO.ReservaConsultaDTO;
 // import com.dac.msreserva.DTO.AlternaEstadoDTO;
 import com.dac.msreserva.DTO.ReservaDTO;
 import com.dac.msreserva.services.ReservaService;
@@ -22,32 +23,30 @@ public class ReservaController {
     }
 
     @GetMapping("/clientes/{codigo_cliente}/reservas")
-    public ResponseEntity<List<ReservaDTO>> getReservasByCliente(@PathVariable Long codigo_cliente) {
+    public ResponseEntity<List<ReservaConsultaDTO>> getReservasByCliente(@PathVariable Long codigo_cliente) {
         try {
-            List<ReservaDTO> reservas = service.listReservasByCliente(codigo_cliente);
+            List<ReservaConsultaDTO> reservas = service.listReservasByCliente(codigo_cliente);
             return ResponseEntity.ok(reservas);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
-
     }
 
-    @GetMapping("/{codigo}")
-    public ResponseEntity<ReservaDTO> detailReserva(@PathVariable String codigo) {
+    @GetMapping("/reservas/{codigo}")
+    public ResponseEntity<ReservaConsultaDTO> buscaReserva(@PathVariable String codigo) {
         try {
-            ReservaDTO reserva = service.detailReserva(codigo);
+            ReservaConsultaDTO reserva = service.buscaReserva(codigo);
             return ResponseEntity.ok(reserva);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
-
     }
 
     // @PatchMapping("/{codigo}/estado")
     // public ResponseEntity<ReservaDTO> alterarEstado(
-    //         @PathVariable String codigo,
-    //         @RequestBody AlternaEstadoDTO payload) {
-    //     ReservaDTO reserva = service.alterarEstado(codigo, payload);
-    //     return ResponseEntity.ok(reserva);
+    // @PathVariable String codigo,
+    // @RequestBody AlternaEstadoDTO payload) {
+    // ReservaDTO reserva = service.alterarEstado(codigo, payload);
+    // return ResponseEntity.ok(reserva);
     // }
 }

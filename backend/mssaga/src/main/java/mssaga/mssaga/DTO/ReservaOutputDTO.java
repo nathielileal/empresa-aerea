@@ -12,7 +12,6 @@ public class ReservaOutputDTO {
     private Double quantidade_milhas;
     private long codigo_cliente;
     private Double saldo_cliente;
-    // private List<Integer> poltronasReservadas;
     private VooDTO voo;
     private String voo_codigo;
 

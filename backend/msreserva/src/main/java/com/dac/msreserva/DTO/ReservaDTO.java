@@ -11,7 +11,6 @@ public class ReservaDTO {
     private Double quantidade_milhas;
     private Long codigo_cliente;
     private Double saldo_cliente;
-    private List<Integer> poltronas_reservadas;
     private VooDTO voo;
     private String voo_codigo;
 
@@ -27,7 +26,6 @@ public class ReservaDTO {
         this.quantidade_milhas = quantidade_milhas;
         this.codigo_cliente = codigo_cliente;
         this.saldo_cliente = saldo_cliente;
-        this.poltronas_reservadas = poltronas_reservadas;
         this.voo = voo;
         this.voo_codigo = voo_codigo;
     }
@@ -77,14 +75,6 @@ public class ReservaDTO {
 
     public void setSaldo_cliente(Double saldo_cliente) {
         this.saldo_cliente = saldo_cliente;
-    }
-
-    public List<Integer> getPoltronas_reservadas() {
-        return poltronas_reservadas;
-    }
-
-    public void setPoltronas_reservadas(List<Integer> poltronas_reservadas) {
-        this.poltronas_reservadas = poltronas_reservadas;
     }
 
     public VooDTO getVoo() {

@@ -7,6 +7,10 @@ public class AeroportoDTO {
     private String cidade;
     private String uf;
 
+    public AeroportoDTO(String codigo) {
+        this.codigo = codigo;
+    }
+
     public String getCodigo() {
         return codigo;
     }

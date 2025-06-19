@@ -15,6 +15,7 @@ public class Reserva {
     @OneToOne
     @JoinColumn(name = "estado_codigo")
     private EstadoReserva estado;
+    private Integer quantidade_poltronas;
 
     public Reserva() {
     }
@@ -22,7 +23,17 @@ public class Reserva {
     private Double quantidade_milhas;
 
     public Reserva(String codigo, Long codigo_cliente, String codigo_voo, EstadoReserva estado,
-            Double quantidade_milhas) {
+            Double quantidade_milhas, Integer quantidade_poltronas) {
+        this.codigo = codigo;
+        this.codigo_cliente = codigo_cliente;
+        this.codigo_voo = codigo_voo;
+        this.estado = estado;
+        this.quantidade_milhas = quantidade_milhas;
+        this.quantidade_poltronas = quantidade_poltronas;
+    }
+
+    public Reserva(String codigo, Long codigo_cliente, String codigo_voo, EstadoReserva estado,
+            Integer quantidade_poltronas, Double quantidade_milhas) {
         this.codigo = codigo;
         this.codigo_cliente = codigo_cliente;
         this.codigo_voo = codigo_voo;
@@ -68,6 +79,14 @@ public class Reserva {
 
     public void setQuantidade_milhas(Double quantidade_milhas) {
         this.quantidade_milhas = quantidade_milhas;
+    }
+
+    public Integer getQuantidade_poltronas() {
+        return quantidade_poltronas;
+    }
+
+    public void setQuantidade_poltronas(Integer quantidade_poltronas) {
+        this.quantidade_poltronas = quantidade_poltronas;
     }
 
 }

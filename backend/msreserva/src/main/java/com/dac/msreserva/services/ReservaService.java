@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import com.dac.msreserva.DTO.ReservaConsultaDTO;
 // import com.dac.msreserva.DTO.AlternaEstadoDTO;
 import com.dac.msreserva.DTO.ReservaCreationResponseDTO;
 import com.dac.msreserva.DTO.ReservaDTO;
@@ -59,25 +60,28 @@ public class ReservaService {
         this.exchange = exchange;
     }
 
-    public List<ReservaDTO> listReservasByCliente(Long codigo) {
-        List<ReservaConsulta> reservas = consultaReposity.findReservasByCodigoCliente(codigo);
+    // public List<ReservaDTO> listReservasByCliente(Long codigo) {
+    // List<ReservaConsulta> reservas =
+    // consultaReposity.findReservasByCodigoCliente(codigo);
 
-        return reservas.stream()
-                .map(reserva -> mapper.map(reserva, ReservaDTO.class))
-                .collect(Collectors.toList());
-    }
+    // return reservas.stream()
+    // .map(reserva -> mapper.map(reserva, ReservaDTO.class))
+    // .collect(Collectors.toList());
+    // }
 
-    public ReservaDTO detailReserva(String codigo) {
-        ReservaConsulta reserva = consultaReposity.findReservaByCodigo(codigo);
+    // public ReservaDTO detailReserva(String codigo) {
+    // ReservaConsulta reserva = consultaReposity.findReservaByCodigo(codigo);
 
-        if (reserva == null) {
-            throw new RuntimeException("Reserva com código " + codigo + " não encontrada.");
-        }
+    // if (reserva == null) {
+    // throw new RuntimeException("Reserva com código " + codigo + " não
+    // encontrada.");
+    // }
 
-        return mapper.map(reserva, ReservaDTO.class);
-    }
+    // return mapper.map(reserva, ReservaDTO.class);
+    // }
 
-    public ReservaCreationResponseDTO efetuarReserva(ReservaTransactionDTO reserva) throws JsonProcessingException, AmqpException {
+    public ReservaCreationResponseDTO efetuarReserva(ReservaTransactionDTO reserva)
+            throws JsonProcessingException, AmqpException {
         // Geração de código aleatório no formato ABC123
         long proximoNumero = repository.count() + 1;
         String codigo = "RES" + String.format("%04d", proximoNumero);
@@ -92,14 +96,18 @@ public class ReservaService {
         ZonedDateTime data = ZonedDateTime.now(ZoneOffset.of("-03:00"));
 
         Reserva input = new Reserva(codigo, reserva.getCodigo_cliente(), reserva.getVoo().getCodigo(), estadoReserva,
-                milhas_utilizadas);
+                milhas_utilizadas, reserva.getQuantidade_poltronas());
         System.out.println("Input");
         System.out.println(input);
         repository.save(input);
         historicoRepository.save(new HistoricoReserva(0L, data, input, null, estadoReserva));
 
+        ReservaConsulta consulta = new ReservaConsulta(codigo, reserva.getCodigo_cliente(),
+                estadoReserva.getDescricao(), data, reserva.getMilhas_utilizadas(), reserva.getVoo().getCodigo(),
+                reserva.getVoo().getAeroporto_origem().getCodigo(),
+                reserva.getVoo().getAeroporto_destino().getCodigo());
         // Envia para sistema de consulta (CQRS)
-        template.convertAndSend(exchange.getName(), "gravacao", objectMapper.writeValueAsString(reserva));
+        template.convertAndSend(exchange.getName(), "gravacao", objectMapper.writeValueAsString(consulta));
 
         return new ReservaCreationResponseDTO(
                 data,
@@ -109,6 +117,21 @@ public class ReservaService {
                 milhas_utilizadas,
                 reserva.getVoo().getCodigo(),
                 milhas_utilizadas);
+    }
+
+    public ReservaConsultaDTO buscaReserva(String codigo) {
+        ReservaConsulta reserva = consultaReposity.findById(codigo)
+                .orElseThrow(() -> new RuntimeException("Reserva não encontrada"));
+
+        return new ReservaConsultaDTO(reserva);
+    }
+
+    public List<ReservaConsultaDTO> listReservasByCliente(Long codigo_cliente) {
+        List<ReservaConsulta> reservas = consultaReposity.buscarPorCodigoCliente(codigo_cliente);
+        if (reservas.isEmpty()) {
+            throw new RuntimeException("Nenhuma reserva encontrada para o cliente " + codigo_cliente);
+        }
+        return reservas.stream().map(ReservaConsultaDTO::new).toList();
     }
 
     // public ReservaDTO cancelarReserva(String codigo) {

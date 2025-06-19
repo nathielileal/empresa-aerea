@@ -6,19 +6,16 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.dac.msreserva.DTO.ReservaConsultaDTO;
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.dac.msreserva.model.ReservaConsulta;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.lang.reflect.Type;
-import java.util.List;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @Service
 public class ConsultaListener {
 
     private final AsyncReservaService service;
     @Autowired
-    private ModelMapper mapper;
+    private ObjectMapper objectMapper;
 
     public ConsultaListener(AsyncReservaService service) {
         this.service = service;
@@ -30,12 +27,8 @@ public class ConsultaListener {
         try {
             System.out.println("CQRS escutado");
 
-            ObjectMapper objectMapper = new ObjectMapper();
-            List<ReservaConsultaDTO> reservas = objectMapper.readValue(payload,
-                    new TypeReference<List<ReservaConsultaDTO>>() {
-                    });
-
-            service.gravarReserva(reservas);
+            ReservaConsulta reserva = objectMapper.readValue(payload, ReservaConsulta.class);
+            service.gravarReserva(reserva);
 
         } catch (Exception e) {
             System.out.println("Erro ao processar mensagem CQRS: " + e.getMessage());

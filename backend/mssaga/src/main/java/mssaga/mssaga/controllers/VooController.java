@@ -31,8 +31,8 @@ public class VooController {
             Map<String, Object> response = new HashMap<>();
 
             response.put("codigo", vooCriado.getCodigo());
-            response.put("aeroporto_origem", vooCriado.getAeroportoOrigem());
-            response.put("aeroporto_destino", vooCriado.getAeroportoDestino());
+            response.put("aeroporto_origem", vooCriado.getAeroporto_origem());
+            response.put("aeroporto_destino", vooCriado.getAeroporto_destino());
             response.put("data", vooCriado.getData());
             response.put("estado", vooCriado.getEstado());
 

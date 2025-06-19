@@ -2,18 +2,30 @@ package com.dac.msreserva.DTO;
 
 import java.time.ZonedDateTime;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class VooDTO {
 
     private String codigo;
     private ZonedDateTime data;
     private Double valor_passagem;
-    private Integer quantidade_poltronas_total;
-    private Integer quantidade_poltronas_ocupadas;
     private String estado;
+    @JsonProperty("aeroporto_origem")
     private AeroportoDTO aeroporto_origem;
+    @JsonProperty("aeroporto_destino")
     private AeroportoDTO aeroporto_destino;
     public String getCodigo() {
         return codigo;
+    }
+    public VooDTO(String codigo, AeroportoDTO aeroporto_origem, AeroportoDTO aeroporto_destino) {
+        this.codigo = codigo;
+        this.aeroporto_origem = aeroporto_origem;
+        this.aeroporto_destino = aeroporto_destino;
+    }
+    public VooDTO(String codigo) {
+        this.codigo = codigo;
+    }
+    public VooDTO() {
     }
     public void setCodigo(String codigo) {
         this.codigo = codigo;
@@ -29,18 +41,6 @@ public class VooDTO {
     }
     public void setValor_passagem(Double valor_passagem) {
         this.valor_passagem = valor_passagem;
-    }
-    public Integer getQuantidade_poltronas_total() {
-        return quantidade_poltronas_total;
-    }
-    public void setQuantidade_poltronas_total(Integer quantidade_poltronas_total) {
-        this.quantidade_poltronas_total = quantidade_poltronas_total;
-    }
-    public Integer getQuantidade_poltronas_ocupadas() {
-        return quantidade_poltronas_ocupadas;
-    }
-    public void setQuantidade_poltronas_ocupadas(Integer quantidade_poltronas_ocupadas) {
-        this.quantidade_poltronas_ocupadas = quantidade_poltronas_ocupadas;
     }
     public String getEstado() {
         return estado;
