@@ -19,11 +19,11 @@ public class HistoricoReserva {
     @JoinColumn(name = "reserva_codigo")
     private Reserva reserva;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "estado_old")
     private EstadoReserva estadoAntigo;
-
-    @OneToOne
+    
+    @ManyToOne
     @JoinColumn(name = "estado_new")
     private EstadoReserva estadoNovo;
 

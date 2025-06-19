@@ -8,14 +8,32 @@ public class VooDTO {
     private String codigo;
     private ZonedDateTime data;
 
-    @JsonProperty("codigo_aeroporto_origem")
-    private String codigo_aeroporto_origem;
-
-    @JsonProperty("codigo_aeroporto_destino")
-    private String codigo_aeroporto_destino;
+    @JsonProperty("aeroporto_origem")
+    private AeroportoDTO aeroporto_origem;
+    @JsonProperty("aeroporto_destino")
+    private AeroportoDTO aeroporto_destino;
 
     @JsonProperty("valor_passagem")
     private double valor_passagem;
+
+    public AeroportoDTO getAeroporto_origem() {
+        return aeroporto_origem;
+    }
+
+    public void setAeroporto_origem(AeroportoDTO aeroporto_origem) {
+        this.aeroporto_origem = aeroporto_origem;
+    }
+
+    public AeroportoDTO getAeroporto_destino() {
+        return aeroporto_destino;
+    }
+
+    public void setAeroporto_destino(AeroportoDTO aeroporto_destino) {
+        this.aeroporto_destino = aeroporto_destino;
+    }
+
+    public VooDTO() {
+    }
 
     @JsonProperty("quantidade_poltronas_total")
     private int quantidade_poltronas_total;
@@ -24,6 +42,32 @@ public class VooDTO {
     private int quantidade_poltronas_ocupadas;
 
     private String estado;
+
+
+
+    public double getValor_passagem() {
+        return valor_passagem;
+    }
+
+    public void setValor_passagem(double valor_passagem) {
+        this.valor_passagem = valor_passagem;
+    }
+
+    public int getQuantidade_poltronas_total() {
+        return quantidade_poltronas_total;
+    }
+
+    public void setQuantidade_poltronas_total(int quantidade_poltronas_total) {
+        this.quantidade_poltronas_total = quantidade_poltronas_total;
+    }
+
+    public int getQuantidade_poltronas_ocupadas() {
+        return quantidade_poltronas_ocupadas;
+    }
+
+    public void setQuantidade_poltronas_ocupadas(int quantidade_poltronas_ocupadas) {
+        this.quantidade_poltronas_ocupadas = quantidade_poltronas_ocupadas;
+    }
 
     public String getCodigo() {
         return codigo;
@@ -39,22 +83,6 @@ public class VooDTO {
 
     public void setData(ZonedDateTime data) {
         this.data = data;
-    }
-
-    public String getAeroportoOrigem() {
-        return codigo_aeroporto_origem;
-    }
-
-    public void setAeroportoOrigem(String codigo_aeroporto_origem) {
-        this.codigo_aeroporto_origem = codigo_aeroporto_origem;
-    }
-
-    public String getAeroportoDestino() {
-        return codigo_aeroporto_destino;
-    }
-
-    public void setAeroportoDestino(String codigo_aeroporto_destino) {
-        this.codigo_aeroporto_destino = codigo_aeroporto_destino;
     }
 
     public double getValorPassagem() {
@@ -86,6 +114,18 @@ public class VooDTO {
     }
 
     public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public VooDTO(String codigo, ZonedDateTime data, AeroportoDTO aeroporto_origem, AeroportoDTO aeroporto_destino,
+            double valor_passagem, int quantidade_poltronas_total, int quantidade_poltronas_ocupadas, String estado) {
+        this.codigo = codigo;
+        this.data = data;
+        this.aeroporto_origem = aeroporto_origem;
+        this.aeroporto_destino = aeroporto_destino;
+        this.valor_passagem = valor_passagem;
+        this.quantidade_poltronas_total = quantidade_poltronas_total;
+        this.quantidade_poltronas_ocupadas = quantidade_poltronas_ocupadas;
         this.estado = estado;
     }
 }

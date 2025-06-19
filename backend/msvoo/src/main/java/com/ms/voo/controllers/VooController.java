@@ -3,8 +3,11 @@ package com.ms.voo.controllers;
 import com.ms.voo.dto.VooDTO;
 import com.ms.voo.services.VooService;
 import jakarta.validation.Valid;
+
+import java.time.ZonedDateTime;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -23,10 +27,17 @@ public class VooController {
     private VooService service;
 
     @GetMapping
-    public ResponseEntity<List<VooDTO>> listarVoos() {
-        List<VooDTO> voos = service.listarVoos();
-
-        return ResponseEntity.ok(voos);
+    public ResponseEntity<?> listarVoos(
+            @RequestParam(required = false) String origem,
+            @RequestParam(required = false) String destino,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime data) {
+        if (origem != null && destino != null) {
+            // retornar o formato complexo
+            return ResponseEntity.ok(service.listarVoosFiltrados(origem, destino, data));
+        } else {
+            // retornar lista simples
+            return ResponseEntity.ok(service.listarVoos());
+        }
     }
 
     @GetMapping("/{codigo}")

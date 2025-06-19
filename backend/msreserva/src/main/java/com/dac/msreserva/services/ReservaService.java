@@ -85,9 +85,11 @@ public class ReservaService {
         // Geração de código aleatório no formato ABC123
         long proximoNumero = repository.count() + 1;
         String codigo = "RES" + String.format("%04d", proximoNumero);
-
-        Double milhas_utilizadas = (reserva.getMilhas_utilizadas() != null ? reserva.getMilhas_utilizadas() : 0.0)
-                + reserva.getValor();
+        System.out.println("Codigo gerado");
+        System.out.println(codigo);
+        // Double milhas_utilizadas = (reserva.getMilhas_utilizadas() != null ? reserva.getMilhas_utilizadas() : 0.0)
+        //         + reserva.getValor();
+        Double milhas_utilizadas = (reserva.getMilhas_utilizadas() != null ? reserva.getMilhas_utilizadas() : 0.0);
 
         EstadoReserva estadoReserva = estadoReservaRepository.findById(EstadoReservaEnum.CRIADA.getCodigo()).get();
 

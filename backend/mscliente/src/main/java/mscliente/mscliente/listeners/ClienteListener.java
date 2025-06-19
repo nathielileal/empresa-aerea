@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Map;
 
 @Component
 public class ClienteListener {
@@ -61,19 +62,28 @@ public class ClienteListener {
             ClienteDTO dadosCliente = clienteService.findById(dadosReserva.getCodigo_cliente());
 
             if (dadosReserva.getMilhas_utilizadas() > dadosCliente.getSaldo_milhas()) {
-                throw new IllegalArgumentException("Saldo de milhas insuficiente");
+                // Retorna mensagem de erro como JSON
+                return objectMapper.writeValueAsString(Map.of("erro", "Saldo de milhas insuficiente"));
             }
 
             return objectMapper.writeValueAsString(dadosCliente);
         } catch (Exception e) {
-            throw new AmqpRejectAndDontRequeueException("Erro na verificação de saldo", e);
+            // Também envia erro genérico como JSON
+            try {
+                return objectMapper.writeValueAsString(Map.of("erro", "Erro na verificação de saldo"));
+            } catch (Exception ex) {
+                return "{\"erro\":\"Falha inesperada\"}";
+            }
         }
     }
 
     @RabbitListener(queues = "criareserva.cliente")
     public String efetuarReserva(String payload) {
         try {
+            System.out.println("desconto de milhas");
+
             ReservaCreationResponseDTO transaction = objectMapper.readValue(payload, ReservaCreationResponseDTO.class);
+            System.out.println(transaction.getQuantidade_milhas());
             Object result = milhasService.registrarReserva(transaction);
             return objectMapper.writeValueAsString(result);
         } catch (Exception e) {
@@ -94,16 +104,16 @@ public class ClienteListener {
 
     // @RabbitListener(queues = "cancelavoo.cliente")
     // public String canceladoVoo(String payload) {
-    //     try {
-    //         List<ReservaOutputDTO> reservas = objectMapper.readValue(
-    //                 payload,
-    //                 new TypeReference<List<ReservaOutputDTO>>() {
-    //                 }
-    //         );
-    //         Object result = milhasService.reembolsarVoo(reservas);
-    //         return objectMapper.writeValueAsString(new RabbitMessageDTO(true, result));
-    //     } catch (Exception e) {
-    //         throw new AmqpRejectAndDontRequeueException("Erro ao cancelar voo", e);
-    //     }
+    // try {
+    // List<ReservaOutputDTO> reservas = objectMapper.readValue(
+    // payload,
+    // new TypeReference<List<ReservaOutputDTO>>() {
+    // }
+    // );
+    // Object result = milhasService.reembolsarVoo(reservas);
+    // return objectMapper.writeValueAsString(new RabbitMessageDTO(true, result));
+    // } catch (Exception e) {
+    // throw new AmqpRejectAndDontRequeueException("Erro ao cancelar voo", e);
+    // }
     // }
 }

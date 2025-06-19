@@ -1,11 +1,14 @@
 package mssaga.mssaga.sagas;
 
+import org.springframework.amqp.AmqpRejectAndDontRequeueException;
 import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.rabbit.connection.RabbitUtils;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -19,6 +22,7 @@ import mssaga.mssaga.DTO.VooDTO;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.ArrayList;
 
 @Service
@@ -53,36 +57,48 @@ public class CriarReservaSaga {
                         String responseConsultaSaldo = (String) rabbitTemplate.convertSendAndReceive(
                                         exchangeCriar.getName(), "saldo", objectMapper.writeValueAsString(payload));
                         System.out.println(responseConsultaSaldo);
+
+                        Map<String, Object> respostaMap = objectMapper.readValue(responseConsultaSaldo, Map.class);
+
+                        if (respostaMap.containsKey("erro")) {
+                                String erro = (String) respostaMap.get("erro");
+                                if ("Saldo de milhas insuficiente".equals(erro)) {
+                                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, erro);
+                                } else {
+                                        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, erro);
+                                }
+                        }
+
                         ClienteDTO clienteOutput = objectMapper.readValue(responseConsultaSaldo, ClienteDTO.class);
                         System.out.println(("Dados do cliente buscados no ms"));
                         System.out.println(clienteOutput);
                         // Buscar dados do voo
 
                         System.out.println(("Buscando dados do voo"));
-                        String vooPayload = """
-                                        {
-                                            "codigo": "TADS5492",
-                                            "data": "2025-07-01T15:00:00-03:00",
-                                            "valor_passagem": 500.0,
-                                            "quantidade_poltronas_total": 180,
-                                            "estado": "DISPONIVEL",
-                                            "aeroporto_origem": {
-                                                "codigo": "GRU",
-                                                "nome": "Aeroporto Internacional de Guarulhos",
-                                                "cidade": "Guarulhos",
-                                                "uf": "SP"
-                                            },
-                                            "aeroporto_destino": {
-                                                "codigo": "SDU",
-                                                "nome": "Aeroporto Santos Dumont",
-                                                "cidade": "Rio de Janeiro",
-                                                "uf": "RJ"
-                                            }
-                                        }
-                                        """;
-                        // String vooPayload = (String) rabbitTemplate.convertSendAndReceive(
-                        // exchangeCriar.getName(), "voo",
-                        // objectMapper.writeValueAsString(payload.getCodigo_voo()));
+                        // String vooPayload = """
+                        // {
+                        // "codigo": "TADS5492",
+                        // "data": "2025-07-01T15:00:00-03:00",
+                        // "valor_passagem": 500.0,
+                        // "quantidade_poltronas_total": 180,
+                        // "estado": "DISPONIVEL",
+                        // "aeroporto_origem": {
+                        // "codigo": "GRU",
+                        // "nome": "Aeroporto Internacional de Guarulhos",
+                        // "cidade": "Guarulhos",
+                        // "uf": "SP"
+                        // },
+                        // "aeroporto_destino": {
+                        // "codigo": "SDU",
+                        // "nome": "Aeroporto Santos Dumont",
+                        // "cidade": "Rio de Janeiro",
+                        // "uf": "RJ"
+                        // }
+                        // }
+                        // """;
+                        String vooPayload = (String) rabbitTemplate.convertSendAndReceive(
+                                        exchangeCriar.getName(), "voo",
+                                        objectMapper.writeValueAsString(payload.getCodigo_voo()));
 
                         VooDTO dadosVoo = objectMapper.readValue(vooPayload, VooDTO.class);
                         System.out.println("Dados do voo retornados");
@@ -108,16 +124,21 @@ public class CriarReservaSaga {
                                         ReservaCreationResponseDTO.class);
 
                         // Descontar milhas
+                        System.out.println("milhas antes");
+                        System.out.println(clienteOutput.getSaldo_milhas());
                         String savedTransaction = (String) rabbitTemplate.convertSendAndReceive(
                                         exchangeCriar.getName(), "cliente",
                                         objectMapper.writeValueAsString(dadosReserva));
 
                         ExtratoDTO transaction = objectMapper.readValue(savedTransaction, ExtratoDTO.class);
-
+                        System.out.println("milhas depois");
+                        System.out.println(transaction.getSaldo_milhas());
                         return processResults(dadosReserva, dadosVoo, transaction);
 
+                } catch (ResponseStatusException e) {
+                        throw e; // já foi tratado acima
                 } catch (Exception e) {
-                        throw new RuntimeException("Falha ao executar saga de criação de reserva", e);
+                        throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Erro inesperado");
                 }
         }
 

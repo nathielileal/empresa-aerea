@@ -18,5 +18,45 @@ public class HistoricoReservaDTO {
 
     private EstadoReserva estadoNovo;
 
+    public Long getCodigo() {
+        return codigo;
+    }
+
+    public void setCodigo(Long codigo) {
+        this.codigo = codigo;
+    }
+
+    public ZonedDateTime getData() {
+        return data;
+    }
+
+    public void setData(ZonedDateTime data) {
+        this.data = data;
+    }
+
+    public Reserva getReserva() {
+        return reserva;
+    }
+
+    public void setReserva(Reserva reserva) {
+        this.reserva = reserva;
+    }
+
+    public EstadoReserva getEstadoAntigo() {
+        return estadoAntigo;
+    }
+
+    public void setEstadoAntigo(EstadoReserva estadoAntigo) {
+        this.estadoAntigo = estadoAntigo;
+    }
+
+    public EstadoReserva getEstadoNovo() {
+        return estadoNovo;
+    }
+
+    public void setEstadoNovo(EstadoReserva estadoNovo) {
+        this.estadoNovo = estadoNovo;
+    }
+
     // Getters and Setters
 }

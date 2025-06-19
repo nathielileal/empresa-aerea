@@ -7,6 +7,7 @@ module.exports = async (req, res) => {
       url: `http://msvoo:9091${req.originalUrl}`,
       headers: req.headers,
       data: req.body,
+      params: req.params,
     });
 
     res.status(response.status).json(response.data);

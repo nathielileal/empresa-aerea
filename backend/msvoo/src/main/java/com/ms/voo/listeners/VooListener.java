@@ -45,7 +45,7 @@ public class VooListener {
         System.out.println(payload);
 
         try {
-            String input = payload;
+            String input = payload.replace("\"", "");
 
             VooDTO dadosVoo = vooService.buscarPorCodigo(input);
 

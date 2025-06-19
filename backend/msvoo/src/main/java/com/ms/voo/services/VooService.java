@@ -1,5 +1,6 @@
 package com.ms.voo.services;
 
+import com.ms.voo.dto.BuscaVoosResponseDTO;
 import com.ms.voo.dto.VooDTO;
 import com.ms.voo.model.Voo;
 import com.ms.voo.model.VooEstado;
@@ -52,6 +53,23 @@ public class VooService {
         return voos.stream().map(voo -> mapper.map(voo, VooDTO.class)).collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
+    public BuscaVoosResponseDTO listarVoosFiltrados(String origem, String destino, ZonedDateTime data) {
+        List<Voo> todosVoos = repository.findAll();
+
+        List<Voo> voosFiltrados = todosVoos.stream()
+                .filter(voo -> (origem == null || voo.getAeroportoOrigem().getCodigo().equalsIgnoreCase(origem)) &&
+                        (destino == null || voo.getAeroportoDestino().getCodigo().equalsIgnoreCase(destino)) &&
+                        (data == null || !voo.getData().isBefore(data)))
+                .collect(Collectors.toList());
+
+        List<VooDTO> voosDto = voosFiltrados.stream()
+                .map(voo -> mapper.map(voo, VooDTO.class))
+                .collect(Collectors.toList());
+
+        return new BuscaVoosResponseDTO(origem, destino, data, voosDto);
+    }
+
     private String gerarCodigoUnico() {
         String codigo;
 
@@ -66,7 +84,7 @@ public class VooService {
     public VooDTO cadastrarVoo(VooDTO dto) {
         String codigo = gerarCodigoUnico();
 
-        if (dto.getAeroportoOrigem().equals(dto.getAeroportoDestino())) {
+        if (dto.getAeroporto_origem().getCodigo().equals(dto.getAeroporto_destino().getCodigo())) {
             throw new IllegalArgumentException("Aeroporto de origem e destino não podem ser iguais");
         }
 
@@ -78,12 +96,15 @@ public class VooService {
 
         voo.setCodigo(codigo);
         voo.setData(dto.getData());
-        voo.setAeroportoOrigem(aeroportoRepository.findById(dto.getAeroportoOrigem()).orElseThrow(() -> new RuntimeException("Aeroporto origem não encontrado")));
-        voo.setAeroportoDestino(aeroportoRepository.findById(dto.getAeroportoDestino()).orElseThrow(() -> new RuntimeException("Aeroporto destino não encontrado")));
+        voo.setAeroportoOrigem(aeroportoRepository.findById(dto.getAeroporto_origem().getCodigo())
+                .orElseThrow(() -> new RuntimeException("Aeroporto origem não encontrado")));
+        voo.setAeroportoDestino(aeroportoRepository.findById(dto.getAeroporto_destino().getCodigo())
+                .orElseThrow(() -> new RuntimeException("Aeroporto destino não encontrado")));
         voo.setValorPassagem(dto.getValorPassagem());
         voo.setQuantidadeOcupadas(dto.getQuantidadeOcupadas());
 
-        VooEstado estadoConfirmado = vooEstadoRepository.findBySigla("CONFIRMADO").orElseThrow(() -> new RuntimeException("Estado CONFIRMADO não encontrado"));
+        VooEstado estadoConfirmado = vooEstadoRepository.findBySigla("CONFIRMADO")
+                .orElseThrow(() -> new RuntimeException("Estado CONFIRMADO não encontrado"));
 
         voo.setEstado(estadoConfirmado);
 
@@ -100,7 +121,8 @@ public class VooService {
             throw new IllegalStateException("Só é possível cancelar voo no estado CONFIRMADO");
         }
 
-        VooEstado estadoCancelado = vooEstadoRepository.findBySigla("CANCELADO").orElseThrow(() -> new RuntimeException("Estado CANCELADO não encontrado"));
+        VooEstado estadoCancelado = vooEstadoRepository.findBySigla("CANCELADO")
+                .orElseThrow(() -> new RuntimeException("Estado CANCELADO não encontrado"));
 
         voo.setEstado(estadoCancelado);
 
@@ -123,7 +145,8 @@ public class VooService {
             throw new IllegalStateException("Só é possível realizar voo no estado CONFIRMADO");
         }
 
-        VooEstado estadoRealizado = vooEstadoRepository.findBySigla("REALIZADO").orElseThrow(() -> new RuntimeException("Estado REALIZADO não encontrado"));
+        VooEstado estadoRealizado = vooEstadoRepository.findBySigla("REALIZADO")
+                .orElseThrow(() -> new RuntimeException("Estado REALIZADO não encontrado"));
 
         voo.setEstado(estadoRealizado);
 
