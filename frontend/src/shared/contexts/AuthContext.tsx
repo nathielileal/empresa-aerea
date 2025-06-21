@@ -10,6 +10,7 @@ interface AuthContextType {
   isLoading: boolean; // Adicione isso;
   login: (user: AuthUser, access_token: string) => void;
   logout: () => void;
+  refreshUser: () => Promise<void>;
   updateUser: (updatedUser: Partial<AuthUser>) => void;
 }
 
@@ -36,12 +37,23 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     initializeAuth();
   }, []);
 
+  const refreshUser = async () => {
+    try {
+      const updatedUser = await authService.getCurrentUser();
+      setUser(updatedUser);
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+    } catch (error) {
+      console.error('Erro ao atualizar usuário', error);
+      logout(); // opcional: fazer logout se der erro
+    }
+  };
+
   const login = (userData: AuthUser, access_token: string) => {
     setUser(userData);
     localStorage.setItem('access_token', access_token);
     localStorage.setItem('user', JSON.stringify(userData));  // salva usuário
   };
-  
+
 
   const logout = () => {
     setUser(null);
@@ -60,6 +72,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       isAuthenticated: !!user,
       isLoading, // Adicione isso
       login,
+      refreshUser,
       logout,
       updateUser,
     }}>

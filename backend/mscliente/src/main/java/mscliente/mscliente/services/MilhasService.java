@@ -86,7 +86,7 @@ public class MilhasService {
                                 reserva.getValor(),
                                 reserva.getDescricao(),
                                 TipoTransacao.SAIDA);
-                System.out.println("Milhas utilizadas x saldo cliente");
+                System.out.println("saldo cliente x Milhas utilizadas");
                 System.out.println(cliente.getSaldo_milhas());
                 System.out.println(quantidade);
                 double saldoAtualizado = cliente.getSaldo_milhas() - reserva.getQuantidade_milhas();

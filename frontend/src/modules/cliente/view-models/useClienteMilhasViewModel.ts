@@ -10,7 +10,7 @@ import { Cliente } from "../models/ClienteTypes";
 export const useMilhas = () => {
   const [extrato, setExtrato] = useState<Extrato>();
   const [loading, setLoading] = useState<boolean>(false);
-  const { user } = useAuth();
+  const { user, refreshUser, updateUser } = useAuth();
   const cliente = user?.tipo === 'CLIENTE' ? user as Cliente : null;
   const clienteId = cliente?.codigo
   const fetchTransactions = async () => {
@@ -46,6 +46,10 @@ export const useMilhas = () => {
     try {
       await MilhasService.buyMiles(clienteId, milhas);
       await fetchTransactions();
+      updateUser({
+        ...user,
+        saldo_milhas: cliente?.saldo_milhas ?? + milhas
+    });
     } catch (err) {
       console.error("Erro ao comprar milhas:", err);
       throw err;
@@ -54,3 +58,7 @@ export const useMilhas = () => {
 
   return { extrato, buyMiles, getSaldo_milhas, loading, fetchTransactions };
 };
+function updateUser(arg0: { saldo_milhas: number; } | { saldo_milhas: number; codigo?: string; nome: string; email: string; tipo?: import("../../auth/models/AuthTypes").UserProfile; } | { saldo_milhas: number; cpf: string; endereco: import("../models/ClienteTypes").Endereco; codigo?: string; nome: string; email: string; tipo?: import("../../auth/models/AuthTypes").UserProfile; } | { saldo_milhas: number; cpf: string; telefone: string; codigo?: string; nome: string; email: string; tipo?: import("../../auth/models/AuthTypes").UserProfile; }) {
+  throw new Error("Function not implemented.");
+}
+

@@ -5,9 +5,10 @@ import { reservaService } from '../services/reservaService';
 import { Reserva } from '../models/ReservaTypes';
 import { Cliente } from '../models/ClienteTypes';
 import { useMilhas } from './useClienteMilhasViewModel';
+import { clienteService } from '../services/clienteService';
 
 export function usePerfilViewModel() {
-  const { user } = useAuth();
+  const { user, refreshUser } = useAuth();
   const [reservas, setReservas] = useState<Reserva[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -31,6 +32,21 @@ export function usePerfilViewModel() {
       setLoading(false);
     }
   };
+
+  const getCliente = async () => {
+    if (!user?.codigo) return;
+
+    setLoading(true);
+    try {
+      const cliente = await clienteService.getById(user.codigo);
+      setSaldo_milhas(cliente.saldo_milhas);
+    } catch (err) {
+      setError('Erro ao carregar dados do cliente');
+    } finally {
+      setLoading(false);
+    }
+  };
+
 
   useEffect(() => {
     // const milhasCompradas = getsaldo_milhas();
@@ -65,6 +81,7 @@ export function usePerfilViewModel() {
 
   const carregarDados = async () => {
     await carregarDadosReservas();
+    await getCliente()
   };
 
   useEffect(() => {
