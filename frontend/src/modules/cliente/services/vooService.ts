@@ -17,36 +17,65 @@ export const vooService = {
 
     async buscarVoos(origem?: string, destino?: string, data?: string): Promise<Voo[]> {
         try {
-        console.log("chamando backend")
-          const token = localStorage.getItem('access_token');
-      
-          const params = new URLSearchParams();
-          if (origem) params.append('origem', origem);
-          if (destino) params.append('destino', destino);
-          if (data) params.append('data', data); // precisa estar no formato ISO: '2025-08-10T00:00:00Z'
-      
-          const response = await fetch(`http://localhost:3000/voos?${params.toString()}`, {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`,
-            },
-          });
-      
-          if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`Erro ao buscar voos: ${errorText}`);
-          }
-      
-          const voos: Voo[] = await response.json();
-          console.log(voos)
-          return voos;
-      
+            console.log("chamando backend")
+            const token = localStorage.getItem('access_token');
+
+            const params = new URLSearchParams();
+            if (origem) params.append('origem', origem);
+            if (destino) params.append('destino', destino);
+            if (data) params.append('data', data); // precisa estar no formato ISO: '2025-08-10T00:00:00Z'
+
+            const response = await fetch(`http://localhost:3000/voos?${params.toString()}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                },
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Erro ao buscar voos: ${errorText}`);
+            }
+
+            const voos: Voo[] = await response.json();
+            console.log(voos)
+            return voos;
+
         } catch (error) {
-          console.error(error);
-          throw error;
+            console.error(error);
+            throw error;
         }
-      },
+    },
+
+    async buscarVooById(id: string): Promise<Voo> {
+        try {
+            console.log("Buscando", id);
+
+            const token = localStorage.getItem('access_token'); // pega o token
+
+            const response = await fetch(`http://localhost:3000/voos/${id}`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`, // inclui o token
+                },
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                throw new Error(`Erro ao buscar cliente: ${errorText}`);
+            }
+
+            const voo: Voo = await response.json();
+            return voo;
+
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    },
+
 
     async mockFinalizarReserva(dados: Reserva): Promise<Reserva> {
         reservasMock.push(dados);

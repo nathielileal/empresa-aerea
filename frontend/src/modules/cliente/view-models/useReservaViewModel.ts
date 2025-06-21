@@ -53,9 +53,10 @@ export function useReservaViewModel() {
 
     const carregarVooSelecionado = async (id: string) => {
         setLoading(true);
+        console.log('buscando voo')
         try {
-            const voos = await vooService.buscarVoos('', '');
-            const voo = voos.find(v => v.codigo === id);
+            const voo = await vooService.buscarVooById(id);
+            console.log("Voo encontrado", voo)
             if (voo) {
                 setVooSelecionado(voo);
             } else {
@@ -69,7 +70,9 @@ export function useReservaViewModel() {
         }
     };
 
-    const selecionarVoo = (voo: Voo) => {
+    const selecionarVoo = async (voo: Voo) => {
+        console.log('Voo selecionado')
+        await carregarVooSelecionado(voo.codigo)
         navigate(`/cliente/reservar/confirmar/${voo.codigo}`);
     };
 
