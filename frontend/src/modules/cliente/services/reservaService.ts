@@ -39,12 +39,39 @@ export const reservaService = {
 },
 
 
+  // async getReservaDetalhes(reservaId: string): Promise<Reserva> {
+  //   await new Promise(resolve => setTimeout(resolve, 500));
+  //   const reserva = reservasMock.find(r => r.codigo === reservaId);
+  //   if (!reserva) throw new Error('Reserva não encontrada');
+  //   return reserva;
+  // },
+
   async getReservaDetalhes(reservaId: string): Promise<Reserva> {
-    await new Promise(resolve => setTimeout(resolve, 500));
-    const reserva = reservasMock.find(r => r.codigo === reservaId);
-    if (!reserva) throw new Error('Reserva não encontrada');
-    return reserva;
-  },
+    try {
+        const token = localStorage.getItem('access_token');
+
+        const response = await fetch(`http://localhost:3000/reservas/${reservaId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+            },
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Erro ao buscar voos: ${errorText}`);
+        }
+
+        const reserva: Reserva = await response.json();
+        console.log(reserva)
+        return reserva;
+
+    } catch (error) {
+        console.error(error);
+        throw error;
+    }
+},
 
   async cancelarReserva(reservaId: string): Promise<void> {
     await new Promise(resolve => setTimeout(resolve, 500));

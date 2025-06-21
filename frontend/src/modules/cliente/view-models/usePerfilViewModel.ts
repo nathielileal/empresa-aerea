@@ -66,14 +66,6 @@ export function usePerfilViewModel() {
 
       await reservaService.cancelarReserva(reservaId);
 
-      //buscar o extrato e atualiza
-      const milhasRestituir = reserva.milhasGastas ?? 0;
-      if (milhasRestituir > 0 && user?.codigo) {
-        // await clienteService.restituirMilhas(...)
-      }
-
-      // Atualiza saldo no frontend
-      setSaldo_milhas(prev => prev + milhasRestituir);
     } catch (err) {
       setError('Erro ao cancelar reserva');
     }
