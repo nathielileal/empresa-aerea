@@ -25,10 +25,10 @@ export function useReservaViewModel() {
     // Calculados
     const cliente = user?.tipo === UserProfile.CLIENTE ? user as Cliente : null;
     const saldo_milhas = cliente?.saldo_milhas || 0;
-    const valorTotal = vooSelecionado ? vooSelecionado.preco * quantidade : 0;
-    const milhasTotais = vooSelecionado ? vooSelecionado.milhasNecessarias * quantidade : 0;
+    const valorTotal = vooSelecionado ? vooSelecionado.valor_passagem * quantidade : 0;
+    const milhasTotais = vooSelecionado ? (vooSelecionado.valor_passagem / 5) * quantidade : 0;
     const valorComMilhas = vooSelecionado ?
-        Math.max(0, valorTotal - (milhasUsadas * vooSelecionado.preco / vooSelecionado.milhasNecessarias)) : 0;
+        Math.max(0, valorTotal - (milhasUsadas * vooSelecionado.valor_passagem / (vooSelecionado.valor_passagem / 5))) : 0;
 
     // Efeitos
     useEffect(() => {
@@ -42,7 +42,7 @@ export function useReservaViewModel() {
         setLoading(true);
         setError('');
         try {
-            const voosEncontrados = await vooService.mockBuscarVoos(origem, destino);
+            const voosEncontrados = await vooService.buscarVoos(origem, destino);
             setVoos(voosEncontrados);
         } catch (err) {
             setError('Erro ao buscar voos');
@@ -54,7 +54,7 @@ export function useReservaViewModel() {
     const carregarVooSelecionado = async (id: string) => {
         setLoading(true);
         try {
-            const voos = await vooService.mockBuscarVoos('', '');
+            const voos = await vooService.buscarVoos('', '');
             const voo = voos.find(v => v.codigo === id);
             if (voo) {
                 setVooSelecionado(voo);
@@ -98,9 +98,9 @@ export function useReservaViewModel() {
             const dadosReserva: Reserva = {
                 id: Math.floor(1000 + Math.random() * 9000).toString(),
                 codigo: codigo,
-                dataHora: vooSelecionado.dataHora,
-                origem: vooSelecionado.origem,
-                destino: vooSelecionado.destino,
+                dataHora: vooSelecionado.data,
+                origem: vooSelecionado.aeroporto_origem.codigo,
+                destino: vooSelecionado.aeroporto_destino.codigo,
                 valorReais: valorComMilhas,
                 milhasGastas: milhasUsadas,
                 estado: 'CRIADA'

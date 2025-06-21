@@ -8,12 +8,45 @@ export const vooService = {
         return voosMock;
     },
 
-    async mockBuscarVoos(origem: string, destino: string): Promise<Voo[]> {
-        return voosMock.filter(voo =>
-            (!origem || voo.origem.includes(origem)) &&
-            (!destino || voo.destino.includes(destino))
-        );
-    },
+    // async mockBuscarVoos(origem: string, destino: string): Promise<Voo[]> {
+    //     return voosMock.filter(voo =>
+    //         (!origem || voo.origem.includes(origem)) &&
+    //         (!destino || voo.destino.includes(destino))
+    //     );
+    // },
+
+    async buscarVoos(origem?: string, destino?: string, data?: string): Promise<Voo[]> {
+        try {
+        console.log("chamando backend")
+          const token = localStorage.getItem('access_token');
+      
+          const params = new URLSearchParams();
+          if (origem) params.append('origem', origem);
+          if (destino) params.append('destino', destino);
+          if (data) params.append('data', data); // precisa estar no formato ISO: '2025-08-10T00:00:00Z'
+      
+          const response = await fetch(`http://localhost:3000/voos?${params.toString()}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`,
+            },
+          });
+      
+          if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Erro ao buscar voos: ${errorText}`);
+          }
+      
+          const voos: Voo[] = await response.json();
+          console.log(voos)
+          return voos;
+      
+        } catch (error) {
+          console.error(error);
+          throw error;
+        }
+      },
 
     async mockFinalizarReserva(dados: Reserva): Promise<Reserva> {
         reservasMock.push(dados);
@@ -27,11 +60,11 @@ export const vooService = {
             throw new Error("Voo não encontrado");
         }
 
-        if (voo.status !== "CONFIRMADO") {
+        if (voo.estado !== "CONFIRMADO") {
             throw new Error("Somente voos confirmados podem ser cancelados");
         }
 
-        voo.status = "CANCELADO";
+        voo.estado = "CANCELADO";
 
         const reservasAssociadas = reservasMock.filter(r => r.codigo === voo.codigo);
         reservasAssociadas.forEach(reserva => {
@@ -57,12 +90,12 @@ export const vooService = {
             throw new Error("Voo não encontrado");
         }
 
-        if (voo.status !== "CONFIRMADO") {
+        if (voo.estado !== "CONFIRMADO") {
             throw new Error("Somente voos confirmados podem ser realizados");
         }
 
         // Atualiza o voo para o estado REALIZADO
-        voo.status = "REALIZADO";
+        voo.estado = "REALIZADO";
 
         // Atualiza as reservas associadas ao voo
         const reservasAssociadas = reservasMock.filter(r => r.codigo === voo.codigo);

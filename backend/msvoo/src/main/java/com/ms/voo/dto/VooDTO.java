@@ -35,11 +35,11 @@ public class VooDTO {
     public VooDTO() {
     }
 
-    @JsonProperty("quantidade_poltronas_total")
-    private int quantidade_poltronas_total;
+    // @JsonProperty("quantidade_poltronas_total")
+    // private int quantidade_poltronas_total;
 
-    @JsonProperty("quantidade_poltronas_ocupadas")
-    private int quantidade_poltronas_ocupadas;
+    // @JsonProperty("quantidade_poltronas_ocupadas")
+    // private int quantidade_poltronas_ocupadas;
 
     private String estado;
 
@@ -53,21 +53,21 @@ public class VooDTO {
         this.valor_passagem = valor_passagem;
     }
 
-    public int getQuantidade_poltronas_total() {
-        return quantidade_poltronas_total;
-    }
+    // public int getQuantidade_poltronas_total() {
+    //     return quantidade_poltronas_total;
+    // }
 
-    public void setQuantidade_poltronas_total(int quantidade_poltronas_total) {
-        this.quantidade_poltronas_total = quantidade_poltronas_total;
-    }
+    // public void setQuantidade_poltronas_total(int quantidade_poltronas_total) {
+    //     this.quantidade_poltronas_total = quantidade_poltronas_total;
+    // }
 
-    public int getQuantidade_poltronas_ocupadas() {
-        return quantidade_poltronas_ocupadas;
-    }
+    // public int getQuantidade_poltronas_ocupadas() {
+    //     return quantidade_poltronas_ocupadas;
+    // }
 
-    public void setQuantidade_poltronas_ocupadas(int quantidade_poltronas_ocupadas) {
-        this.quantidade_poltronas_ocupadas = quantidade_poltronas_ocupadas;
-    }
+    // public void setQuantidade_poltronas_ocupadas(int quantidade_poltronas_ocupadas) {
+    //     this.quantidade_poltronas_ocupadas = quantidade_poltronas_ocupadas;
+    // }
 
     public String getCodigo() {
         return codigo;
@@ -93,21 +93,21 @@ public class VooDTO {
         this.valor_passagem = valor_passagem;
     }
 
-    public int getQuantidadePoltronas() {
-        return quantidade_poltronas_total;
-    }
+    // public int getQuantidadePoltronas() {
+    //     return quantidade_poltronas_total;
+    // }
 
-    public void setQuantidadePoltronas(int quantidade_poltronas_total) {
-        this.quantidade_poltronas_total = quantidade_poltronas_total;
-    }
+    // public void setQuantidadePoltronas(int quantidade_poltronas_total) {
+    //     this.quantidade_poltronas_total = quantidade_poltronas_total;
+    // }
 
-    public int getQuantidadeOcupadas() {
-        return quantidade_poltronas_ocupadas;
-    }
+    // public int getQuantidadeOcupadas() {
+    //     return quantidade_poltronas_ocupadas;
+    // }
 
-    public void setQuantidadeOcupadas(int quantidade_poltronas_ocupadas) {
-        this.quantidade_poltronas_ocupadas = quantidade_poltronas_ocupadas;
-    }
+    // public void setQuantidadeOcupadas(int quantidade_poltronas_ocupadas) {
+    //     this.quantidade_poltronas_ocupadas = quantidade_poltronas_ocupadas;
+    // }
 
     public String getEstado() {
         return estado;
@@ -124,8 +124,8 @@ public class VooDTO {
         this.aeroporto_origem = aeroporto_origem;
         this.aeroporto_destino = aeroporto_destino;
         this.valor_passagem = valor_passagem;
-        this.quantidade_poltronas_total = quantidade_poltronas_total;
-        this.quantidade_poltronas_ocupadas = quantidade_poltronas_ocupadas;
+        // this.quantidade_poltronas_total = quantidade_poltronas_total;
+        // this.quantidade_poltronas_ocupadas = quantidade_poltronas_ocupadas;
         this.estado = estado;
     }
 }
