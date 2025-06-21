@@ -83,48 +83,31 @@ export function useReservaViewModel() {
     };
 
     const finalizarReserva = async () => {
-        if (!vooSelecionado || !user) return;
+        if (!vooSelecionado || !user || !cliente) return;
 
-        //levar essa parte pro back?
-        const letras = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        const numeros = '0123456789';
-        let codigo = '';
-
-        for (let i = 0; i < 3; i++) {
-            codigo += letras.charAt(Math.floor(Math.random() * letras.length));
-        }
-        for (let i = 0; i < 3; i++) {
-            codigo += numeros.charAt(Math.floor(Math.random() * numeros.length));
-        }
         setLoading(true);
         try {
-            const dadosReserva: Reserva = {
-                id: Math.floor(1000 + Math.random() * 9000).toString(),
-                codigo: codigo,
-                dataHora: vooSelecionado.data,
-                origem: vooSelecionado.aeroporto_origem.codigo,
-                destino: vooSelecionado.aeroporto_destino.codigo,
-                valorReais: valorComMilhas,
-                milhasGastas: milhasUsadas,
-                estado: 'CRIADA'
+            const payload = {
+                valor: vooSelecionado.valor_passagem,
+                milhas_utilizadas: milhasUsadas,
+                quantidade_poltronas: quantidade,
+                codigo_cliente: cliente?.codigo!.toString(),
+                codigo_voo: vooSelecionado.codigo
             };
-            console.log(dadosReserva)
-
-            const reserva = await vooService.mockFinalizarReserva(dadosReserva);
-
-            // await clienteService.debitarMilhas(user.id, milhasUsadas, 'Reserva de voo');
-
-            // VERIFICAR SE TEM MILHA PARA DESCONTAR
-
-            // Atualiza o estado local
-            updateUser({
-                ...user,
-                saldo_milhas: cliente?.saldo_milhas ?? - milhasUsadas
-            });
-            // Navega para a página de confirmação
-            // navigate(`/cliente/reservas/${reserva.codigo}`);
-            navigate(`/cliente/initial-page`)
+    
+            console.log('Enviando reserva:', payload);
+    
+            const reserva = await vooService.finalizarReserva(payload);
+    
+            // Atualiza o estado local com novo saldo
+            // updateUser({
+            //     ...user,
+            //     saldo_milhas: cliente.saldo_milhas - milhasUsadas
+            // });
+    
+            navigate('/cliente/initial-page');
         } catch (err) {
+            console.error(err);
             setError('Erro ao finalizar reserva');
         } finally {
             setLoading(false);

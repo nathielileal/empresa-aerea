@@ -76,6 +76,30 @@ export const vooService = {
         }
     },
 
+    async finalizarReserva(payload: {
+        valor: number;
+        milhas_utilizadas: number;
+        quantidade_poltronas: number;
+        codigo_cliente: string;
+        codigo_voo: string;
+    }) {
+        console.log("Fazendo reserva", payload)
+        const response = await fetch('http://localhost:3000/reservas', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+            throw new Error('Erro ao finalizar reserva no backend');
+        }
+
+        return response.json();
+    }
+    ,
+
 
     async mockFinalizarReserva(dados: Reserva): Promise<Reserva> {
         reservasMock.push(dados);
