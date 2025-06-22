@@ -25,7 +25,11 @@ export function usePerfilViewModel() {
     try {
       const reservasData = await reservaService.getReservas(user.codigo, {
       });
-      setReservas(reservasData);
+      if (Array.isArray(reservasData)) {
+        setReservas(reservasData);
+      } else {
+        setReservas([]);
+      }
     } catch (err) {
       setError('Erro ao carregar reservas');
     } finally {
@@ -57,7 +61,7 @@ export function usePerfilViewModel() {
 
   const cancelarReserva = async (reservaId: string) => {
     try {
-      const reserva = reservas.find(r => r.codigo === reservaId);
+      const reserva : Reserva = await reservaService.getReservaDetalhes(reservaId);
 
       if (!reserva || !['CRIADA', 'CHECK-IN'].includes(reserva.estado)) {
         setError('Reserva não pode ser cancelada');
@@ -65,6 +69,8 @@ export function usePerfilViewModel() {
       }
 
       await reservaService.cancelarReserva(reservaId);
+
+      await carregarDados()
 
     } catch (err) {
       setError('Erro ao cancelar reserva');

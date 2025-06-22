@@ -12,31 +12,36 @@ export const reservaService = {
 
   async getReservas(clienteId: string, filtros?: any): Promise<Reserva[]> {
     try {
-        console.log("chamando backend")
-        const token = localStorage.getItem('access_token');
+      console.log("chamando backend");
+      const token = localStorage.getItem('access_token');
 
-        const response = await fetch(`http://localhost:3000/clientes/${clienteId}/reservas`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            },
-        });
+      const response = await fetch(`http://localhost:3000/clientes/${clienteId}/reservas`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`Erro ao buscar voos: ${errorText}`);
-        }
+      if (response.status === 204) {
+        console.log("Nenhuma reserva encontrada.");
+        return [];
+      }
 
-        const reservas: Reserva[] = await response.json();
-        console.log(reservas)
-        return reservas;
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Erro ao buscar reservas: ${errorText}`);
+      }
+
+      const reservas: Reserva[] = await response.json();
+      console.log(reservas);
+      return reservas;
 
     } catch (error) {
-        console.error(error);
-        throw error;
+      console.error(error);
+      throw error;
     }
-},
+  },
 
 
   // async getReservaDetalhes(reservaId: string): Promise<Reserva> {
@@ -48,35 +53,62 @@ export const reservaService = {
 
   async getReservaDetalhes(reservaId: string): Promise<Reserva> {
     try {
-        const token = localStorage.getItem('access_token');
+      const token = localStorage.getItem('access_token');
 
-        const response = await fetch(`http://localhost:3000/reservas/${reservaId}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-            },
-        });
+      const response = await fetch(`http://localhost:3000/reservas/${reservaId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
 
-        if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`Erro ao buscar voos: ${errorText}`);
-        }
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Erro ao buscar voos: ${errorText}`);
+      }
 
-        const reserva: Reserva = await response.json();
-        console.log(reserva)
-        return reserva;
+      const reserva: Reserva = await response.json();
+      console.log(reserva)
+      return reserva;
 
     } catch (error) {
-        console.error(error);
-        throw error;
+      console.error(error);
+      throw error;
     }
-},
+  },
 
-  async cancelarReserva(reservaId: string): Promise<void> {
-    await new Promise(resolve => setTimeout(resolve, 500));
-    const reserva = reservasMock.find(r => r.codigo === reservaId);
-    if (reserva) reserva.estado = 'CANCELADA';
+  // async cancelarReserva(reservaId: string): Promise<void> {
+  //   await new Promise(resolve => setTimeout(resolve, 500));
+  //   const reserva = reservasMock.find(r => r.codigo === reservaId);
+  //   if (reserva) reserva.estado = 'CANCELADA';
+  // },
+
+  async cancelarReserva(reservaId: string): Promise<Reserva> {
+    try {
+      const token = localStorage.getItem('access_token');
+
+      const response = await fetch(`http://localhost:3000/reservas/${reservaId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Erro ao cancelar reserva: ${errorText}`);
+      }
+
+      const reserva: Reserva = await response.json();
+      console.log(reserva)
+      return reserva;
+
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   },
 
   async atualizarEstadoReserva(id: string, novoEstado: EstadoReserva): Promise<void> {
@@ -98,7 +130,7 @@ export const reservaService = {
     }
 
     voo.estado = "CANCELADO";
-    await vooService.adicionar(voo);  
+    await vooService.adicionar(voo);
 
     const reservas = reservasMock.filter(r => r.codigo === voo.codigo);
     reservas.forEach(reserva => {

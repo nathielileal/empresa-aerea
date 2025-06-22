@@ -63,8 +63,8 @@ function ReservaDetalheView() {
                     })}
                   </TableCell>
                   <TableCell>{reserva.voo.aeroporto_origem.codigo} → {reserva.voo.aeroporto_destino.codigo}</TableCell>
-                  {/* <TableCell>R$ {reserva.valorReais.toFixed(2)}</TableCell> */}
-                  {/* <TableCell>{reserva.milhasGastas.toLocaleString()}</TableCell> */}
+                  <TableCell>R$ {reserva.valor.toFixed(2)}</TableCell>
+                  <TableCell>{reserva.quantidade_milhas.toLocaleString()}</TableCell>
                   <TableCell>
                     <Chip
                       label={reserva.estado.toUpperCase()}

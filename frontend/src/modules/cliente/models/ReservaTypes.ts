@@ -8,6 +8,8 @@ export interface Reserva {
   voo: Voo; // ISO string
   estado: string;
   data: string;
+  quantidade_milhas: number;
+  valor: number;
 }
 
 export interface FiltroReservas {

@@ -12,6 +12,7 @@ public class ReservaConsultaDTO {
     private String estado;
     private Double quantidade_milhas;
     private ZonedDateTime data;
+    private Double valor;
 
     public ReservaConsultaDTO(ReservaConsulta reserva) {
         this.codigo = reserva.getCodigo();
@@ -24,6 +25,18 @@ public class ReservaConsultaDTO {
                 reserva.getCodigo_voo(),
                 new AeroportoDTO(reserva.getAeroporto_origem()),
                 new AeroportoDTO(reserva.getAeroporto_destino()));
+        this.valor = reserva.getValor();
+    }
+
+    public ReservaConsultaDTO(String codigo, Long codigo_cliente, VooDTO voo, String estado, Double quantidade_milhas,
+            ZonedDateTime data, Double valor) {
+        this.codigo = codigo;
+        this.codigo_cliente = codigo_cliente;
+        this.voo = voo;
+        this.estado = estado;
+        this.quantidade_milhas = quantidade_milhas;
+        this.data = data;
+        this.valor = valor;
     }
 
     public Double getQuantidade_milhas() {
@@ -84,6 +97,14 @@ public class ReservaConsultaDTO {
 
     public void setVoo(VooDTO voo) {
         this.voo = voo;
+    }
+
+    public Double getValor() {
+        return valor;
+    }
+
+    public void setValor(Double valor) {
+        this.valor = valor;
     }
 
     // Getters and Setters

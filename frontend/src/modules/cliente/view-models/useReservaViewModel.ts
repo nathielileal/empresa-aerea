@@ -6,6 +6,7 @@ import { Voo } from '../../funcionario/models/VooTypes';
 import { Reserva } from '../models/ReservaTypes';
 import { Cliente } from '../models/ClienteTypes';
 import { UserProfile } from '../../auth/models/AuthTypes';
+import { clienteService } from '../services/clienteService';
 
 export function useReservaViewModel() {
     const navigate = useNavigate();
@@ -21,10 +22,9 @@ export function useReservaViewModel() {
     const [milhasUsadas, setMilhasUsadas] = useState(0);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-
+    const [saldo_milhas, setSaldo_milhas] = useState(Number)
     // Calculados
     const cliente = user?.tipo === UserProfile.CLIENTE ? user as Cliente : null;
-    const saldo_milhas = cliente?.saldo_milhas || 0;
     const valorTotal = vooSelecionado ? vooSelecionado.valor_passagem * quantidade : 0;
     const milhasTotais = vooSelecionado ? (vooSelecionado.valor_passagem / 5) * quantidade : 0;
     const valorComMilhas = vooSelecionado ?
@@ -35,6 +35,7 @@ export function useReservaViewModel() {
         if (vooId) {
             carregarVooSelecionado(vooId);
         }
+        getCliente()
     }, [vooId]);
 
     // Métodos
@@ -46,6 +47,20 @@ export function useReservaViewModel() {
             setVoos(voosEncontrados);
         } catch (err) {
             setError('Erro ao buscar voos');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const getCliente = async () => {
+        if (!user?.codigo) return;
+
+        setLoading(true);
+        try {
+            const cliente = await clienteService.getById(user.codigo);
+            setSaldo_milhas(cliente.saldo_milhas);
+        } catch (err) {
+            setError('Erro ao carregar dados do cliente');
         } finally {
             setLoading(false);
         }
@@ -94,17 +109,17 @@ export function useReservaViewModel() {
                 codigo_cliente: cliente?.codigo!.toString(),
                 codigo_voo: vooSelecionado.codigo
             };
-    
+
             console.log('Enviando reserva:', payload);
-    
+
             const reserva = await vooService.finalizarReserva(payload);
-    
+
             // Atualiza o estado local com novo saldo
             // updateUser({
             //     ...user,
             //     saldo_milhas: cliente.saldo_milhas - milhasUsadas
             // });
-    
+
             navigate('/cliente/initial-page');
         } catch (err) {
             console.error(err);

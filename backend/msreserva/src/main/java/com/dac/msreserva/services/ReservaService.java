@@ -113,7 +113,8 @@ public class ReservaService {
         ReservaConsulta consulta = new ReservaConsulta(codigo, reserva.getCodigo_cliente(),
                 estadoReserva.getDescricao(), data, reserva.getMilhas_utilizadas(), reserva.getVoo().getCodigo(),
                 reserva.getVoo().getAeroporto_origem().getCodigo(),
-                reserva.getVoo().getAeroporto_destino().getCodigo());
+                reserva.getVoo().getAeroporto_destino().getCodigo(),
+                reserva.getValor());
         // Envia para sistema de consulta (CQRS)
         template.convertAndSend(exchange.getName(), "gravacao", objectMapper.writeValueAsString(consulta));
 

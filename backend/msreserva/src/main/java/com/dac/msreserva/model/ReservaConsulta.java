@@ -21,13 +21,15 @@ public class ReservaConsulta {
 
     private String aeroporto_origem;
 
+    private Double valor;
+
     public ReservaConsulta() {
     }
 
     private String aeroporto_destino;
 
     public ReservaConsulta(String codigo, Long codigo_cliente, String estado, ZonedDateTime data,
-            Double quantidade_milhas, String codigo_voo, String aeroporto_origem, String aeroporto_destino) {
+            Double quantidade_milhas, String codigo_voo, String aeroporto_origem, String aeroporto_destino, Double valor) {
         this.codigo = codigo;
         this.codigo_cliente = codigo_cliente;
         this.estado = estado;
@@ -36,6 +38,7 @@ public class ReservaConsulta {
         this.codigo_voo = codigo_voo;
         this.aeroporto_origem = aeroporto_origem;
         this.aeroporto_destino = aeroporto_destino;
+        this.valor = valor;
     }
 
     public String getAeroporto_origem() {
@@ -100,6 +103,10 @@ public class ReservaConsulta {
 
     public void setCodigo_voo(String codigo_voo) {
         this.codigo_voo = codigo_voo;
+    }
+
+    public Double getValor() {
+        return valor;
     }
 
     // Getters and Setters
