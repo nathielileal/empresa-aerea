@@ -18,10 +18,10 @@
       "codigoIATA": "BSB"
     },
     {
-      "nome": "Aeroporto Internacional de Miami",
-      "cidade": "Miami",
-      "pais": "Estados Unidos",
-      "codigoIATA": "MIA"
+      "nome": "Aeroporto Internacional Salgado Filho",
+      "cidade": "Porto Alegre",
+      "pais": "Brasil",
+      "codigoIATA": "POA"
     },
     {
       "nome": "Aeroporto Internacional de Frankfurt",
@@ -30,10 +30,10 @@
       "codigoIATA": "FRA"
     },
     {
-      "nome": "Aeroporto Internacional de Tóquio",
-      "cidade": "Tóquio",
-      "pais": "Japão",
-      "codigoIATA": "NRT"
+      "nome": "Aeroporto Internacional de Curitiba",
+      "cidade": "Curitiba",
+      "pais": "Brasil",
+      "codigoIATA": "CWB"
     },
     {
       "nome": "Aeroporto Internacional de Sydney",

@@ -11,6 +11,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.Optional;
 
 @Configuration
@@ -52,8 +53,18 @@ public class DataInitializer {
                 Optional<Aeroporto> gig = aeroportoRepository.findById("GIG");
 
                 if (poa.isPresent() && cwb.isPresent() && gig.isPresent()) {
+<<<<<<< HEAD
                     Voo voo1 = new Voo(OffsetDateTime.parse("2025-08-10T10:30:00-03:00").toZonedDateTime(), poa.get(), cwb.get());
                     voo1.setEstado(estadoConfirmado);
+=======
+                    vooRepository.save(new Voo(OffsetDateTime.parse("2025-08-10T10:30:00-03:00").toZonedDateTime(), poa.get(), cwb.get()));
+                    vooRepository.save(new Voo(OffsetDateTime.parse("2025-09-11T09:30:00-03:00").toZonedDateTime(), cwb.get(), gig.get()));
+                    vooRepository.save(new Voo(OffsetDateTime.parse("2025-10-12T08:30:00-03:00").toZonedDateTime(), cwb.get(), poa.get()));
+                    // Voos nas próximas 48 horas
+                    OffsetDateTime now = OffsetDateTime.now(ZoneOffset.of("-03:00"));
+                    vooRepository.save(new Voo(now.plusHours(12).toZonedDateTime(), poa.get(), gig.get()));
+                    vooRepository.save(new Voo(now.plusHours(36).toZonedDateTime(), gig.get(), poa.get()));
+>>>>>>> 9f676359c415b2c863a53287852ae9a77868d8d1
 
                     Voo voo2 = new Voo(OffsetDateTime.parse("2025-09-11T09:30:00-03:00").toZonedDateTime(), cwb.get(), gig.get());
                     voo2.setEstado(estadoConfirmado);

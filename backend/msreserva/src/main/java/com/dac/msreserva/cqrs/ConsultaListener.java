@@ -6,7 +6,9 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.dac.msreserva.DTO.UpdateEstadoDTO;
 import com.dac.msreserva.model.ReservaConsulta;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
@@ -36,10 +38,16 @@ public class ConsultaListener {
         }
     }
 
-    // @RabbitListener(queues = "cqrs.edicao")
-    // public void editaReserva(String payload) {
-    // ReservaUpdateEstadoDTO reservas = gson.fromJson(payload,
-    // ReservaUpdateEstadoDTO.class);
-    // service.editarReserva(reservas);
-    // }
+    @RabbitListener(queues = "cqrs.edicao")
+    public void editaReserva(String payload) {
+        try {
+            System.out.println("CQRS pra edição escutado");
+            System.out.println(payload);
+            UpdateEstadoDTO reserva = objectMapper.readValue(payload, UpdateEstadoDTO.class);
+            service.editarReserva(reserva);
+        } catch (JsonProcessingException e) {
+            System.err.println("Erro ao desserializar payload: " + e.getMessage());
+        }
+    }
+
 }

@@ -135,13 +135,13 @@ export function BuscaVoosView() {
                                 {voos.map((voo) => (
                                     <TableRow key={voo.codigo}>
                                         <TableCell>{voo.codigo}</TableCell>
-                                        <TableCell>{voo.origem}</TableCell>
-                                        <TableCell>{voo.destino}</TableCell>
+                                        <TableCell>{voo.aeroporto_origem.codigo}</TableCell>
+                                        <TableCell>{voo.aeroporto_destino.codigo}</TableCell>
                                         <TableCell>
-                                            {new Date(voo.dataHora).toLocaleString('pt-BR')}
+                                            {new Date(voo.data).toLocaleString('pt-BR')}
                                         </TableCell>
-                                        <TableCell>{voo.preco?.toFixed(2)}</TableCell>
-                                        <TableCell>{voo.milhasNecessarias?.toLocaleString()}</TableCell>
+                                        <TableCell>{voo.valor_passagem?.toFixed(2)}</TableCell>
+                                        <TableCell>{(voo.valor_passagem / 5).toLocaleString()}</TableCell>
                                         <TableCell>
                                             <Button
                                                 variant="contained"

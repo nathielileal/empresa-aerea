@@ -47,17 +47,17 @@ export function TabelaReservas({
           <TableBody>
             {reservas.length > 0 ? (
               reservas.map((reserva) => (
-                <TableRow key={reserva.id}>
+                <TableRow key={reserva.codigo}>
                   <TableCell>{reserva.codigo}</TableCell>
-                  <TableCell>{formatarData(reserva.dataHora)}</TableCell>
-                  <TableCell>{reserva.origem}</TableCell>
-                  <TableCell>{reserva.destino}</TableCell>
+                  <TableCell>{formatarData(reserva.data)}</TableCell>
+                  <TableCell>{reserva.voo.aeroporto_origem.codigo}</TableCell>
+                  <TableCell>{reserva.voo.aeroporto_destino.codigo}</TableCell>
                   <TableCell sx={{ display:"flex" }}>
-                    <Button variant="outlined" size="small" sx={{ backgroundColor:"primary.main" }} onClick={() => onVerDetalhes(reserva.id)}>
+                    <Button variant="outlined" size="small" sx={{ backgroundColor:"primary.main" }} onClick={() => onVerDetalhes(reserva.codigo)}>
                       Ver
                     </Button>
                     {reserva.estado === "CRIADA" /*|| reserva.estado === "CHECK-IN"*/ && (
-                      <Button variant="contained" size="small" color="error" onClick={() => onCancelar(reserva.id)}>
+                      <Button variant="contained" size="small" color="error" onClick={() => onCancelar(reserva.codigo)}>
                         Cancelar
                       </Button>
                     )}

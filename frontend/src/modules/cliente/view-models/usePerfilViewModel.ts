@@ -25,7 +25,11 @@ export function usePerfilViewModel() {
     try {
       const reservasData = await reservaService.getReservas(user.codigo, {
       });
-      setReservas(reservasData);
+      if (Array.isArray(reservasData)) {
+        setReservas(reservasData);
+      } else {
+        setReservas([]);
+      }
     } catch (err) {
       setError('Erro ao carregar reservas');
     } finally {
@@ -57,7 +61,7 @@ export function usePerfilViewModel() {
 
   const cancelarReserva = async (reservaId: string) => {
     try {
-      const reserva = reservas.find(r => r.codigo === reservaId);
+      const reserva : Reserva = await reservaService.getReservaDetalhes(reservaId);
 
       if (!reserva || !['CRIADA', 'CHECK-IN'].includes(reserva.estado)) {
         setError('Reserva não pode ser cancelada');
@@ -66,14 +70,8 @@ export function usePerfilViewModel() {
 
       await reservaService.cancelarReserva(reservaId);
 
-      //buscar o extrato e atualiza
-      const milhasRestituir = reserva.milhasGastas ?? 0;
-      if (milhasRestituir > 0 && user?.codigo) {
-        // await clienteService.restituirMilhas(...)
-      }
+      await carregarDados()
 
-      // Atualiza saldo no frontend
-      setSaldo_milhas(prev => prev + milhasRestituir);
     } catch (err) {
       setError('Erro ao cancelar reserva');
     }

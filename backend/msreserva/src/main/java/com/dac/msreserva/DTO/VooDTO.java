@@ -17,8 +17,9 @@ public class VooDTO {
     public String getCodigo() {
         return codigo;
     }
-    public VooDTO(String codigo, AeroportoDTO aeroporto_origem, AeroportoDTO aeroporto_destino) {
+    public VooDTO(String codigo, ZonedDateTime data, AeroportoDTO aeroporto_origem, AeroportoDTO aeroporto_destino) {
         this.codigo = codigo;
+        this.data = data;
         this.aeroporto_origem = aeroporto_origem;
         this.aeroporto_destino = aeroporto_destino;
     }

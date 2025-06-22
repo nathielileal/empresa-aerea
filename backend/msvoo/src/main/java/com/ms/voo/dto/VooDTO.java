@@ -43,6 +43,7 @@ public class VooDTO {
         this.estado = estado;
     }
 
+    // Getters e setters
     public String getCodigo() {
         return codigo;
     }

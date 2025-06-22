@@ -18,8 +18,23 @@ public class ReservaConsulta {
     private Double quantidade_milhas;
 
     private String codigo_voo;
+    private ZonedDateTime dataVoo;
+
+    public ZonedDateTime getDataVoo() {
+        return dataVoo;
+    }
+
+    public void setDataVoo(ZonedDateTime dataVoo) {
+        this.dataVoo = dataVoo;
+    }
+
+    public void setValor(Double valor) {
+        this.valor = valor;
+    }
 
     private String aeroporto_origem;
+
+    private Double valor;
 
     public ReservaConsulta() {
     }
@@ -27,7 +42,8 @@ public class ReservaConsulta {
     private String aeroporto_destino;
 
     public ReservaConsulta(String codigo, Long codigo_cliente, String estado, ZonedDateTime data,
-            Double quantidade_milhas, String codigo_voo, String aeroporto_origem, String aeroporto_destino) {
+            Double quantidade_milhas, String codigo_voo, String aeroporto_origem, String aeroporto_destino,
+            Double valor) {
         this.codigo = codigo;
         this.codigo_cliente = codigo_cliente;
         this.estado = estado;
@@ -36,6 +52,22 @@ public class ReservaConsulta {
         this.codigo_voo = codigo_voo;
         this.aeroporto_origem = aeroporto_origem;
         this.aeroporto_destino = aeroporto_destino;
+        this.valor = valor;
+    }
+
+    public ReservaConsulta(String codigo, Long codigo_cliente, String estado, ZonedDateTime data,
+            Double quantidade_milhas, String codigo_voo, String aeroporto_origem, String aeroporto_destino,
+            Double valor, ZonedDateTime datavoo) {
+        this.codigo = codigo;
+        this.codigo_cliente = codigo_cliente;
+        this.estado = estado;
+        this.data = data;
+        this.quantidade_milhas = quantidade_milhas;
+        this.codigo_voo = codigo_voo;
+        this.aeroporto_origem = aeroporto_origem;
+        this.aeroporto_destino = aeroporto_destino;
+        this.valor = valor;
+        this.dataVoo = datavoo;
     }
 
     public String getAeroporto_origem() {
@@ -100,6 +132,10 @@ public class ReservaConsulta {
 
     public void setCodigo_voo(String codigo_voo) {
         this.codigo_voo = codigo_voo;
+    }
+
+    public Double getValor() {
+        return valor;
     }
 
     // Getters and Setters

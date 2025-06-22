@@ -6,7 +6,7 @@ import { ArrowBack } from '@mui/icons-material';
 export function ConfirmarReservaView() {
     const theme = useTheme();
     const navigate = useNavigate();
-    
+
     const {
         vooSelecionado,
         quantidade,
@@ -47,13 +47,18 @@ export function ConfirmarReservaView() {
                     <Box display="grid" gridTemplateColumns="repeat(2, 1fr)" gap={2}>
                         <Box>
                             <Typography><strong>Código:</strong> {vooSelecionado.codigo}</Typography>
-                            <Typography><strong>Origem:</strong> {vooSelecionado.origem}</Typography>
-                            <Typography><strong>Destino:</strong> {vooSelecionado.destino}</Typography>
+                            <Typography><strong>Origem:</strong> {vooSelecionado.aeroporto_origem.codigo}</Typography>
+                            <Typography><strong>Destino:</strong> {vooSelecionado.aeroporto_destino.codigo}</Typography>
                         </Box>
                         <Box>
-                            <Typography><strong>Data/Hora:</strong> {new Date(vooSelecionado.dataHora).toLocaleString('pt-BR')}</Typography>
-                            <Typography><strong>Preço unitário:</strong> R$ {vooSelecionado.valorReais.toFixed(2)}</Typography>
-                            <Typography><strong>Milhas por passagem:</strong> {vooSelecionado.valorMilhas.toLocaleString()}</Typography>
+                            <Typography><strong>Data/Hora:</strong> {new Date(vooSelecionado.data).toLocaleString('pt-BR')}</Typography>
+                            <Typography>
+                                <strong>Preço unitário:</strong>{' '}
+                                {vooSelecionado.valor_passagem != null
+                                    ? `R$ ${vooSelecionado.valor_passagem.toFixed(2)}`
+                                    : 'Não disponível'}
+                            </Typography>
+                            <Typography><strong>Milhas por passagem:</strong> {(vooSelecionado.valor_passagem / 5).toLocaleString()}</Typography>
                         </Box>
                     </Box>
                 </Box>
@@ -67,7 +72,7 @@ export function ConfirmarReservaView() {
                         type="number"
                         value={quantidade}
                         onChange={(e) => setQuantidade(Math.max(1, parseInt(e.target.value) || 1))}
-                        inputProps={{ min: 1, max: vooSelecionado.poltronas }}
+                        // inputProps={{ min: 1, max: vooSelecionado.poltronas }}
                         sx={{ mb: 2 }}
                         fullWidth
                     />

@@ -39,7 +39,7 @@ public class Voo {
         this.aeroporto_destino = destino;
         this.quantidade_poltronas_total = 100;
         this.quantidade_poltronas_ocupadas = 0;
-        this.valor_passagem = 0.0;
+        this.valor_passagem = 350.00;
     }
 
     public String getCodigo() {

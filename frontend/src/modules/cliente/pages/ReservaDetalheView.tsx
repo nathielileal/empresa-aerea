@@ -54,7 +54,7 @@ function ReservaDetalheView() {
                 <TableRow>
                   <TableCell>{reserva.codigo}</TableCell>
                   <TableCell>
-                    {new Date(reserva.dataHora).toLocaleDateString('pt-BR', {
+                    {new Date(reserva.data).toLocaleDateString('pt-BR', {
                       day: '2-digit',
                       month: 'long',
                       year: 'numeric',
@@ -62,9 +62,9 @@ function ReservaDetalheView() {
                       minute: '2-digit'
                     })}
                   </TableCell>
-                  <TableCell>{reserva.origem} → {reserva.destino}</TableCell>
-                  <TableCell>R$ {reserva.valorReais.toFixed(2)}</TableCell>
-                  <TableCell>{reserva.milhasGastas.toLocaleString()}</TableCell>
+                  <TableCell>{reserva.voo.aeroporto_origem.codigo} → {reserva.voo.aeroporto_destino.codigo}</TableCell>
+                  <TableCell>R$ {reserva.valor.toFixed(2)}</TableCell>
+                  <TableCell>{reserva.quantidade_milhas.toLocaleString()}</TableCell>
                   <TableCell>
                     <Chip
                       label={reserva.estado.toUpperCase()}

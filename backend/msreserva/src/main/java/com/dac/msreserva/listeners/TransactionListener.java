@@ -6,10 +6,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.dac.msreserva.DTO.ReservaTransactionDTO;
 import com.dac.msreserva.DTO.VooDTO;
 import com.dac.msreserva.services.ReservaService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
@@ -38,26 +40,27 @@ public class TransactionListener {
             throw new RuntimeException("Erro ao processar reserva", e);
         }
     }
+
+    @RabbitListener(queues = "cancelareserva.reserva")
+    public String cancelarReserva(String payload) {
+        try {
+            System.out.println("Iniciando cancelamento da reserva");
+
+            String codigo = objectMapper.readValue(payload, String.class);
+            System.out.println("Código recebido: " + codigo);
+
+            Object reserva = service.cancelarReserva(codigo);
+            return objectMapper.writeValueAsString(reserva);
+
+        } catch (ResponseStatusException e) {
+            return "{\"erro\": \"" + e.getReason() + "\", \"status\": " + e.getStatusCode().value() + "}";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "{\"erro\": \"Erro inesperado ao cancelar reserva\"}";
+        }
+    }
+
 }
-
-// @RabbitListener(queues = "cancelareserva.reserva", errorHandler =
-// "customErrorHandler")
-// public String cancelarReserva(String codigo) {
-// Object reserva = service.cancelarReserva(codigo);
-// response = new (true, reserva);
-
-// return gson.toJson(response);
-// }
-
-// @RabbitListener(queues = "cancelavoo.reserva", errorHandler =
-// "customErrorHandler")
-// public String canceladoVoo(String payload) {
-// VooDTO voo = gson.fromJson(payload, VooDTO.class);
-// Object reserva = service.canceladoVoo(voo);
-// response = new (true, reserva);
-
-// return gson.toJson(response);
-// }
 
 // @RabbitListener(queues = "realizavoo.reserva", errorHandler =
 // "customErrorHandler")

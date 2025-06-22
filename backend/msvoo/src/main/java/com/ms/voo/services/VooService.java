@@ -8,7 +8,6 @@ import com.ms.voo.model.VooEstado;
 import com.ms.voo.repository.AeroportoRepository;
 import com.ms.voo.repository.VooEstadoRepository;
 import com.ms.voo.repository.VooRepository;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Random;
@@ -118,7 +117,7 @@ public class VooService {
         Voo voo = new Voo();
 
         voo.setCodigo(codigo);
-        voo.setData(dto.getData().withZoneSameInstant(ZoneId.of("America/Sao_Paulo")));
+        voo.setData(dto.getData());
         voo.setAeroportoOrigem(aeroportoOrigem);
         voo.setAeroportoDestino(aeroportoDestino);
         voo.setValorPassagem(dto.getValorPassagem());

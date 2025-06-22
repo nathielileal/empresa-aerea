@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.dac.msreserva.DTO.AlterarEstadoDTO;
 import com.dac.msreserva.DTO.ReservaConsultaDTO;
 // import com.dac.msreserva.DTO.AlternaEstadoDTO;
 import com.dac.msreserva.DTO.ReservaDTO;
@@ -42,11 +43,12 @@ public class ReservaController {
         }
     }
 
-    // @PatchMapping("/{codigo}/estado")
-    // public ResponseEntity<ReservaDTO> alterarEstado(
-    // @PathVariable String codigo,
-    // @RequestBody AlternaEstadoDTO payload) {
-    // ReservaDTO reserva = service.alterarEstado(codigo, payload);
-    // return ResponseEntity.ok(reserva);
-    // }
+    @PatchMapping("/reservas/{codigo}/estado")
+    public ResponseEntity<ReservaDTO> alterarEstado(
+            @PathVariable String codigo,
+            @RequestBody AlterarEstadoDTO payload) {
+        ReservaDTO reserva = service.alterarEstado(codigo, payload.getEstado());
+        return ResponseEntity.ok(reserva);
+    }
+
 }

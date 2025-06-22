@@ -6,6 +6,7 @@ import { Voo } from '../../funcionario/models/VooTypes';
 import { Reserva } from '../models/ReservaTypes';
 import { Cliente } from '../models/ClienteTypes';
 import { UserProfile } from '../../auth/models/AuthTypes';
+import { clienteService } from '../services/clienteService';
 
 export function useReservaViewModel() {
     const navigate = useNavigate();
@@ -21,20 +22,20 @@ export function useReservaViewModel() {
     const [milhasUsadas, setMilhasUsadas] = useState(0);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-
+    const [saldo_milhas, setSaldo_milhas] = useState(Number)
     // Calculados
     const cliente = user?.tipo === UserProfile.CLIENTE ? user as Cliente : null;
-    const saldo_milhas = cliente?.saldo_milhas || 0;
-    const valorTotal = vooSelecionado ? vooSelecionado.preco * quantidade : 0;
-    const milhasTotais = vooSelecionado ? vooSelecionado.milhasNecessarias * quantidade : 0;
+    const valorTotal = vooSelecionado ? vooSelecionado.valor_passagem * quantidade : 0;
+    const milhasTotais = vooSelecionado ? (vooSelecionado.valor_passagem / 5) * quantidade : 0;
     const valorComMilhas = vooSelecionado ?
-        Math.max(0, valorTotal - (milhasUsadas * vooSelecionado.preco / vooSelecionado.milhasNecessarias)) : 0;
+        Math.max(0, valorTotal - (milhasUsadas * vooSelecionado.valor_passagem / (vooSelecionado.valor_passagem / 5))) : 0;
 
     // Efeitos
     useEffect(() => {
         if (vooId) {
             carregarVooSelecionado(vooId);
         }
+        getCliente()
     }, [vooId]);
 
     // Métodos
@@ -42,7 +43,7 @@ export function useReservaViewModel() {
         setLoading(true);
         setError('');
         try {
-            const voosEncontrados = await vooService.mockBuscarVoos(origem, destino);
+            const voosEncontrados = await vooService.buscarVoos(origem, destino);
             setVoos(voosEncontrados);
         } catch (err) {
             setError('Erro ao buscar voos');
@@ -51,11 +52,26 @@ export function useReservaViewModel() {
         }
     };
 
-    const carregarVooSelecionado = async (id: string) => {
+    const getCliente = async () => {
+        if (!user?.codigo) return;
+
         setLoading(true);
         try {
-            const voos = await vooService.mockBuscarVoos('', '');
-            const voo = voos.find(v => v.codigo === id);
+            const cliente = await clienteService.getById(user.codigo);
+            setSaldo_milhas(cliente.saldo_milhas);
+        } catch (err) {
+            setError('Erro ao carregar dados do cliente');
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    const carregarVooSelecionado = async (id: string) => {
+        setLoading(true);
+        console.log('buscando voo')
+        try {
+            const voo = await vooService.buscarVooById(id);
+            console.log("Voo encontrado", voo)
             if (voo) {
                 setVooSelecionado(voo);
             } else {
@@ -69,7 +85,9 @@ export function useReservaViewModel() {
         }
     };
 
-    const selecionarVoo = (voo: Voo) => {
+    const selecionarVoo = async (voo: Voo) => {
+        console.log('Voo selecionado')
+        await carregarVooSelecionado(voo.codigo)
         navigate(`/cliente/reservar/confirmar/${voo.codigo}`);
     };
 
@@ -80,48 +98,31 @@ export function useReservaViewModel() {
     };
 
     const finalizarReserva = async () => {
-        if (!vooSelecionado || !user) return;
+        if (!vooSelecionado || !user || !cliente) return;
 
-        //levar essa parte pro back?
-        const letras = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        const numeros = '0123456789';
-        let codigo = '';
-
-        for (let i = 0; i < 3; i++) {
-            codigo += letras.charAt(Math.floor(Math.random() * letras.length));
-        }
-        for (let i = 0; i < 3; i++) {
-            codigo += numeros.charAt(Math.floor(Math.random() * numeros.length));
-        }
         setLoading(true);
         try {
-            const dadosReserva: Reserva = {
-                id: Math.floor(1000 + Math.random() * 9000).toString(),
-                codigo: codigo,
-                dataHora: vooSelecionado.dataHora,
-                origem: vooSelecionado.origem,
-                destino: vooSelecionado.destino,
-                valorReais: valorComMilhas,
-                milhasGastas: milhasUsadas,
-                estado: 'CRIADA'
+            const payload = {
+                valor: vooSelecionado.valor_passagem,
+                milhas_utilizadas: milhasUsadas,
+                quantidade_poltronas: quantidade,
+                codigo_cliente: cliente?.codigo!.toString(),
+                codigo_voo: vooSelecionado.codigo
             };
-            console.log(dadosReserva)
 
-            const reserva = await vooService.mockFinalizarReserva(dadosReserva);
+            console.log('Enviando reserva:', payload);
 
-            // await clienteService.debitarMilhas(user.id, milhasUsadas, 'Reserva de voo');
+            const reserva = await vooService.finalizarReserva(payload);
 
-            // VERIFICAR SE TEM MILHA PARA DESCONTAR
+            // Atualiza o estado local com novo saldo
+            // updateUser({
+            //     ...user,
+            //     saldo_milhas: cliente.saldo_milhas - milhasUsadas
+            // });
 
-            // Atualiza o estado local
-            updateUser({
-                ...user,
-                saldo_milhas: cliente?.saldo_milhas ?? - milhasUsadas
-            });
-            // Navega para a página de confirmação
-            // navigate(`/cliente/reservas/${reserva.codigo}`);
-            navigate(`/cliente/initial-page`)
+            navigate('/cliente/initial-page');
         } catch (err) {
+            console.error(err);
             setError('Erro ao finalizar reserva');
         } finally {
             setLoading(false);
