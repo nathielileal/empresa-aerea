@@ -37,6 +37,11 @@ public class FuncionarioService {
         }
 
         Funcionario funcionario = mapper.map(funcionarioDTO, Funcionario.class);
+
+        if (funcionario.getAtivo() == null) {
+            funcionario.setAtivo(true); 
+        }
+
         Funcionario funcionarioSalvo = repository.save(funcionario);
 
         CadastroDTO cadastroDTO = new CadastroDTO();
@@ -51,12 +56,8 @@ public class FuncionarioService {
 
             System.out.println("foi");
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
-
             throw new RuntimeException("Erro ao serializar DTO para JSON ou enviar para RabbitMQ", e);
         } catch (AmqpException e) {
-            e.printStackTrace();
-
             throw new RuntimeException("Erro ao enviar mensagem para RabbitMQ", e);
         }
 
@@ -64,10 +65,21 @@ public class FuncionarioService {
     }
 
     @Transactional
-    public FuncionarioDTO findById(Long id) {
-        Funcionario funcionario = repository.findById(id).orElseThrow(() -> new RuntimeException("Funcionário não encontrado com o ID: " + id));
+    public FuncionarioDTO findByIdAtivo(Long id) {
+        Funcionario funcionario = repository.findById(id).filter(Funcionario::getAtivo).orElseThrow(() -> new RuntimeException("Funcionário não encontrado com o ID: " + id));
 
         return mapper.map(funcionario, FuncionarioDTO.class);
+    }
+
+    @Transactional
+    public Funcionario findById(Long id) {
+        Funcionario funcionario = repository.findById(id).orElseThrow(() -> new RuntimeException("Funcionário não encontrado com o ID: " + id));
+
+        if (!funcionario.getAtivo()) {
+            throw new RuntimeException("Não é possível atualizar um funcionário inativo");
+        }
+
+        return funcionario;
     }
 
     @Transactional
@@ -100,11 +112,13 @@ public class FuncionarioService {
     }
 
     @Transactional
-    public void deleteFuncionario(Long id) {
+    public FuncionarioDTO deleteFuncionario(Long id) {
         Funcionario funcionario = repository.findById(id).orElseThrow(() -> new RuntimeException("Funcionário não encontrado com o ID: " + id));
 
         funcionario.setAtivo(false);
 
-        repository.save(funcionario);
+        Funcionario atualizado = repository.save(funcionario);
+
+        return mapper.map(atualizado, FuncionarioDTO.class);
     }
 }

@@ -27,7 +27,6 @@ public class FuncionarioController {
 
     @GetMapping
     public ResponseEntity<List<Map<String, Object>>> listAll() {
-//        return service.listarFuncionarios();
         List<FuncionarioDTO> funcionarios = service.listarFuncionarios();
 
         List<Map<String, Object>> resposta = funcionarios.stream().map(f -> {
@@ -50,7 +49,7 @@ public class FuncionarioController {
     @GetMapping("/{id}")
     public ResponseEntity<FuncionarioDTO> getById(@PathVariable Long id) {
         try {
-            FuncionarioDTO dto = service.findById(id);
+            FuncionarioDTO dto = service.findByIdAtivo(id);
 
             return ResponseEntity.ok(dto);
         } catch (RuntimeException e) {
@@ -77,11 +76,10 @@ public class FuncionarioController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteFuncionario(@PathVariable Long id) {
+    public ResponseEntity<FuncionarioDTO> deleteFuncionario(@PathVariable Long id) {
         try {
-            service.deleteFuncionario(id);
-
-            return ResponseEntity.noContent().build();
+            FuncionarioDTO funcionarioDTO = service.deleteFuncionario(id);
+            return ResponseEntity.ok(funcionarioDTO);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }

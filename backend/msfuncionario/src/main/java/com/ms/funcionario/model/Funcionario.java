@@ -25,6 +25,7 @@ public class Funcionario {
 
     private String telefone;
 
+    @Column(nullable = false)
     private Boolean ativo = true;
 
     public Long getCodigo() {
