@@ -207,13 +207,6 @@ public class ReservaService {
         }
     }
 
-    // public List<ReservaDTO> canceladoVoo(VooDTO voo) {
-    // List<Reserva> reservas = repository.findByCodigoVoo(voo.getCodigo());
-    // return reservas.stream()
-    // .map(r -> atualizarEstadoReserva(r,
-    // EstadoReservaEnum.CANCELADA_VOO.getCodigo()))
-    // .collect(Collectors.toList());
-    // }
 
     public void realizaVoo(VooDTO voo) {
         List<Reserva> reservas = repository.findByCodigoVoo(voo.getCodigo());
