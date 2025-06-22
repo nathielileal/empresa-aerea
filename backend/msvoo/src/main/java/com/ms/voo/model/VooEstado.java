@@ -14,6 +14,14 @@ public class VooEstado {
     private String sigla;
     private String descricao;
 
+    public VooEstado() {
+    }
+
+    public VooEstado(String sigla, String descricao) {
+        this.sigla = sigla.toUpperCase();
+        this.descricao = descricao;
+    }
+
     public Long getCodigo() {
         return codigo;
     }
