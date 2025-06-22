@@ -18,4 +18,9 @@ public enum EstadoReservaEnum {
     public Long getCodigo() {
         return codigo;
     }
+
+    @Override
+    public String toString() {
+        return this.name().replace("_", "-");
+    }
 }

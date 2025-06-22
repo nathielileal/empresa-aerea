@@ -65,26 +65,6 @@ public class ReservaService {
         this.exchange = exchange;
     }
 
-    // public List<ReservaDTO> listReservasByCliente(Long codigo) {
-    // List<ReservaConsulta> reservas =
-    // consultaReposity.findReservasByCodigoCliente(codigo);
-
-    // return reservas.stream()
-    // .map(reserva -> mapper.map(reserva, ReservaDTO.class))
-    // .collect(Collectors.toList());
-    // }
-
-    // public ReservaDTO detailReserva(String codigo) {
-    // ReservaConsulta reserva = consultaReposity.findReservaByCodigo(codigo);
-
-    // if (reserva == null) {
-    // throw new RuntimeException("Reserva com código " + codigo + " não
-    // encontrada.");
-    // }
-
-    // return mapper.map(reserva, ReservaDTO.class);
-    // }
-
     public ReservaCreationResponseDTO efetuarReserva(ReservaTransactionDTO reserva)
             throws JsonProcessingException, AmqpException {
         // Geração de código aleatório no formato ABC123
@@ -124,7 +104,8 @@ public class ReservaService {
                 estadoReserva.getDescricao(),
                 reserva.getCodigo_cliente(),
                 milhas_utilizadas,
-                reserva.getVoo().getCodigo(),
+                reserva.getVoo().getAeroporto_origem().getCodigo() + "->"
+                        + reserva.getVoo().getAeroporto_destino().getCodigo(),
                 milhas_utilizadas);
     }
 
@@ -235,15 +216,24 @@ public class ReservaService {
     // return estadoDesejadoEnum;
     // }
 
-    // public ReservaDTO alterarEstado(String codigo, AlternaEstadoDTO payload) {
-    // Reserva reserva = repository.findById(codigo)
-    // .orElseThrow(() -> new ("Reserva não encontrada com o código fornecido."));
+    public ReservaDTO alterarEstado(String codigo, String payload) {
+        try {
+            Reserva reserva = repository.findById(codigo)
+                    .orElseThrow(() -> new RuntimeException("Reserva não encontrada com o código fornecido."));
 
-    // long novoEstado = validaAlteracaoEstado(payload.getEstado(),
-    // reserva.getEstado()).getCodigo();
+            // Converte o nome do estado para enum (removendo hífens e tratando
+            // case-insensitive)
+            String enumName = payload.trim().toUpperCase().replace("-", "_");
+            EstadoReservaEnum estadoEnum = EstadoReservaEnum.valueOf(enumName);
+            Long codigoEstado = estadoEnum.getCodigo();
 
-    // return atualizarEstadoReserva(reserva, novoEstado);
-    // }
+            return atualizarEstadoReserva(reserva, codigoEstado);
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Estado inválido fornecido: " + payload);
+        } catch (Exception e) {
+            throw new RuntimeException("Erro ao alterar estado da reserva: " + e.getMessage(), e);
+        }
+    }
 
     // public List<ReservaDTO> canceladoVoo(VooDTO voo) {
     // List<Reserva> reservas = repository.findByCodigoVoo(voo.getCodigo());
