@@ -26,6 +26,14 @@ public class ReservaConsultaDTO {
                 new AeroportoDTO(reserva.getAeroporto_destino()));
     }
 
+    public Double getQuantidade_milhas() {
+        return quantidade_milhas;
+    }
+
+    public void setQuantidade_milhas(Double quantidade_milhas) {
+        this.quantidade_milhas = quantidade_milhas;
+    }
+
     public ReservaConsultaDTO(String codigo, Long codigo_cliente, VooDTO voo, String estado, ZonedDateTime data,
             Double quantidade_milhas) {
         this.codigo = codigo;

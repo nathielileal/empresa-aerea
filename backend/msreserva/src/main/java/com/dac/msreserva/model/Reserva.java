@@ -12,7 +12,7 @@ public class Reserva {
     private String codigo;
     private Long codigo_cliente;
     private String codigo_voo;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "estado_codigo")
     private EstadoReserva estado;
     private Integer quantidade_poltronas;

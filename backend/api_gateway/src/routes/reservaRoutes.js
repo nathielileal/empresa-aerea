@@ -6,6 +6,7 @@ const reservaServiceProxy = require('../services/reservaServiceProxy');
 
 router.get('/reservas', verifyJWT, reservaServiceProxy);
 router.get('/reservas/:id', verifyJWT, reservaServiceProxy);
+router.delete('/reservas/:id', verifyJWT, sagaServiceProxy);
 router.get('/clientes/:id/reservas', verifyJWT, reservaServiceProxy);
 router.get('/reservas/:id/milhas', verifyJWT, reservaServiceProxy);
 router.put('/reservas/:id/milhas', verifyJWT, reservaServiceProxy);

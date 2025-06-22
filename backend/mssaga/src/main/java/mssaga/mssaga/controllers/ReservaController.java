@@ -8,7 +8,10 @@ import mssaga.mssaga.sagas.CriarReservaSaga;
 import java.net.URI;
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +23,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class ReservaController {
 
     private final CriarReservaSaga sagaCriar;
+    private final CancelarReservaSaga sagaCancelar;
     // private final CancelarReservaSaga sagaCancelar;
 
     // public ReservaController(CriarReservaSaga sagaCriar, CancelarReservaSaga
@@ -28,9 +32,9 @@ public class ReservaController {
     // this.sagaCancelar = sagaCancelar;
     // }
 
-    public ReservaController(CriarReservaSaga sagaCriar) {
+    public ReservaController(CriarReservaSaga sagaCriar, CancelarReservaSaga sagaCancelar) {
         this.sagaCriar = sagaCriar;
-        // this.sagaCancelar = sagaCancelar;
+        this.sagaCancelar = sagaCancelar;
     }
 
     @PostMapping
@@ -50,10 +54,18 @@ public class ReservaController {
 
     }
 
-    // @DeleteMapping("/{codigo}")
-    // public ResponseEntity<ReservaOutputDTO> cancelarReserva(@PathVariable String
-    // codigo) {
-    // ReservaOutputDTO reserva = sagaCancelar.executeSaga(codigo);
-    // return ResponseEntity.ok(reserva);
-    // }
+    @DeleteMapping("/{codigo}")
+    public ResponseEntity<?> cancelarReserva(@PathVariable String codigo) {
+        try {
+            System.out.println("Iniciando cancelamento da reserva");
+            ReservaOutputDTO reserva = sagaCancelar.executeSaga(codigo);
+            return ResponseEntity.ok(reserva);
+        } catch (ResponseStatusException e) {
+            return ResponseEntity.status(e.getStatusCode()).body(Map.of("erro", e.getReason()));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("erro", "Erro interno ao cancelar reserva"));
+        }
+    }
+
 }

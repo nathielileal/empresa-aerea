@@ -30,6 +30,16 @@ public class ReservaDTO {
         this.voo_codigo = voo_codigo;
     }
 
+    public ReservaDTO(String codigo, ZonedDateTime data, String estado, Double quantidade_milhas, Long codigo_cliente,
+            String voo_codigo) {
+        this.codigo = codigo;
+        this.data = data;
+        this.estado = estado;
+        this.quantidade_milhas = quantidade_milhas;
+        this.codigo_cliente = codigo_cliente;
+        this.voo_codigo = voo_codigo;
+    }
+
     public ReservaDTO() {
     }
 

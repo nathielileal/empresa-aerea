@@ -17,4 +17,8 @@ public interface ConsultaRepository extends JpaRepository<ReservaConsulta, Strin
 
     @Query("SELECT r FROM ReservaConsulta r WHERE r.codigo_cliente = :codigo_cliente")
     List<ReservaConsulta> buscarPorCodigoCliente(@Param("codigo_cliente") Long codigo_cliente);
+
+    @Modifying
+    @Query("UPDATE ReservaConsulta r SET r.estado = :estado, r.data = :data WHERE r.codigo = :codigo")
+    void update(@Param("estado") String estado, @Param("data") ZonedDateTime data, @Param("codigo") String codigo);
 }

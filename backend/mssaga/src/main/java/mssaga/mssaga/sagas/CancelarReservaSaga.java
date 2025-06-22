@@ -4,7 +4,9 @@ import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -21,30 +23,41 @@ public class CancelarReservaSaga {
 
     @Autowired
     public CancelarReservaSaga(RabbitTemplate rabbitTemplate,
-                               @Qualifier("sagaCancelarReserva") DirectExchange exchange,
-                               ObjectMapper objectMapper) {
+            @Qualifier("sagaCancelarReserva") DirectExchange exchange,
+            ObjectMapper objectMapper) {
         this.rabbitTemplate = rabbitTemplate;
         this.exchange = exchange;
         this.objectMapper = objectMapper;
     }
 
-    public ReservaOutputDTO executeSaga(String codigo) throws Exception {
-        // Atualiza a reserva
-        String reservaJson = objectMapper.writeValueAsString(codigo);
-        Object reservaResponse = rabbitTemplate.convertSendAndReceive(exchange.getName(), "reserva", reservaJson);
-        ReservaOutputDTO dadosReserva = objectMapper.readValue(reservaResponse.toString(), ReservaOutputDTO.class);
+    public ReservaOutputDTO executeSaga(String codigo) {
+        try {
+            // Etapa 1 - Cancelar Reserva
+            String reservaJson = objectMapper.writeValueAsString(codigo);
+            Object reservaResponse = rabbitTemplate.convertSendAndReceive(exchange.getName(), "reserva", reservaJson);
+            System.out.println("Reserva cancelada");
+            if (reservaResponse == null) {
+                throw new IllegalStateException("Erro ao cancelar reserva. Resposta nula.");
+            }
 
-        // Reembolsa o cliente
-        String clienteJson = objectMapper.writeValueAsString(dadosReserva);
-        Object clienteResponse = rabbitTemplate.convertSendAndReceive(exchange.getName(), "cliente", clienteJson);
-        ClienteDTO dadosCliente = objectMapper.readValue(clienteResponse.toString(), ClienteDTO.class);
+            ReservaOutputDTO dadosReserva = objectMapper.readValue(reservaResponse.toString(), ReservaOutputDTO.class);
 
-        // // Libera assentos do voo
-        // String vooJson = objectMapper.writeValueAsString(dadosReserva);
-        // Object vooResponse = rabbitTemplate.convertSendAndReceive(exchange.getName(), "voo", vooJson);
-        // VooDTO dadosVoo = objectMapper.readValue(vooResponse.toString(), VooDTO.class);
+            // Etapa 2 - Reembolsar Cliente
+            String clienteJson = objectMapper.writeValueAsString(dadosReserva);
+            Object clienteResponse = rabbitTemplate.convertSendAndReceive(exchange.getName(), "cliente", clienteJson);
 
-        return processResponse(dadosReserva, dadosCliente);
+            if (clienteResponse == null) {
+                throw new IllegalStateException("Erro ao reembolsar cliente. Resposta nula.");
+            }
+
+            ClienteDTO dadosCliente = objectMapper.readValue(clienteResponse.toString(), ClienteDTO.class);
+
+            return processResponse(dadosReserva, dadosCliente);
+
+        } catch (Exception e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR,
+                    "Falha ao executar a saga de cancelamento: " + e.getMessage());
+        }
     }
 
     private ReservaOutputDTO processResponse(ReservaOutputDTO dadosReserva, ClienteDTO dadosCliente) {
@@ -54,7 +67,6 @@ public class CancelarReservaSaga {
                 dadosReserva.getEstado(),
                 dadosReserva.getQuantidade_milhas(),
                 dadosCliente.getCodigo(),
-                dadosCliente.getSaldo_milhas()
-        );
+                dadosCliente.getSaldo_milhas());
     }
 }
