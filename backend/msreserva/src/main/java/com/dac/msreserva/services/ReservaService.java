@@ -187,35 +187,7 @@ public class ReservaService {
                 reservaAtualizada.getCodigo_voo());
     }
 
-    // private EstadoReservaEnum validaAlteracaoEstado(String estadoDesejado,
-    // EstadoReservaDTO estadoAtual) {
-    // Map<String, EstadoReservaEnum> transicoesValidas = new HashMap<>();
-    // transicoesValidas.put("CHECK-IN", EstadoReservaEnum.CRIADA);
-    // transicoesValidas.put("EMBARCADA", EstadoReservaEnum.CHECK_IN);
 
-    // String estadoNormalizado = estadoDesejado.toUpperCase().replace("-", "_");
-    // EstadoReservaEnum estadoDesejadoEnum;
-    // try {
-    // estadoDesejadoEnum = EstadoReservaEnum.valueOf(estadoNormalizado);
-    // } catch (IllegalArgumentException e) {
-    // throw new IllegalArgumentException("Estado desejado inválido: " +
-    // estadoDesejado);
-    // }
-
-    // EstadoReservaEnum estadoAtualEsperado =
-    // transicoesValidas.get(estadoDesejado.toUpperCase());
-    // if (estadoAtualEsperado == null) {
-    // throw new IllegalArgumentException("Estado desejado inválido: " +
-    // estadoDesejado);
-    // }
-
-    // if (estadoAtual.getCodigo() != estadoAtualEsperado.getCodigo()) {
-    // throw new IllegalArgumentException("Condições para troca de estado não
-    // atendidas");
-    // }
-
-    // return estadoDesejadoEnum;
-    // }
 
     public ReservaDTO alterarEstado(String codigo, String payload) {
         try {
