@@ -144,17 +144,4 @@ public class MilhasService {
                 }
         }
 
-        // public TransacaoDTO emitirExtrato(Long codigo) {
-        // Cliente cliente = repository.findByCodigo(codigo)
-        // .orElseThrow(() -> new RuntimeException(
-        // "Cliente não encontrado com o id: "));
-
-        // List<Transacao> transacoes = transacaoRepository.findByCliente(cliente);
-
-        // return new TransacaoDTO(
-        // cliente.getCodigo(),
-        // cliente.getSaldo_milhas(),
-        // transacoes.stream().map(t -> mapper.map(t,
-        // TransacaoDTO.class)).collect(Collectors.toList()));
-        // }
 }
