@@ -1,6 +1,7 @@
 package com.dac.msreserva.listeners;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.dac.msreserva.DTO.ReservaDTO;
 import com.dac.msreserva.DTO.ReservaTransactionDTO;
 import com.dac.msreserva.DTO.VooDTO;
 import com.dac.msreserva.services.ReservaService;
@@ -60,15 +62,35 @@ public class TransactionListener {
         }
     }
 
+    @RabbitListener(queues = "realizavoo.reserva")
+    public String realizaVoo(String payload) {
+        try {
+            System.out.println("Realizar voo escutado");
+            VooDTO voo = objectMapper.readValue(payload, VooDTO.class);
+            service.realizaVoo(voo);
+
+            return "{\"mensagem\": \"Reservas atualizadas com sucesso para o voo " + voo.getCodigo() + "\"}";
+
+        } catch (ResponseStatusException e) {
+            return "{\"erro\": \"" + e.getReason() + "\", \"status\": " + e.getStatusCode().value() + "}";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "{\"erro\": \"Erro inesperado ao processar voo " + payload + "\"}";
+        }
+    }
+
+    @RabbitListener(queues = "cancelavoo.reserva")
+    public String canceladoVoo(String payload) {
+        try {
+            System.out.println(("Cancelar voo escutado"));
+            VooDTO voo = objectMapper.readValue(payload, VooDTO.class);
+            List<ReservaDTO> reservas = service.canceladoVoo(voo);
+
+            return objectMapper.writeValueAsString(reservas);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "{\"erro\": \"Erro ao processar cancelamento de voo\"}";
+        }
+    }
+
 }
-
-// @RabbitListener(queues = "realizavoo.reserva", errorHandler =
-// "customErrorHandler")
-// public String realizaVoo(String payload) {
-// VooDTO voo = gson.fromJson(payload, VooDTO.class);
-// Object reserva = service.realizaVoo(voo);
-// response = new (true, reserva);
-
-// return gson.toJson(response);
-// }
-// }

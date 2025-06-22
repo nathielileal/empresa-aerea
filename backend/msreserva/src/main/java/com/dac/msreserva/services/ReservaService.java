@@ -21,6 +21,7 @@ import com.dac.msreserva.DTO.ReservaCreationResponseDTO;
 import com.dac.msreserva.DTO.ReservaDTO;
 import com.dac.msreserva.DTO.ReservaTransactionDTO;
 import com.dac.msreserva.DTO.UpdateEstadoDTO;
+import com.dac.msreserva.DTO.VooDTO;
 import com.dac.msreserva.model.EstadoReserva;
 import com.dac.msreserva.model.EstadoReservaEnum;
 import com.dac.msreserva.model.HistoricoReserva;
@@ -187,8 +188,6 @@ public class ReservaService {
                 reservaAtualizada.getCodigo_voo());
     }
 
-
-
     public ReservaDTO alterarEstado(String codigo, String payload) {
         try {
             Reserva reserva = repository.findById(codigo)
@@ -216,19 +215,27 @@ public class ReservaService {
     // .collect(Collectors.toList());
     // }
 
-    // public void realizaVoo(VooDTO voo) {
-    // List<Reserva> reservas = repository.findByCodigoVoo(voo.getCodigo());
-    // reservas.forEach(res -> {
-    // EstadoReservaEnum estado;
-    // if (res.getEstado().getCodigo() == EstadoReservaEnum.EMBARCADA.getCodigo()) {
-    // estado = EstadoReservaEnum.REALIZADA;
-    // } else if (res.getEstado().getCodigo() ==
-    // EstadoReservaEnum.CANCELADA.getCodigo()) {
-    // estado = EstadoReservaEnum.CANCELADA;
-    // } else {
-    // estado = EstadoReservaEnum.NAO_REALIZADA;
-    // }
-    // atualizarEstadoReserva(res, estado.getCodigo());
-    // });
-    // }
+    public void realizaVoo(VooDTO voo) {
+        List<Reserva> reservas = repository.findByCodigoVoo(voo.getCodigo());
+        reservas.forEach(res -> {
+            EstadoReservaEnum estado;
+            if (res.getEstado().getCodigo() == EstadoReservaEnum.EMBARCADA.getCodigo()) {
+                estado = EstadoReservaEnum.REALIZADO;
+            } else if (res.getEstado().getCodigo() == EstadoReservaEnum.CANCELADA.getCodigo()) {
+                estado = EstadoReservaEnum.CANCELADA;
+            } else {
+                estado = EstadoReservaEnum.NAO_REALIZADA;
+            }
+            atualizarEstadoReserva(res, estado.getCodigo());
+        });
+    }
+
+    public List<ReservaDTO> canceladoVoo(VooDTO voo) {
+        List<Reserva> reservas = repository.findByCodigoVoo(voo.getCodigo());
+
+        return reservas.stream()
+                .map(reserva -> atualizarEstadoReserva(reserva, EstadoReservaEnum.CANCELADA_VOO.getCodigo()))
+                .collect(Collectors.toList());
+    }
+
 }

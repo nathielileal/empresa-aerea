@@ -102,18 +102,22 @@ public class ClienteListener {
         }
     }
 
-    // @RabbitListener(queues = "cancelavoo.cliente")
-    // public String canceladoVoo(String payload) {
-    // try {
-    // List<ReservaOutputDTO> reservas = objectMapper.readValue(
-    // payload,
-    // new TypeReference<List<ReservaOutputDTO>>() {
-    // }
-    // );
-    // Object result = milhasService.reembolsarVoo(reservas);
-    // return objectMapper.writeValueAsString(new RabbitMessageDTO(true, result));
-    // } catch (Exception e) {
-    // throw new AmqpRejectAndDontRequeueException("Erro ao cancelar voo", e);
-    // }
-    // }
+    @RabbitListener(queues = "cancelavoo.cliente")
+    public String canceladoVoo(String payload) {
+        try {
+            System.out.println(("Cancela voo escutado, começando reembolsos"));
+            List<ReservaOutputDTO> reservas = objectMapper.readValue(
+                    payload,
+                    new TypeReference<List<ReservaOutputDTO>>() {
+                    });
+
+            milhasService.reembolsarVoo(reservas);
+
+            return objectMapper.writeValueAsString(
+                    Map.of("mensagem", "Reembolso de milhas processado com sucesso", "total", reservas.size()));
+        } catch (Exception e) {
+            throw new AmqpRejectAndDontRequeueException("Erro ao processar reembolso de voo", e);
+        }
+    }
+
 }

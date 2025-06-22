@@ -6,7 +6,7 @@ public enum EstadoReservaEnum {
     CANCELADA(3L),
     CANCELADA_VOO(4L),
     EMBARCADA(5L),
-    REALIZADA(6L),
+    REALIZADO(6L),
     NAO_REALIZADA(7L);
 
     private final Long codigo;

@@ -7,5 +7,5 @@ VALUES
   (3, 'CANCELADA'),
   (4, 'CANCELADA_VOO'),
   (5, 'EMBARCADA'),
-  (6, 'REALIZADA'),
+  (6, 'REALIZADO'),
   (7, 'NAO_REALIZADA');
