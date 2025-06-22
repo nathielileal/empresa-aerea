@@ -111,10 +111,40 @@ export const reservaService = {
     }
   },
 
-  async atualizarEstadoReserva(id: string, novoEstado: EstadoReserva): Promise<void> {
-    await new Promise(resolve => setTimeout(resolve, 500));
-    const reserva = reservasMock.find(r => r.codigo === id);
-    if (reserva) reserva.estado = novoEstado;
+  // async atualizarEstadoReserva(id: string, novoEstado: EstadoReserva): Promise<void> {
+  //   await new Promise(resolve => setTimeout(resolve, 500));
+  //   const reserva = reservasMock.find(r => r.codigo === id);
+  //   if (reserva) reserva.estado = novoEstado;
+  // },
+
+  async atualizarEstadoReserva(reservaId: string, estadoNovo: string): Promise<Reserva> {
+    try {
+      console.log("realizando checkin no service")
+      const token = localStorage.getItem('access_token');
+
+      const response = await fetch(`http://localhost:3000/reservas/${reservaId}/estado`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({ estado: estadoNovo })
+
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Erro ao mudar estado: ${errorText}`);
+      }
+
+      const reserva: Reserva = await response.json();
+      console.log(reserva)
+      return reserva;
+
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   },
 
   async cancelarReservasPorVoo(codigoVoo: string): Promise<void> {

@@ -94,7 +94,8 @@ public class ReservaService {
                 estadoReserva.getDescricao(), data, reserva.getMilhas_utilizadas(), reserva.getVoo().getCodigo(),
                 reserva.getVoo().getAeroporto_origem().getCodigo(),
                 reserva.getVoo().getAeroporto_destino().getCodigo(),
-                reserva.getValor());
+                reserva.getValor(),
+                reserva.getVoo().getData());
         // Envia para sistema de consulta (CQRS)
         template.convertAndSend(exchange.getName(), "gravacao", objectMapper.writeValueAsString(consulta));
 

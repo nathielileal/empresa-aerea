@@ -18,7 +18,7 @@ export function useCheckinViewModel() {
                 console.log("todas as reservas", todasReservas);
 
                 const proximas = todasReservas.filter((r) => {
-                    const dataVoo = new Date(r.voo?.data); 
+                    const dataVoo = new Date(r.voo?.data);
                     return dataVoo > now && dataVoo <= limite;
                 });
 
@@ -37,12 +37,14 @@ export function useCheckinViewModel() {
 
     const fazerCheckin = async (reservaId: string) => {
         try {
-            await reservaService.atualizarEstadoReserva(reservaId, "CHECK-IN");
+            console.log("realizando checkin")
+            const reserva: Reserva = await reservaService.atualizarEstadoReserva(reservaId, "CHECK-IN");
             setReservasProximas((prev) =>
                 prev.map((r) =>
                     r.codigo === reservaId ? { ...r, estado: "CHECK-IN" } : r
                 )
             );
+            return reserva
         } catch (e) {
             console.error("Erro ao fazer check-in:", e);
         }

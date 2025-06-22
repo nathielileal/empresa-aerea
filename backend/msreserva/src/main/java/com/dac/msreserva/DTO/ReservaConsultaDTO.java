@@ -23,6 +23,7 @@ public class ReservaConsultaDTO {
 
         this.voo = new VooDTO(
                 reserva.getCodigo_voo(),
+                reserva.getDataVoo(),
                 new AeroportoDTO(reserva.getAeroporto_origem()),
                 new AeroportoDTO(reserva.getAeroporto_destino()));
         this.valor = reserva.getValor();
