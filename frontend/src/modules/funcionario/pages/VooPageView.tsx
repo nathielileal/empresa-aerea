@@ -30,6 +30,7 @@ export default function VooPageView() {
       setVoos(resposta);
       setLoading(false);
     };
+
     carregarVoos();
   }, []);
 
@@ -80,12 +81,12 @@ export default function VooPageView() {
               {voos.map((v) => (
                 <TableRow key={v.codigo}>
                   <TableCell>{v.codigo}</TableCell>
-                  <TableCell>{v.origem}</TableCell>
-                  <TableCell>{v.destino}</TableCell>
-                  <TableCell>{formatarData(v.dataHora)}</TableCell>
-                  <TableCell>{v.valorReais}</TableCell>
-                  <TableCell>{v.poltronas}</TableCell>
-                  <TableCell>{v.status}</TableCell>
+                  <TableCell>{v.aeroporto_origem.codigo}</TableCell>
+                  <TableCell>{v.aeroporto_destino.codigo}</TableCell>
+                  <TableCell>{formatarData(v.data)}</TableCell>
+                  <TableCell>{v.valor_passagem.toFixed(2)}</TableCell>
+                  <TableCell>{v.quantidade_poltronas_total}</TableCell>
+                  <TableCell>{v.estado}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

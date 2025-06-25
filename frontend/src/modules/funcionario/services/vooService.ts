@@ -1,38 +1,146 @@
+import { Aeroporto } from "../models/AeroportoTypes";
 import { Voo } from "../models/VooTypes";
 
-const VOOS_STORAGE_KEY = "voos";
+const API_URL = "http://localhost:3000/voos";
+
+function getToken(): string | null {
+  return localStorage.getItem("token");
+}
 
 export class VooService {
-  listar(): Promise<Voo[]> {
-    return new Promise((resolve) => {
-      const data = localStorage.getItem(VOOS_STORAGE_KEY);
-      const voos = data ? JSON.parse(data) : [];
-      setTimeout(() => resolve(voos), 0);
-    });
+  async listar(): Promise<Voo[]> {
+    try {
+      const token = getToken();
+
+      const response = await fetch(API_URL, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Erro ao buscar voos");
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   }
 
-  async adicionar(voo: Voo): Promise<void> {
-    const voos = await this.listar();
-    voos.push(voo);
-    localStorage.setItem(VOOS_STORAGE_KEY, JSON.stringify(voos));
+  async listarAeroportos(): Promise<Aeroporto[]> {
+    try {
+      const token = getToken();
+
+      const response = await fetch(API_URL + "/aeroportos", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Erro ao buscar aeroportos");
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   }
 
-  async adicionarCadastro(vooCadastro: any): Promise<void> {
-    const voo: Voo = {
-      codigo: vooCadastro.codigo,
-      dataHora: vooCadastro.dataHora,
-      origem: vooCadastro.origem,
-      destino: vooCadastro.destino,
-      valorReais: vooCadastro.valorReais,
-      valorMilhas: vooCadastro.valorMilhas,
-      poltronas: vooCadastro.poltronas,
-      poltronasOcupadas: vooCadastro.poltronasOcupadas,
-      status: vooCadastro.status,
-      preco: 0,
-      milhasNecessarias: 0
-    };
+  async listarVoosPorIntervalo(inicio: string, fim: string): Promise<Voo[]> {
+    try {
+      const token = getToken();
 
-    await this.adicionar(voo);
+      const response = await fetch(API_URL + `?inicio=${inicio}&fim=${fim}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        const erro = await response.text();
+        throw new Error("Erro ao cadastrar voo: " + erro);
+      }
+
+      const data = await response.json();
+      
+      return data.voos;
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async cancelarVoo(codigo: string): Promise<void> {
+    try {
+      const token = getToken();
+
+      await fetch(API_URL + `/${codigo}/cancelar`, {
+        method: "PUT",
+        headers: {
+          // "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async realizarVoo(codigo: string): Promise<void> {
+    try {
+      const token = getToken();
+
+      await fetch(API_URL + `/${codigo}/realizar`, {
+        method: "PUT",
+        headers: {
+          // "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
+
+  async adicionar(voo: {
+    data: string;
+    valor_passagem: number;
+    quantidade_poltronas_total: number;
+    quantidade_poltronas_ocupadas: number;
+    codigo_aeroporto_origem: string;
+    codigo_aeroporto_destino: string;
+  }): Promise<{ codigo: string }> {
+    try {
+      const token = getToken();
+
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(voo),
+      });
+
+      if (!response.ok) {
+        const erro = await response.text();
+        throw new Error("Erro ao cadastrar voo: " + erro);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
   }
 }
 

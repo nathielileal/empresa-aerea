@@ -25,7 +25,7 @@ public class Voo {
     private int quantidade_poltronas_total;
     private int quantidade_poltronas_ocupadas;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     @JoinColumn(name = "estado_codigo", referencedColumnName = "codigo")
     private VooEstado estado;
 

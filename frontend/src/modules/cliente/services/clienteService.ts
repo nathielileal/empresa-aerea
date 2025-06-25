@@ -1,4 +1,3 @@
-import { mockDatabase, MockUser } from "../../auth/mocks/mockDatabase";
 import { Cliente } from "../models/ClienteTypes";
 
 export const clienteService = {
@@ -34,8 +33,6 @@ export const clienteService = {
       throw error;
     }
   },
-  
-
 
   async restituirMilhas() { },
 
@@ -43,6 +40,7 @@ export const clienteService = {
 
   async cadastrar(cliente: Cliente) {
     console.log("enviando os dados para cadastro do cliente:", cliente)
+    
     try {
       const response = await fetch('http://localhost:3000/clientes', {
         method: 'POST',
@@ -58,12 +56,10 @@ export const clienteService = {
       }
 
       return await response.json();
-
     } catch (error) {
       console.log(error)
     }
 
   }
-
 };
 ;

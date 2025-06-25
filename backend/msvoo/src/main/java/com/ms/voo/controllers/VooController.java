@@ -5,6 +5,7 @@ import com.ms.voo.dto.CriarVooDTO;
 import com.ms.voo.dto.VooDTO;
 import com.ms.voo.services.VooService;
 import java.time.ZonedDateTime;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -17,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import java.util.Map;
-import org.springframework.web.bind.annotation.PatchMapping;
 
 @RestController
 @RequestMapping("/voos")
@@ -31,9 +30,14 @@ public class VooController {
     public ResponseEntity<?> listarVoos(
             @RequestParam(required = false) String origem,
             @RequestParam(required = false) String destino,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime data) {
-        if (origem != null && destino != null) {
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) ZonedDateTime data,
+            @RequestParam(required = false) String inicio,
+            @RequestParam(required = false) String fim) {
+
+        if (origem != null && destino != null && data != null) {
             return ResponseEntity.ok(service.listarVoosFiltrados(origem, destino, data));
+        } else if (inicio != null && fim != null) {
+            return ResponseEntity.ok(service.listarVoosPorHora(inicio, fim));
         } else {
             return ResponseEntity.ok(service.listarVoos());
         }
@@ -43,6 +47,11 @@ public class VooController {
     public ResponseEntity<VooDTO> buscarPorCodigo(@PathVariable String codigo) {
         VooDTO voo = service.buscarPorCodigo(codigo);
         return ResponseEntity.ok(voo);
+    }
+
+    @GetMapping("/aeroportos")
+    public ResponseEntity<List<AeroportoDTO>> listarAeroportos() {
+        return ResponseEntity.ok(service.listarAeroportos());
     }
 
     @PostMapping
@@ -77,27 +86,4 @@ public class VooController {
         VooDTO vooRealizado = service.realizarVoo(codigo);
         return ResponseEntity.ok(vooRealizado);
     }
-
-//    @PatchMapping("/{codigo}/estado")
-//    public ResponseEntity<VooDTO> alterarEstado(@PathVariable String codigo, @RequestBody Map<String, String> payload) {
-//        String novoEstado = payload.get("estado");
-//        if (novoEstado == null) {
-//            return ResponseEntity.badRequest().build();
-//        }
-//
-//        VooDTO vooAtualizado;
-//
-//        switch (novoEstado.toUpperCase()) {
-//            case "CANCELADO":
-//                vooAtualizado = service.cancelarVoo(codigo);
-//                break;
-//            case "REALIZADO":
-//                vooAtualizado = service.realizarVoo(codigo);
-//                break;
-//            default:
-//                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-//        }
-//
-//        return ResponseEntity.ok(vooAtualizado);
-//    }
 }

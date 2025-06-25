@@ -1,16 +1,8 @@
 package com.dac.msreserva.controllers;
 
-import java.util.List;
-
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import com.dac.msreserva.DTO.AlterarEstadoDTO;
 import com.dac.msreserva.DTO.ReservaConsultaDTO;
-// import com.dac.msreserva.DTO.AlternaEstadoDTO;
 import com.dac.msreserva.DTO.ReservaDTO;
 import com.dac.msreserva.services.ReservaService;
 
@@ -50,5 +42,4 @@ public class ReservaController {
         ReservaDTO reserva = service.alterarEstado(codigo, payload.getEstado());
         return ResponseEntity.ok(reserva);
     }
-
 }

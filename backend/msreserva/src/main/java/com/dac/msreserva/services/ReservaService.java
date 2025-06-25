@@ -66,6 +66,12 @@ public class ReservaService {
         this.exchange = exchange;
     }
 
+    public List<ReservaConsultaDTO> listarReservasPorVoo(String codigoVoo) {
+        List<ReservaConsulta> reservas = consultaReposity.findByCodigoVoo(codigoVoo);
+        
+        return reservas.stream().map(ReservaConsultaDTO::new).collect(Collectors.toList());
+    }
+
     public ReservaCreationResponseDTO efetuarReserva(ReservaTransactionDTO reserva)
             throws JsonProcessingException, AmqpException {
         // Geração de código aleatório no formato ABC123
@@ -107,7 +113,7 @@ public class ReservaService {
                 reserva.getCodigo_cliente(),
                 milhas_utilizadas,
                 reserva.getVoo().getAeroporto_origem().getCodigo() + "->"
-                        + reserva.getVoo().getAeroporto_destino().getCodigo(),
+                + reserva.getVoo().getAeroporto_destino().getCodigo(),
                 milhas_utilizadas);
     }
 
@@ -206,7 +212,6 @@ public class ReservaService {
             throw new RuntimeException("Erro ao alterar estado da reserva: " + e.getMessage(), e);
         }
     }
-
 
     public void realizaVoo(VooDTO voo) {
         List<Reserva> reservas = repository.findByCodigoVoo(voo.getCodigo());

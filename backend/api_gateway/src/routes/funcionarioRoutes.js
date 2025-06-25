@@ -8,8 +8,8 @@ router.get('/funcionarios', verifyJWT, funcionarioServiceProxy);
 router.get('/funcionarios/:id', verifyJWT, funcionarioServiceProxy);
 router.get('/funcionarios/:id/milhas', verifyJWT, funcionarioServiceProxy);
 router.put('/funcionarios/:id/milhas', verifyJWT, funcionarioServiceProxy);
-// router.post('/funcionarios', sagaServiceProxy); //cadastrosaga
+router.delete('/funcionarios/:id', verifyJWT, funcionarioServiceProxy);
+router.put('/funcionarios/:id', verifyJWT, funcionarioServiceProxy);
 router.post('/funcionarios', funcionarioServiceProxy); //cadastrosaga
 
-
-module.exports = router;
+module.exports = router;    

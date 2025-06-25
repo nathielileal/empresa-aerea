@@ -1,6 +1,8 @@
 package com.ms.voo.services;
 
+import com.ms.voo.dto.AeroportoDTO;
 import com.ms.voo.dto.BuscaVoosResponseDTO;
+import com.ms.voo.dto.BuscarVooResponseDTO;
 import com.ms.voo.dto.VooDTO;
 import com.ms.voo.model.Aeroporto;
 import com.ms.voo.model.Voo;
@@ -9,6 +11,7 @@ import com.ms.voo.repository.AeroportoRepository;
 import com.ms.voo.repository.VooEstadoRepository;
 import com.ms.voo.repository.VooRepository;
 import java.time.ZonedDateTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -40,8 +43,7 @@ public class VooService {
 
     @Transactional(readOnly = true)
     public VooDTO buscarPorCodigo(String codigo) {
-        Voo voo = repository.findById(codigo)
-                .orElseThrow(() -> new RuntimeException("Voo não encontrado com código: " + codigo));
+        Voo voo = repository.findById(codigo).orElseThrow(() -> new RuntimeException("Voo não encontrado com código: " + codigo));
 
         VooDTO dto = mapper.map(voo, VooDTO.class);
 
@@ -54,13 +56,12 @@ public class VooService {
     public List<VooDTO> listarVoos() {
         List<Voo> voos = repository.findAll();
 
-        return voos.stream()
-                .map(voo -> {
+        return voos.stream().map(voo -> {
                     VooDTO dto = mapper.map(voo, VooDTO.class);
                     dto.setEstado(voo.getEstado().getSigla());
+                    
                     return dto;
-                })
-                .collect(Collectors.toList());
+                }).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
@@ -82,6 +83,40 @@ public class VooService {
                 .collect(Collectors.toList());
 
         return new BuscaVoosResponseDTO(origem, destino, data, voosDto);
+    }
+
+    @Transactional(readOnly = true)
+    public BuscarVooResponseDTO listarVoosPorHora(String inicioStr, String fimStr) {
+        ZonedDateTime inicio = ZonedDateTime.parse(inicioStr + "T00:00:00-03:00");
+        ZonedDateTime fim = ZonedDateTime.parse(fimStr + "T23:59:59-03:00");
+
+        List<Voo> todos = repository.findAll();
+
+        List<VooDTO> voosFiltrados = todos.stream()
+                .filter(voo -> {
+                    ZonedDateTime data = voo.getData();
+                    return data != null && !data.isBefore(inicio) && !data.isAfter(fim);
+                })
+                .map(voo -> {
+                    VooDTO dto = mapper.map(voo, VooDTO.class);
+                    dto.setEstado(voo.getEstado() != null ? voo.getEstado().getSigla() : "DESCONHECIDO");
+                    return dto;
+                })
+                .sorted(Comparator.comparing(VooDTO::getData))
+                .collect(Collectors.toList());
+
+        return new BuscarVooResponseDTO(inicioStr, fimStr, voosFiltrados);
+    }
+    
+    public List<AeroportoDTO> listarAeroportos() {
+        List<Aeroporto> aeroportos = aeroportoRepository.findAll();
+
+        return aeroportos.stream().map(a -> new AeroportoDTO(
+                        a.getCodigo(),
+                        a.getNome(),
+                        a.getCidade(),
+                        a.getUf()
+                )).collect(Collectors.toList());
     }
 
     private String gerarCodigoUnico() {

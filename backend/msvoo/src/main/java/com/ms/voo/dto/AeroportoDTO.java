@@ -6,6 +6,15 @@ public class AeroportoDTO {
     private String nome;
     private String cidade;
     private String uf;
+    
+    public AeroportoDTO() {}
+
+    public AeroportoDTO(String codigo, String nome, String cidade, String uf) {
+        this.codigo = codigo;
+        this.nome = nome;
+        this.cidade = cidade;
+        this.uf = uf;
+    }
 
     public String getCodigo() {
         return codigo;

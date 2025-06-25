@@ -41,15 +41,15 @@ const ConfirmarEmbarqueModal: React.FC<ConfirmarEmbarqueModalProps> = ({
     }
   
     const vooCondiz =
-      reserva.dataHora === vooSelecionado.dataHora &&
-      reserva.origem === vooSelecionado.origem &&
-      reserva.destino === vooSelecionado.destino;
+      reserva.data === vooSelecionado.dataHora &&
+      reserva.voo.aeroporto_origem.codigo === vooSelecionado.origem &&
+      reserva.voo.aeroporto_destino.codigo === vooSelecionado.destino;
   
     if (!vooCondiz) {
       return setErro('Reserva não corresponde a este voo.');
     }
   
-    await reservaService.atualizarEstadoReserva(reserva.id, 'EMBARCADA');
+    await reservaService.atualizarEstadoReserva(reserva.codigo, 'EMBARCADA');
     onConfirmar({ ...reserva, estado: 'EMBARCADA' });
   
     setErro('');
