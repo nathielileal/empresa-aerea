@@ -14,9 +14,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
 import com.dac.msreserva.DTO.ReservaConsultaDTO;
-// import com.dac.msreserva.DTO.AlternaEstadoDTO;
 import com.dac.msreserva.DTO.ReservaCreationResponseDTO;
 import com.dac.msreserva.DTO.ReservaDTO;
 import com.dac.msreserva.DTO.ReservaTransactionDTO;
@@ -33,7 +31,6 @@ import com.dac.msreserva.repository.HistoricoRepository;
 import com.dac.msreserva.repository.TransactionRepository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
 import jakarta.transaction.Transactional;
 
 @Service
@@ -73,9 +70,6 @@ public class ReservaService {
         String codigo = "RES" + String.format("%04d", proximoNumero);
         System.out.println("Codigo gerado");
         System.out.println(codigo);
-        // Double milhas_utilizadas = (reserva.getMilhas_utilizadas() != null ?
-        // reserva.getMilhas_utilizadas() : 0.0)
-        // + reserva.getValor();
         Double milhas_utilizadas = (reserva.getMilhas_utilizadas() != null ? reserva.getMilhas_utilizadas() : 0.0);
 
         EstadoReserva estadoReserva = estadoReservaRepository.findById(EstadoReservaEnum.CRIADA.getCodigo()).get();
@@ -135,14 +129,6 @@ public class ReservaService {
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reserva não encontrada."));
             System.out.println("Reserva encontrada");
             System.out.println(reserva);
-            // Somente estados que permitem cancelamento
-            // if (!Arrays.asList(
-            // EstadoReservaEnum.CRIADA.getCodigo(),
-            // EstadoReservaEnum.CHECK_IN.getCodigo())
-            // .contains(reserva.getEstado().getCodigo())) {
-            // throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-            // "Reserva não pode ser cancelada neste estado.");
-            // }
 
             return atualizarEstadoReserva(reserva, EstadoReservaEnum.CANCELADA.getCodigo());
 
@@ -190,13 +176,13 @@ public class ReservaService {
 
     public ReservaDTO alterarEstado(String codigo, String payload) {
         try {
-            Reserva reserva = repository.findById(codigo)
-                    .orElseThrow(() -> new RuntimeException("Reserva não encontrada com o código fornecido."));
+            Reserva reserva = repository.findById(codigo).orElseThrow(() -> new RuntimeException("Reserva não encontrada com o código fornecido."));
 
-            // Converte o nome do estado para enum (removendo hífens e tratando
-            // case-insensitive)
+            // Converte o nome do estado para enum (removendo hífens e tratando case-insensitive)
             String enumName = payload.trim().toUpperCase().replace("-", "_");
+            
             EstadoReservaEnum estadoEnum = EstadoReservaEnum.valueOf(enumName);
+            
             Long codigoEstado = estadoEnum.getCodigo();
 
             return atualizarEstadoReserva(reserva, codigoEstado);
@@ -212,12 +198,13 @@ public class ReservaService {
         reservas.forEach(res -> {
             EstadoReservaEnum estado;
             if (res.getEstado().getCodigo() == EstadoReservaEnum.EMBARCADA.getCodigo()) {
-                estado = EstadoReservaEnum.REALIZADO;
+                estado = EstadoReservaEnum.REALIZADA;
             } else if (res.getEstado().getCodigo() == EstadoReservaEnum.CANCELADA.getCodigo()) {
                 estado = EstadoReservaEnum.CANCELADA;
             } else {
                 estado = EstadoReservaEnum.NAO_REALIZADA;
             }
+            
             atualizarEstadoReserva(res, estado.getCodigo());
         });
     }
@@ -229,5 +216,4 @@ public class ReservaService {
                 .map(reserva -> atualizarEstadoReserva(reserva, EstadoReservaEnum.CANCELADA_VOO.getCodigo()))
                 .collect(Collectors.toList());
     }
-
 }

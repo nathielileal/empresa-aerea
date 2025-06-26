@@ -17,7 +17,7 @@ public class ReservaConsultaDTO {
     public ReservaConsultaDTO(ReservaConsulta reserva) {
         this.codigo = reserva.getCodigo();
         this.codigo_cliente = reserva.getCodigo_cliente();
-        this.estado = reserva.getEstado();
+        this.estado = convertTextCampoEstadoReserva(reserva.getEstado());
         this.data = reserva.getData();
         this.quantidade_milhas = reserva.getQuantidade_milhas();
 
@@ -54,7 +54,7 @@ public class ReservaConsultaDTO {
         this.codigo_cliente = codigo_cliente;
         this.voo = voo;
         this.estado = estado;
-        this.data = data;
+        this.data = data;   
     }
 
     public ReservaConsultaDTO() {
@@ -108,5 +108,35 @@ public class ReservaConsultaDTO {
         this.valor = valor;
     }
 
-    // Getters and Setters
+    private String convertTextCampoEstadoReserva(String estado) {
+        if (estado == null) return null;
+
+        switch (estado) {
+            case "CRIADA":
+                return "CRIADA";
+            
+            case "CHECK_IN":
+                return "CHECK-IN";
+            
+            case "CANCELADA":
+                return "CANCELADA";
+            
+            case "CANCELADA_VOO":
+            case "CANCELADA-VOO":
+                return "CANCELADA VOO";
+        
+            case "EMBARCADA":
+                return "EMBARCADA";
+            
+            case "REALIZADO":
+                return "REALIZADA";  
+            
+            case "NAO-REALIZADA":
+            case "NAO_REALIZADA":
+                return "NÃO REALIZADA";
+            
+            default:
+                return estado;  
+        }
+    }
 }

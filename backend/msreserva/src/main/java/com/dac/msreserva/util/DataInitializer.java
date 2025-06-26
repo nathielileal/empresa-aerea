@@ -17,8 +17,8 @@ public class DataInitializer {
                 for (EstadoReservaEnum estadoEnum : EstadoReservaEnum.values()) {
                     EstadoReserva estado = new EstadoReserva(
                             estadoEnum.getCodigo(),
-                            estadoEnum.name().replace("_", "-"), // exemplo: CANCELADA_VOO -> "CANCELADA VOO"
-                            estadoEnum.name().replace("_", "-")     // exemplo: CANCELADA -> "CA"
+                            estadoEnum.getCampo(), // exemplo: CANCELADA_VOO -> "CANCELADA VOO"
+                            estadoEnum.name()     // exemplo: CANCELADA -> "CA"
                     );
                     estadoReservaRepository.save(estado);
                 }

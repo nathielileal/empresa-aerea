@@ -75,8 +75,8 @@ public class VooService {
 
         List<Voo> voosFiltrados = todosVoos.stream()
                 .filter(voo -> (origem == null || voo.getAeroportoOrigem().getCodigo().equalsIgnoreCase(origem))
-                        && (destino == null || voo.getAeroportoDestino().getCodigo().equalsIgnoreCase(destino))
-                        && (data == null || !voo.getData().isBefore(data)))
+                && (destino == null || voo.getAeroportoDestino().getCodigo().equalsIgnoreCase(destino))
+                && (data == null || !voo.getData().isBefore(data)))
                 .collect(Collectors.toList());
 
         List<VooDTO> voosDto = voosFiltrados.stream()
@@ -201,9 +201,9 @@ public class VooService {
 
         if (estadoAtual.equals(estadoDesejado)) {
             VooDTO dto = mapper.map(voo, VooDTO.class);
-           
+
             dto.setEstado(estadoAtual);
-           
+
             return dto;
         }
 
@@ -215,15 +215,15 @@ public class VooService {
                 .orElseThrow(() -> new RuntimeException("Estado não encontrado: " + estadoDesejado));
 
         voo.setEstado(novoEstado);
-       
+
         repository.save(voo);
 
         VooDTO dto = mapper.map(voo, VooDTO.class);
 
         try {
             String payload = objectMapper.writeValueAsString(dto);
-            
-            String exc = estadoAtual.equals("CANCELADO") ? "cancelavoo" : "realizavoo";
+
+            String exc = estadoDesejado.equals("CANCELADO") ? "cancelavoo" : "realizavoo";
 
             rabbitTemplate.convertAndSend(exc, "reserva", payload);
         } catch (Exception e) {

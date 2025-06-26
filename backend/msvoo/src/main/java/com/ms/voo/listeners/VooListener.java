@@ -18,9 +18,11 @@ public class VooListener {
     private ObjectMapper objectMapper;
 
     @RabbitListener(queues = "cancelavoo.reserva")
-    public void receberCancelarVoo(String codigoVoo) {
+    public void receberCancelarVoo(String payload) {
         try {
-            vooService.cancelarVoo(codigoVoo);
+            VooDTO voo = objectMapper.readValue(payload, VooDTO.class);
+
+            vooService.cancelarVoo(voo.getCodigo());
         } catch (Exception e) {
             System.err.println("Erro ao cancelar voo: " + e.getMessage());
 
@@ -29,9 +31,11 @@ public class VooListener {
     }
 
     @RabbitListener(queues = "realizavoo.reserva")
-    public void receberRealizarVoo(String codigoVoo) {
+    public void receberRealizarVoo(String payload) {
         try {
-            vooService.realizarVoo(codigoVoo);
+            VooDTO voo = objectMapper.readValue(payload, VooDTO.class);
+
+            vooService.realizarVoo(voo.getCodigo());
         } catch (Exception e) {
             System.err.println("Erro ao realizar voo: " + e.getMessage());
 

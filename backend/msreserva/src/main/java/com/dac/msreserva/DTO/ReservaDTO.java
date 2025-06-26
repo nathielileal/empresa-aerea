@@ -1,5 +1,6 @@
 package com.dac.msreserva.DTO;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import java.time.ZonedDateTime;
 import java.util.List;
 
@@ -13,10 +14,6 @@ public class ReservaDTO {
     private Double saldo_cliente;
     private VooDTO voo;
     private String voo_codigo;
-
-    public String getCodigo() {
-        return codigo;
-    }
 
     public ReservaDTO(String codigo, ZonedDateTime data, String estado, Double quantidade_milhas, Long codigo_cliente,
             Double saldo_cliente, List<Integer> poltronas_reservadas, VooDTO voo, String voo_codigo) {
@@ -41,6 +38,10 @@ public class ReservaDTO {
     }
 
     public ReservaDTO() {
+    }
+
+    public String getCodigo() {
+        return codigo;
     }
 
     public void setCodigo(String codigo) {
@@ -103,5 +104,38 @@ public class ReservaDTO {
         this.voo_codigo = voo_codigo;
     }
 
-    // Getters e Setters
+    @JsonGetter("estado")
+    public String getEstadoFormatado() {
+        if (estado == null) {
+            return null;
+        }
+
+        switch (estado) {
+            case "CRIADA":
+                return "CRIADA";
+
+            case "CHECK_IN":
+                return "CHECK-IN";
+
+            case "CANCELADA":
+                return "CANCELADA";
+
+            case "CANCELADA_VOO":
+            case "CANCELADA-VOO":
+                return "CANCELADA VOO";
+
+            case "EMBARCADA":
+                return "EMBARCADA";
+
+            case "REALIZADO":
+                return "REALIZADA";
+
+            case "NAO-REALIZADA":
+            case "NAO_REALIZADA":
+                return "NÃO REALIZADA";
+
+            default:
+                return estado;
+        }
+    }
 }

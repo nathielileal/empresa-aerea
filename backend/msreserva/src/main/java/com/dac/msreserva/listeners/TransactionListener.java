@@ -1,19 +1,12 @@
 package com.dac.msreserva.listeners;
 
-import java.time.ZonedDateTime;
-import java.util.List;
-
-import org.modelmapper.ModelMapper;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
-
-import com.dac.msreserva.DTO.ReservaDTO;
 import com.dac.msreserva.DTO.ReservaTransactionDTO;
 import com.dac.msreserva.DTO.VooDTO;
 import com.dac.msreserva.services.ReservaService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
@@ -69,13 +62,9 @@ public class TransactionListener {
             VooDTO voo = objectMapper.readValue(payload, VooDTO.class);
             service.realizaVoo(voo);
 
-            // return "{\"mensagem\": \"Reservas atualizadas com sucesso para o voo " + voo.getCodigo() + "\"}";
-
-        } catch (ResponseStatusException e) {
-            // return "{\"erro\": \"" + e.getReason() + "\", \"status\": " + e.getStatusCode().value() + "}";
         } catch (Exception e) {
+            System.err.println("Erro ao processar realização de voo: " + e.getMessage());
             e.printStackTrace();
-            // return "{\"erro\": \"Erro inesperado ao processar voo " + payload + "\"}";
         }
     }
 
@@ -85,12 +74,9 @@ public class TransactionListener {
             System.out.println(("Cancelar voo escutado"));
             VooDTO voo = objectMapper.readValue(payload, VooDTO.class);
             service.canceladoVoo(voo);
-
-            // return objectMapper.writeValueAsString(reservas);
         } catch (Exception e) {
+            System.err.println("Erro ao processar cancelamento de voo: " + e.getMessage());
             e.printStackTrace();
-            // return "{\"erro\": \"Erro ao processar cancelamento de voo\"}";
         }
     }
-
 }
