@@ -13,7 +13,7 @@ public class RabbitMQConfig {
 
     @Bean
     public Queue vooCancelQueue() {
-        return new Queue("voo.cancel");
+        return new Queue("cancelavoo.reserva");
     }
 
     @Bean
@@ -28,7 +28,7 @@ public class RabbitMQConfig {
 
     @Bean
     public Queue vooRealizeQueue() {
-        return new Queue("voo.realize");
+        return new Queue("realizavoo.reserva");
     }
 
     @Bean
@@ -40,14 +40,14 @@ public class RabbitMQConfig {
     public Binding bindingVooCancel(DirectExchange vooExchange, Queue vooCancelQueue) {
         return BindingBuilder.bind(vooCancelQueue)
                 .to(vooExchange)
-                .with(DEFAULT_ROUTING_KEY + ".cancel");
+                .with("cancelavoo.reserva");
     }
 
     @Bean
     public Binding bindingVooRealize(DirectExchange vooExchange, Queue vooRealizeQueue) {
         return BindingBuilder.bind(vooRealizeQueue)
                 .to(vooExchange)
-                .with(DEFAULT_ROUTING_KEY + ".realize");
+                .with("realizavoo.reserva");
     }
 
     @Bean

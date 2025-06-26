@@ -8,7 +8,6 @@ router.get('/voos', verifyJWT, voosServiceProxy);
 router.get('/voos/:codigo', verifyJWT, voosServiceProxy);
 router.get('/voos/aeroportos', verifyJWT, voosServiceProxy);
 router.post('/voos', verifyJWT, voosServiceProxy);
-router.put('/voos/:codigo/cancelar', verifyJWT, voosServiceProxy);
-router.put('/voos/:codigo/realizar', verifyJWT, voosServiceProxy);
+router.patch('/voos/:codigo/estado', verifyJWT, voosServiceProxy);
 
 module.exports = router;

@@ -16,10 +16,9 @@ public class RealizarVooSaga {
     
      public void realizarVoo(String codigoVoo) {
         try {
-            rabbitTemplate.convertAndSend("realizavoo", "voo", codigoVoo);
+            rabbitTemplate.convertSendAndReceive("realizavoo", "reserva", codigoVoo);
         } catch (Exception e) {
             throw new RuntimeException("Erro ao enviar solicitação de realização do voo", e);
         }
     }
-
 }

@@ -63,33 +63,33 @@ public class TransactionListener {
     }
 
     @RabbitListener(queues = "realizavoo.reserva")
-    public String realizaVoo(String payload) {
+    public void realizaVoo(String payload) {
         try {
             System.out.println("Realizar voo escutado");
             VooDTO voo = objectMapper.readValue(payload, VooDTO.class);
             service.realizaVoo(voo);
 
-            return "{\"mensagem\": \"Reservas atualizadas com sucesso para o voo " + voo.getCodigo() + "\"}";
+            // return "{\"mensagem\": \"Reservas atualizadas com sucesso para o voo " + voo.getCodigo() + "\"}";
 
         } catch (ResponseStatusException e) {
-            return "{\"erro\": \"" + e.getReason() + "\", \"status\": " + e.getStatusCode().value() + "}";
+            // return "{\"erro\": \"" + e.getReason() + "\", \"status\": " + e.getStatusCode().value() + "}";
         } catch (Exception e) {
             e.printStackTrace();
-            return "{\"erro\": \"Erro inesperado ao processar voo " + payload + "\"}";
+            // return "{\"erro\": \"Erro inesperado ao processar voo " + payload + "\"}";
         }
     }
 
     @RabbitListener(queues = "cancelavoo.reserva")
-    public String canceladoVoo(String payload) {
+    public void canceladoVoo(String payload) {
         try {
             System.out.println(("Cancelar voo escutado"));
             VooDTO voo = objectMapper.readValue(payload, VooDTO.class);
-            List<ReservaDTO> reservas = service.canceladoVoo(voo);
+            service.canceladoVoo(voo);
 
-            return objectMapper.writeValueAsString(reservas);
+            // return objectMapper.writeValueAsString(reservas);
         } catch (Exception e) {
             e.printStackTrace();
-            return "{\"erro\": \"Erro ao processar cancelamento de voo\"}";
+            // return "{\"erro\": \"Erro ao processar cancelamento de voo\"}";
         }
     }
 

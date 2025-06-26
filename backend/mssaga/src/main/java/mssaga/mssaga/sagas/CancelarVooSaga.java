@@ -16,10 +16,9 @@ public class CancelarVooSaga {
 
     public void cancelarVoo(String codigoVoo) {
         try {
-            rabbitTemplate.convertAndSend("cancelavoo", "voo", codigoVoo);
+            rabbitTemplate.convertSendAndReceive("cancelavoo", "reserva", codigoVoo);
         } catch (Exception e) {
             throw new RuntimeException("Erro ao enviar solicitação de cancelamento do voo", e);
         }
-    }
-    
+    } 
 }

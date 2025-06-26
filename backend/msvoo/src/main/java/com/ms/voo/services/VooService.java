@@ -1,5 +1,6 @@
 package com.ms.voo.services;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ms.voo.dto.AeroportoDTO;
 import com.ms.voo.dto.BuscaVoosResponseDTO;
 import com.ms.voo.dto.BuscarVooResponseDTO;
@@ -39,11 +40,15 @@ public class VooService {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
+    @Autowired
+    private ObjectMapper objectMapper;
+
     private static final String EXCHANGE = "voo.exchange";
 
     @Transactional(readOnly = true)
     public VooDTO buscarPorCodigo(String codigo) {
-        Voo voo = repository.findById(codigo).orElseThrow(() -> new RuntimeException("Voo não encontrado com código: " + codigo));
+        Voo voo = repository.findById(codigo)
+                .orElseThrow(() -> new RuntimeException("Voo não encontrado com código: " + codigo));
 
         VooDTO dto = mapper.map(voo, VooDTO.class);
 
@@ -57,11 +62,11 @@ public class VooService {
         List<Voo> voos = repository.findAll();
 
         return voos.stream().map(voo -> {
-                    VooDTO dto = mapper.map(voo, VooDTO.class);
-                    dto.setEstado(voo.getEstado().getSigla());
-                    
-                    return dto;
-                }).collect(Collectors.toList());
+            VooDTO dto = mapper.map(voo, VooDTO.class);
+            dto.setEstado(voo.getEstado().getSigla());
+
+            return dto;
+        }).collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
@@ -70,8 +75,8 @@ public class VooService {
 
         List<Voo> voosFiltrados = todosVoos.stream()
                 .filter(voo -> (origem == null || voo.getAeroportoOrigem().getCodigo().equalsIgnoreCase(origem))
-                && (destino == null || voo.getAeroportoDestino().getCodigo().equalsIgnoreCase(destino))
-                && (data == null || !voo.getData().isBefore(data)))
+                        && (destino == null || voo.getAeroportoDestino().getCodigo().equalsIgnoreCase(destino))
+                        && (data == null || !voo.getData().isBefore(data)))
                 .collect(Collectors.toList());
 
         List<VooDTO> voosDto = voosFiltrados.stream()
@@ -107,16 +112,15 @@ public class VooService {
 
         return new BuscarVooResponseDTO(inicioStr, fimStr, voosFiltrados);
     }
-    
+
     public List<AeroportoDTO> listarAeroportos() {
         List<Aeroporto> aeroportos = aeroportoRepository.findAll();
 
         return aeroportos.stream().map(a -> new AeroportoDTO(
-                        a.getCodigo(),
-                        a.getNome(),
-                        a.getCidade(),
-                        a.getUf()
-                )).collect(Collectors.toList());
+                a.getCodigo(),
+                a.getNome(),
+                a.getCidade(),
+                a.getUf())).collect(Collectors.toList());
     }
 
     private String gerarCodigoUnico() {
@@ -173,55 +177,60 @@ public class VooService {
     }
 
     @Transactional
-    public VooDTO cancelarVoo(String codigoVoo) {
-        Voo voo = repository.findById(codigoVoo)
-                .orElseThrow(() -> new RuntimeException("Voo não encontrado"));
-
-        if (!voo.getEstado().getSigla().equals("CONFIRMADO")) {
-            throw new IllegalStateException("Só é possível cancelar voo no estado CONFIRMADO");
-        }
-
-        VooEstado estadoCancelado = vooEstadoRepository.findBySigla("CANCELADO")
-                .orElseThrow(() -> new RuntimeException("Estado CANCELADO não encontrado"));
-
-        voo.setEstado(estadoCancelado);
-        repository.save(voo);
-
-        try {
-            rabbitTemplate.convertAndSend(EXCHANGE, "voo.cancel", codigoVoo);
-        } catch (Exception e) {
-            throw new RuntimeException("Erro ao enviar mensagem de cancelamento para RabbitMQ", e);
-        }
-
-        VooDTO dto = mapper.map(voo, VooDTO.class);
-        dto.setEstado(voo.getEstado().getSigla());
-
-        return dto;
+    public void cancelarVoo(String codigoVoo) {
+        alterarEstado(codigoVoo, "CANCELADO");
     }
 
     @Transactional
-    public VooDTO realizarVoo(String codigoVoo) {
+    public void realizarVoo(String codigoVoo) {
+        alterarEstado(codigoVoo, "REALIZADO");
+    }
+
+    @Transactional
+    public VooDTO alterarEstado(String codigoVoo, String estadoStr) {
         Voo voo = repository.findById(codigoVoo)
                 .orElseThrow(() -> new RuntimeException("Voo não encontrado"));
 
-        if (!voo.getEstado().getSigla().equals("CONFIRMADO")) {
-            throw new IllegalStateException("Só é possível realizar voo no estado CONFIRMADO");
+        String estadoAtual = voo.getEstado().getSigla();
+
+        String estadoDesejado = estadoStr.trim().toUpperCase();
+
+        if (!estadoDesejado.equals("CANCELADO") && !estadoDesejado.equals("REALIZADO")) {
+            throw new IllegalArgumentException("Estado inválido: " + estadoStr);
         }
 
-        VooEstado estadoRealizado = vooEstadoRepository.findBySigla("REALIZADO")
-                .orElseThrow(() -> new RuntimeException("Estado REALIZADO não encontrado"));
+        if (estadoAtual.equals(estadoDesejado)) {
+            VooDTO dto = mapper.map(voo, VooDTO.class);
+           
+            dto.setEstado(estadoAtual);
+           
+            return dto;
+        }
 
-        voo.setEstado(estadoRealizado);
+        if (!estadoAtual.equals("CONFIRMADO")) {
+            throw new IllegalStateException("Só é possível alterar estado de voos CONFIRMADOS");
+        }
+
+        VooEstado novoEstado = vooEstadoRepository.findBySigla(estadoDesejado)
+                .orElseThrow(() -> new RuntimeException("Estado não encontrado: " + estadoDesejado));
+
+        voo.setEstado(novoEstado);
+       
         repository.save(voo);
 
+        VooDTO dto = mapper.map(voo, VooDTO.class);
+
         try {
-            rabbitTemplate.convertAndSend(EXCHANGE, "voo.realize", codigoVoo);
+            String payload = objectMapper.writeValueAsString(dto);
+            
+            String exc = estadoAtual.equals("CANCELADO") ? "cancelavoo" : "realizavoo";
+
+            rabbitTemplate.convertAndSend(exc, "reserva", payload);
         } catch (Exception e) {
-            throw new RuntimeException("Erro ao enviar mensagem de realização para RabbitMQ", e);
+            throw new RuntimeException("Erro ao enviar mensagem de voo para RabbitMQ", e);
         }
 
-        VooDTO dto = mapper.map(voo, VooDTO.class);
-        dto.setEstado(voo.getEstado().getSigla());
+        dto.setEstado(novoEstado.getSigla());
 
         return dto;
     }

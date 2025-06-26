@@ -17,7 +17,7 @@ public class VooListener {
     @Autowired
     private ObjectMapper objectMapper;
 
-    @RabbitListener(queues = "voo.cancel")
+    @RabbitListener(queues = "cancelavoo.reserva")
     public void receberCancelarVoo(String codigoVoo) {
         try {
             vooService.cancelarVoo(codigoVoo);
@@ -28,7 +28,7 @@ public class VooListener {
         }
     }
 
-    @RabbitListener(queues = "voo.realize")
+    @RabbitListener(queues = "realizavoo.reserva")
     public void receberRealizarVoo(String codigoVoo) {
         try {
             vooService.realizarVoo(codigoVoo);
@@ -56,5 +56,4 @@ public class VooListener {
             throw new AmqpRejectAndDontRequeueException("Erro ao verificar lotação do voo", e);
         }
     }
-
 }

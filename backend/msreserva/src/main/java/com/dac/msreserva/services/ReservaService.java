@@ -66,12 +66,6 @@ public class ReservaService {
         this.exchange = exchange;
     }
 
-    public List<ReservaConsultaDTO> listarReservasPorVoo(String codigoVoo) {
-        List<ReservaConsulta> reservas = consultaReposity.findByCodigoVoo(codigoVoo);
-        
-        return reservas.stream().map(ReservaConsultaDTO::new).collect(Collectors.toList());
-    }
-
     public ReservaCreationResponseDTO efetuarReserva(ReservaTransactionDTO reserva)
             throws JsonProcessingException, AmqpException {
         // Geração de código aleatório no formato ABC123

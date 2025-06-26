@@ -44,26 +44,27 @@ public class VooController {
         }
     }
 
-    @PostMapping("/{codigo}/cancelar")
-    public ResponseEntity<Map<String, String>> cancelarVoo(@PathVariable String codigo) {
+    @PatchMapping("/{codigo}/estado")
+    public ResponseEntity<?> alterarEstado(@PathVariable String codigo, @RequestBody Map<String, String> payload) {
         try {
-            cancelarVooSaga.cancelarVoo(codigo);
+            String novoEstado = payload.get("estado").toUpperCase().trim();
 
-            return ResponseEntity.ok(Map.of("mensagem", "Solicitação de cancelamento enviada"));
+            switch (novoEstado) {
+                case "CANCELADO":
+                    cancelarVooSaga.cancelarVoo(codigo);
+                    break;
+
+                case "REALIZADO":
+                    realizarVooSaga.realizarVoo(codigo);
+                    break;
+
+                default:
+                    return ResponseEntity.badRequest().body(Map.of("erro", "Estado inválido: " + novoEstado));
+            }
+
+            return ResponseEntity.ok(Map.of("mensagem", "Solicitação de alteração de estado enviada"));
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(Map.of("erro", "Erro ao cancelar voo via saga"));
+            return ResponseEntity.status(500).body(Map.of("erro", "Erro ao alterar estado do voo via saga"));
         }
     }
-
-    @PostMapping("/{codigo}/realizar")
-    public ResponseEntity<Map<String, String>> realizarVoo(@PathVariable String codigo) {
-        try {
-            realizarVooSaga.realizarVoo(codigo);
-
-            return ResponseEntity.ok(Map.of("mensagem", "Solicitação de realização enviada"));
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(Map.of("erro", "Erro ao realizar voo via saga"));
-        }
-    }
-
 }
