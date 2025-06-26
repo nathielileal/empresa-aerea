@@ -2,7 +2,7 @@ package com.dac.msreserva.DTO;
 
 import java.time.ZonedDateTime;
 
-public class ReservaConsultaDTO {
+public class ReservaCRUDTO {
 
     private ZonedDateTime data;
     private String codigo_reserva;
@@ -16,7 +16,7 @@ public class ReservaConsultaDTO {
         return data;
     }
 
-    public ReservaConsultaDTO(ZonedDateTime data, String codigo_reserva, String estado_reserva,
+    public ReservaCRUDTO(ZonedDateTime data, String codigo_reserva, String estado_reserva,
             Long codigo_cliente, Double quantidade_milhas, String descricao, Double valor) {
         this.data = data;
         this.codigo_reserva = codigo_reserva;
@@ -27,10 +27,9 @@ public class ReservaConsultaDTO {
         this.valor = valor;
     }
 
-    /**
-     * @param data
-     */
-    
+    public void setData(ZonedDateTime data) {
+        this.data = data;
+    }
 
     public String getCodigo_reserva() {
         return codigo_reserva;
@@ -52,7 +51,17 @@ public class ReservaConsultaDTO {
         return codigo_cliente;
     }
 
-  
+    public void setCodigo_cliente(Long codigo_cliente) {
+        this.codigo_cliente = codigo_cliente;
+    }
+
+    public Double getQuantidade_milhas() {
+        return quantidade_milhas;
+    }
+
+    public void setQuantidade_milhas(Double quantidade_milhas) {
+        this.quantidade_milhas = quantidade_milhas;
+    }
 
     public String getDescricao() {
         return descricao;
@@ -78,7 +87,25 @@ public class ReservaConsultaDTO {
         return estado;
     }
 
-    
+    public void setEstado(String estado) {
+        this.estado = estado;
+    }
+
+    public Double getQuantidade_milhas() {
+        return quantidade_milhas;
+    }
+
+    public void setQuantidade_milhas(Double quantidade_milhas) {
+        this.quantidade_milhas = quantidade_milhas;
+    }
+
+    public Long getCodigo_cliente() {
+        return codigo_cliente;
+    }
+
+    public void setCodigo_cliente(Long codigo_cliente) {
+        this.codigo_cliente = codigo_cliente;
+    }
+
     // Getters e Setters
 }
-

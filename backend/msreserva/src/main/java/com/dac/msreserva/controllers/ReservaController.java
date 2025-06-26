@@ -43,11 +43,11 @@ public class ReservaController {
 
     }
 
-    // @PatchMapping("/{codigo}/estado")
-    // public ResponseEntity<ReservaDTO> alterarEstado(
-    //         @PathVariable String codigo,
-    //         @RequestBody AlternaEstadoDTO payload) {
-    //     ReservaDTO reserva = service.alterarEstado(codigo, payload);
-    //     return ResponseEntity.ok(reserva);
-    // }
+    @PatchMapping("/{codigo}/estado")
+     public ResponseEntity<ReservaDTO> alterarEstado(
+             @PathVariable String codigo,
+             @RequestBody AlternaEstadoDTO payload) {
+       ReservaDTO reserva = service.alterarEstado(codigo, payload);
+         return ResponseEntity.ok(reserva);
+     }
 }
