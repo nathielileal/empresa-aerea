@@ -1,0 +1,63 @@
+[
+    {
+      "nome": "Aeroporto Internacional de Guarulhos",
+      "cidade": "São Paulo",
+      "pais": "Brasil",
+      "codigoIATA": "GRU"
+    },
+    {
+      "nome": "Aeroporto Internacional do Rio de Janeiro/Galeão",
+      "cidade": "Rio de Janeiro",
+      "pais": "Brasil",
+      "codigoIATA": "GIG"
+    },
+    {
+      "nome": "Aeroporto Internacional de Brasília",
+      "cidade": "Brasília",
+      "pais": "Brasil",
+      "codigoIATA": "BSB"
+    },
+    {
+      "nome": "Aeroporto Internacional Salgado Filho",
+      "cidade": "Porto Alegre",
+      "pais": "Brasil",
+      "codigoIATA": "POA"
+    },
+    {
+      "nome": "Aeroporto Internacional de Frankfurt",
+      "cidade": "Frankfurt",
+      "pais": "Alemanha",
+      "codigoIATA": "FRA"
+    },
+    {
+      "nome": "Aeroporto Internacional de Curitiba",
+      "cidade": "Curitiba",
+      "pais": "Brasil",
+      "codigoIATA": "CWB"
+    },
+    {
+      "nome": "Aeroporto Internacional de Sydney",
+      "cidade": "Sydney",
+      "pais": "Austrália",
+      "codigoIATA": "SYD"
+    },
+    {
+      "nome": "Aeroporto Internacional de Joanesburgo",
+      "cidade": "Joanesburgo",
+      "pais": "África do Sul",
+      "codigoIATA": "JNB"
+    },
+    {
+      "nome": "Aeroporto Internacional de Toronto Pearson",
+      "cidade": "Toronto",
+      "pais": "Canadá",
+      "codigoIATA": "YYZ"
+    },
+    {
+      "nome": "Aeroporto Internacional de Dubai",
+      "cidade": "Dubai",
+      "pais": "Emirados Árabes Unidos",
+      "codigoIATA": "DXB"
+    }
+  ]
+  

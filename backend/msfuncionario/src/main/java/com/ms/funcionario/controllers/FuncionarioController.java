@@ -1,0 +1,87 @@
+package com.ms.funcionario.controllers;
+
+import com.ms.funcionario.dto.FuncionarioDTO;
+import com.ms.funcionario.services.FuncionarioService;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import org.springframework.http.HttpStatus;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/funcionarios")
+public class FuncionarioController {
+
+    @Autowired
+    private FuncionarioService service;
+
+    @GetMapping
+    public ResponseEntity<List<Map<String, Object>>> listAll() {
+        List<FuncionarioDTO> funcionarios = service.listarFuncionarios();
+
+        List<Map<String, Object>> resposta = funcionarios.stream().map(f -> {
+            Map<String, Object> m = new HashMap<>();
+
+            m.put("codigo", f.getCodigo());
+            m.put("cpf", f.getCpf());
+            m.put("nome", f.getNome());
+            m.put("email", f.getEmail());
+            m.put("telefone", f.getTelefone());
+            m.put("ativo", f.getAtivo());
+            m.put("tipo", "FUNCIONARIO");
+
+            return m;
+        }).collect(Collectors.toList());
+
+        return ResponseEntity.ok(resposta);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<FuncionarioDTO> getById(@PathVariable Long id) {
+        try {
+            FuncionarioDTO dto = service.findByIdAtivo(id);
+
+            return ResponseEntity.ok(dto);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+    @PostMapping
+    public ResponseEntity<FuncionarioDTO> createCliente(@RequestBody FuncionarioDTO funcionarioDTO) {
+        FuncionarioDTO saved = service.saveFuncionario(funcionarioDTO);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<FuncionarioDTO> updateFuncionario(@PathVariable Long id, @RequestBody FuncionarioDTO funcionarioDTO) {
+        try {
+            FuncionarioDTO updated = service.updateFuncionario(id, funcionarioDTO);
+
+            return ResponseEntity.ok(updated);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<FuncionarioDTO> deleteFuncionario(@PathVariable Long id) {
+        try {
+            FuncionarioDTO funcionarioDTO = service.deleteFuncionario(id);
+            return ResponseEntity.ok(funcionarioDTO);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+}

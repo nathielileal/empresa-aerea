@@ -1,0 +1,78 @@
+# 🛡️ API Gateway - Microsserviços
+
+Este API Gateway é construído com **Express.js** e serve como ponto de entrada para múltiplos microsserviços, com autenticação via **JWT**.
+
+---
+
+## ✅ Pré-requisitos
+
+- Node.js instalado
+- Arquivo `.env` com:
+  ```env
+  SECRET=sua_chave_secreta
+  PORT=3000
+
+=================================================================
+🚀 Como Rodar
+npm install
+node server.js
+
+=================================================================
+➕ Como Adicionar um Novo Microsserviço
+
+Crie um arquivo em:
+src/services/<nomeDoServico>ServiceProxy.js
+
+Exemplo:
+src/services/reservasServiceProxy.js
+
+const proxy = require('express-http-proxy');
+
+// Altere a URL e porta para onde seu serviço está rodando
+module.exports = proxy('http://localhost:8081');
+
+
+=================================================================
+Criar as rotas para o serviço
+Crie o arquivo de rotas:
+src/routes/<nomeDoServico>Routes.js
+
+Exemplo:
+src/routes/reservasRoutes.js
+
+const express = require('express');
+const router = express.Router();
+const verifyJWT = require('../middlewares/auth');
+const reservasServiceProxy = require('../services/reservasServiceProxy');
+
+// Exemplo de rotas públicas do msreservas
+router.get('/reservas', verifyJWT, reservasServiceProxy);
+router.post('/reservas', verifyJWT, reservasServiceProxy);
+router.put('/reservas/:id', verifyJWT, reservasServiceProxy);
+router.delete('/reservas/:id', verifyJWT, reservasServiceProxy);
+
+module.exports = router;
+
+=================================================================
+
+Registrar as novas rotas no roteador principal
+Abra o arquivo:
+src/routes/index.js
+
+Adicione a importação:
+
+const reservasRoutes = require('./reservasRoutes');
+
+E registre as rotas:
+
+router.use('/', reservasRoutes);
+
+Ou, se quiser um prefixo específico:
+
+router.use('/reservas', reservasRoutes);
+
+=================================================================
+
+Testar
+
+node server.js

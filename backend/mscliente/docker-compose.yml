@@ -1,0 +1,41 @@
+version: "3.8"
+
+services:
+  mscliente-db:
+    image: postgres:15
+    container_name: mscliente-db
+    environment:
+      POSTGRES_DB: cliente_db
+      POSTGRES_USER: cliente_user
+      POSTGRES_PASSWORD: cliente_pass
+    ports:
+      - "5433:5432"
+    volumes:
+      - cliente-db-data:/var/lib/postgresql/data
+    networks:
+      - ms-network
+
+  mscliente:
+    build: .
+    container_name: mscliente
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://mscliente-db:5432/cliente_db
+      SPRING_DATASOURCE_USERNAME: cliente_user
+      SPRING_DATASOURCE_PASSWORD: cliente_pass
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
+    depends_on:
+      - mscliente-db
+    networks:
+      - ms-network
+
+volumes:
+  cliente-db-data:
+
+networks:
+  ms-network:
+    external: true

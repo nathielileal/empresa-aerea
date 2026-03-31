@@ -1,0 +1,14 @@
+services:
+  gateway-service:
+    build: .
+    container_name: gateway-service
+    ports:
+      - "3000:3000"
+    networks:
+      - ms-network
+    env_file:
+      - .env
+
+networks:
+  ms-network:
+    external: true
